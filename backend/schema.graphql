@@ -1,0 +1,32 @@
+"""Date with time (isoformat)"""
+scalar DateTime
+
+input DocumentCreateInput {
+  title: String!
+  content: String!
+  category: String!
+}
+
+input DocumentFilter {
+  search: String = null
+  category: String = null
+  startDate: DateTime = null
+  endDate: DateTime = null
+}
+
+type DocumentType {
+  id: Int!
+  title: String!
+  content: String!
+  category: String!
+  createdAt: DateTime!
+}
+
+type Mutation {
+  createDocument(document: DocumentCreateInput!): DocumentType!
+}
+
+type Query {
+  getDocument(id: Int!): DocumentType!
+  listDocuments(filter: DocumentFilter = null, limit: Int! = 10, offset: Int! = 0): [DocumentType!]!
+}
