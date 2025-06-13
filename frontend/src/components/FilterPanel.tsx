@@ -1,4 +1,10 @@
-import { Box, Select, createListCollection, Portal } from "@chakra-ui/react";
+import {
+  Box,
+  Select,
+  createListCollection,
+  Portal,
+  Text,
+} from "@chakra-ui/react";
 import { type SelectValueChangeDetails } from "@chakra-ui/react/select";
 import { useState } from "react";
 
@@ -26,18 +32,37 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFilter }) => {
   });
 
   return (
-    // <Box as="form" p={4} bg="gray.50" borderRadius="md">
-    <form>
+    <Box>
+      <Text fontSize="lg" fontWeight="semibold" color="gray.700" mb={4}>
+        Filter Documents
+      </Text>
+
       <Select.Root
         collection={categories}
-        width="320px"
+        width="100%"
         value={[category]}
         onValueChange={handleCategoryChange}
       >
         <Select.HiddenSelect />
-        <Select.Label>Category</Select.Label>
+        <Select.Label fontSize="sm" fontWeight="medium" color="gray.600" mb={2}>
+          Category
+        </Select.Label>
         <Select.Control>
-          <Select.Trigger>
+          <Select.Trigger
+            bg="gray.50"
+            border="1px"
+            borderColor="gray.300"
+            borderRadius="lg"
+            _hover={{
+              borderColor: "blue.300",
+              bg: "white",
+            }}
+            _focus={{
+              borderColor: "blue.400",
+              bg: "white",
+              shadow: "0 0 0 1px var(--chakra-colors-blue-400)",
+            }}
+          >
             <Select.ValueText placeholder="All Categories" />
           </Select.Trigger>
           <Select.IndicatorGroup>
@@ -46,10 +71,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFilter }) => {
         </Select.Control>
         <Portal>
           <Select.Positioner>
-            <Select.Content>
-              {categories.items.map((framework) => (
-                <Select.Item item={framework} key={framework.value}>
-                  {framework.label}
+            <Select.Content
+              bg="white"
+              border="1px"
+              borderColor="gray.200"
+              borderRadius="lg"
+              shadow="lg"
+            >
+              {categories.items.map((category) => (
+                <Select.Item
+                  item={category}
+                  key={category.value}
+                  _hover={{
+                    bg: "blue.50",
+                  }}
+                  px={4}
+                  py={2}
+                >
+                  {category.label}
                   <Select.ItemIndicator />
                 </Select.Item>
               ))}
@@ -57,7 +96,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFilter }) => {
           </Select.Positioner>
         </Portal>
       </Select.Root>
-    </form>
+    </Box>
   );
 };
 

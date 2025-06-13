@@ -17,17 +17,51 @@ const DocumentModal: React.FC<DocumentModalProps> = ({
       onOpenChange={(details) => details.open || onClose()}
     >
       <Portal>
-        <Dialog.Backdrop />
+        <Dialog.Backdrop bg="blackAlpha.600" />
         <Dialog.Positioner>
-          <Dialog.Content>
-            <Dialog.Header>
-              <Dialog.Title>{document?.title}</Dialog.Title>
+          <Dialog.Content
+            bg="white"
+            borderRadius="xl"
+            shadow="2xl"
+            border="1px"
+            borderColor="gray.200"
+            maxW="4xl"
+            mx={4}
+          >
+            <Dialog.Header p={6} borderBottom="1px" borderColor="gray.200">
+              <Dialog.Title
+                fontSize="2xl"
+                fontWeight="bold"
+                color="gray.800"
+                lineHeight="short"
+              >
+                {document?.title}
+              </Dialog.Title>
             </Dialog.Header>
-            <Dialog.Body>
-              <Text>{document?.content}</Text>
+
+            <Dialog.Body p={6}>
+              <Text
+                fontSize="md"
+                color="gray.700"
+                lineHeight="relaxed"
+                whiteSpace="pre-wrap"
+              >
+                {document?.content}
+              </Text>
             </Dialog.Body>
+
             <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
+              <CloseButton
+                size="lg"
+                position="absolute"
+                top={6}
+                right={6}
+                color="gray.500"
+                _hover={{
+                  color: "gray.700",
+                  bg: "gray.100",
+                }}
+              />
             </Dialog.CloseTrigger>
           </Dialog.Content>
         </Dialog.Positioner>

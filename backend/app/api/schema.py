@@ -10,7 +10,7 @@ class DocumentType:
     title: str
     content: str
     category: str
-    created_at: datetime
+    created_at: datetime = strawberry.field(name="createdAt")
 
 
 @strawberry.input
@@ -30,7 +30,7 @@ class DocumentCreateInput:
 
 @strawberry.type
 class Query:
-    @strawberry.field
+    @strawberry.field(name="getDocument")
     async def get_document(self, id: int) -> DocumentType:
         # Mock database operation
         return DocumentType(
@@ -41,7 +41,7 @@ class Query:
             created_at=datetime.now(),
         )
 
-    @strawberry.field
+    @strawberry.field(name="listDocuments")
     async def list_documents(
         self, filter: Optional[DocumentFilter] = None, limit: int = 10, offset: int = 0
     ) -> List[DocumentType]:
