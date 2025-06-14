@@ -5,6 +5,8 @@ const config = defineConfig({
     // Reset and base styles
     "*": {
       boxSizing: "border-box",
+      transition:
+        "color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease",
     },
 
     // Body styles
@@ -82,12 +84,6 @@ const config = defineConfig({
     "*:focus-visible": {
       outline: "2px solid #3182ce",
       outlineOffset: "2px",
-    },
-
-    // Smooth transitions for better UX
-    "*": {
-      transition:
-        "color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease",
     },
   },
 

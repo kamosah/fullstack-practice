@@ -5,6 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import App from "./App";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { system } from "./styles/theme";
+import "./styles/animations.css";
 
 const queryClient = new QueryClient();
 
