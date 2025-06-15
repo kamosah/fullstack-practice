@@ -96,9 +96,21 @@ const TableSection: React.FC<TableSectionProps> = ({
   };
 
   return (
-    <Box h="100%" display="flex" flexDirection="column" bg="white">
+    <Box
+      h="100%"
+      display="flex"
+      flexDirection="column"
+      bg="white"
+      overflow="hidden"
+    >
       {/* Toolbar */}
-      <Box p={4} borderBottom="1px" borderColor="gray.200" bg="gray.50">
+      <Box
+        p={4}
+        borderBottom="1px"
+        borderColor="gray.200"
+        bg="gray.50"
+        flexShrink={0}
+      >
         <Flex justify="space-between" align="center">
           <Text fontSize="sm" color="gray.600">
             Display
@@ -132,9 +144,11 @@ const TableSection: React.FC<TableSectionProps> = ({
       <Box
         flex={1}
         overflowY="auto"
+        overflowX="auto"
         css={{
           "&::-webkit-scrollbar": {
             width: "6px",
+            height: "6px",
           },
           "&::-webkit-scrollbar-track": {
             backgroundColor: "#f1f1f1",

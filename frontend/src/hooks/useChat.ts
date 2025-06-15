@@ -82,6 +82,7 @@ export const useCreateConversation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["createConversation"],
     mutationFn: async (input: ConversationInput): Promise<Conversation> => {
       const data = (await graphqlClient.request(CREATE_CONVERSATION, {
         input,
@@ -98,8 +99,13 @@ export const useCreateConversation = () => {
         })),
       };
     },
-    onSuccess: () => {
+    onSuccess: (newConversation) => {
+      // Invalidate conversations list to show the new conversation
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      // Invalidate the specific conversation in case it's being viewed
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", newConversation.id],
+      });
     },
   });
 };
@@ -108,6 +114,7 @@ export const useCreateConversationWithMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["createConversationWithMessage"],
     mutationFn: async (input: {
       title?: string;
       firstMessage: string;
@@ -131,8 +138,13 @@ export const useCreateConversationWithMessage = () => {
         })),
       };
     },
-    onSuccess: () => {
+    onSuccess: (newConversation) => {
+      // Invalidate conversations list to show the new conversation
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      // Invalidate the specific conversation in case it's being viewed
+      queryClient.invalidateQueries({
+        queryKey: ["conversation", newConversation.id],
+      });
     },
   });
 };
@@ -141,6 +153,7 @@ export const useSendMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ["sendMessage"],
     mutationFn: async (input: MessageInput): Promise<Message> => {
       const data = (await graphqlClient.request(SEND_MESSAGE, { input })) as {
         sendMessage: GraphQLMessage;
@@ -153,7 +166,9 @@ export const useSendMessage = () => {
       };
     },
     onSuccess: (_, variables) => {
+      // Invalidate conversations list to update message counts/timestamps
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      // Invalidate the specific conversation to show the new message
       queryClient.invalidateQueries({
         queryKey: ["conversation", variables.conversationId],
       });

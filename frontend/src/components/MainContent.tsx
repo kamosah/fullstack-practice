@@ -48,9 +48,16 @@ const MainContent: React.FC<MainContentProps> = ({
   };
 
   return (
-    <Box flex={1} bg="white" display="flex" flexDirection="column">
+    <Box
+      flex={1}
+      bg="white"
+      display="flex"
+      flexDirection="column"
+      maxH="100vh"
+      overflow="hidden"
+    >
       {/* Header */}
-      <Box p={6} borderBottom="1px" borderColor="gray.200">
+      <Box p={6} borderBottom="1px" borderColor="gray.200" flexShrink={0}>
         <Flex justify="space-between" align="center">
           <Box>
             <Heading size="lg" color="gray.800" mb={1}>
@@ -75,7 +82,7 @@ const MainContent: React.FC<MainContentProps> = ({
       </Box>
 
       {/* Resizable Content */}
-      <Box flex={1} position="relative">
+      <Box flex={1} position="relative" overflow="hidden">
         <ResizablePanel
           topContent={
             <ChatSection

@@ -80,6 +80,7 @@ const ResizablePanel: React.FC<ResizablePanelProps> = ({
       display="flex"
       flexDirection="column"
       position="relative"
+      overflow="hidden"
     >
       {/* Top Panel */}
       <Box
@@ -89,6 +90,8 @@ const ResizablePanel: React.FC<ResizablePanelProps> = ({
         overflow="hidden"
         borderBottom="1px"
         borderColor="gray.200"
+        display="flex"
+        flexDirection="column"
       >
         {topContent}
       </Box>
@@ -108,6 +111,7 @@ const ResizablePanel: React.FC<ResizablePanelProps> = ({
         display="flex"
         alignItems="center"
         justifyContent="center"
+        flexShrink={0}
       >
         {/* Resize indicator */}
         <Box
@@ -121,7 +125,13 @@ const ResizablePanel: React.FC<ResizablePanelProps> = ({
       </Box>
 
       {/* Bottom Panel */}
-      <Box flex={1} minHeight={`${100 - maxTopHeight}%`} overflow="hidden">
+      <Box
+        flex={1}
+        minHeight={`${100 - maxTopHeight}%`}
+        overflow="hidden"
+        display="flex"
+        flexDirection="column"
+      >
         {bottomContent}
       </Box>
     </Box>

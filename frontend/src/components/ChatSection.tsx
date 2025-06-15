@@ -53,9 +53,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
   };
 
   return (
-    <Box h="100%" display="flex" flexDirection="column">
+    <Box h="100%" display="flex" flexDirection="column" overflow="hidden">
       {/* Header */}
-      <Box p={4} borderBottom="1px" borderColor="gray.200">
+      <Box p={4} borderBottom="1px" borderColor="gray.200" flexShrink={0}>
         <Flex justify="space-between" align="center">
           <Text fontSize="lg" fontWeight="semibold" color="gray.800">
             Chat
@@ -65,7 +65,23 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       </Box>
 
       {/* Messages Area */}
-      <Box flex={1} overflowY="auto" bg="gray.50">
+      <Box
+        flex={1}
+        overflowY="auto"
+        bg="gray.50"
+        css={{
+          "&::-webkit-scrollbar": {
+            width: "6px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "#f1f1f1",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#c1c1c1",
+            borderRadius: "3px",
+          },
+        }}
+      >
         <VStack gap={4} align="stretch" p={4}>
           {messages.length === 0 ? (
             <Box
@@ -209,7 +225,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       </Box>
 
       {/* Input Area */}
-      <Box p={4} borderTop="1px" borderColor="gray.200" bg="white">
+      <Box
+        p={4}
+        borderTop="1px"
+        borderColor="gray.200"
+        bg="white"
+        flexShrink={0}
+      >
         <form onSubmit={handleSubmit}>
           <Flex gap={2} align="end">
             <Input
