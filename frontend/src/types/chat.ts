@@ -25,7 +25,7 @@ export interface Conversation {
 }
 
 export interface ConversationInput {
-  title: string;
+  title?: string;
 }
 
 export interface MessageInput {

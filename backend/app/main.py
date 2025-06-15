@@ -1,6 +1,3 @@
-import os
-
-import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from strawberry.fastapi import GraphQLRouter
@@ -32,14 +29,3 @@ app.include_router(graphql_app, prefix="/graphql")
 @app.get("/")
 async def root():
     return {"message": "Welcome to My GraphQL App"}
-
-
-@app.post("/api/openai")
-async def proxy_openai(data: dict):
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "https://api.openai.com/v1/chat/completions",
-            json=data,
-            headers={"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"},
-        )
-        return response.json()

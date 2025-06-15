@@ -4,6 +4,7 @@ import {
   GET_CONVERSATIONS,
   GET_CONVERSATION,
   CREATE_CONVERSATION,
+  CREATE_CONVERSATION_WITH_MESSAGE,
   SEND_MESSAGE,
 } from "../graphql/queries";
 import type {
@@ -86,6 +87,39 @@ export const useCreateConversation = () => {
         input,
       })) as { createConversation: GraphQLConversation };
       const conv = data.createConversation;
+      return {
+        ...conv,
+        createdAt: new Date(conv.createdAt),
+        updatedAt: new Date(conv.updatedAt),
+        messages: conv.messages.map((msg: GraphQLMessage) => ({
+          ...msg,
+          type: msg.type as "user" | "agent",
+          createdAt: new Date(msg.createdAt),
+        })),
+      };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+};
+
+export const useCreateConversationWithMessage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: {
+      title?: string;
+      firstMessage: string;
+    }): Promise<Conversation> => {
+      const data = (await graphqlClient.request(
+        CREATE_CONVERSATION_WITH_MESSAGE,
+        {
+          title: input.title,
+          firstMessage: input.firstMessage,
+        }
+      )) as { createConversationWithMessage: GraphQLConversation };
+      const conv = data.createConversationWithMessage;
       return {
         ...conv,
         createdAt: new Date(conv.createdAt),

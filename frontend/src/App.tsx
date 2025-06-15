@@ -7,6 +7,7 @@ import MainContent from "./components/MainContent";
 import {
   useConversations,
   useCreateConversation,
+  useCreateConversationWithMessage,
   useSendMessage,
 } from "./hooks/useChat";
 import type { Conversation } from "./types/chat";
@@ -36,6 +37,8 @@ const AppContent: React.FC = () => {
 
   const { data: conversations = [], isLoading } = useConversations();
   const createConversationMutation = useCreateConversation();
+  const createConversationWithMessageMutation =
+    useCreateConversationWithMessage();
   const sendMessageMutation = useSendMessage();
 
   const [tableData, setTableData] = useState<TableRow[]>([
@@ -82,49 +85,39 @@ const AppContent: React.FC = () => {
   };
 
   const handleSendMessage = async (content: string) => {
-    if (!activeConversation) return;
+    if (!activeConversation) {
+      // If no active conversation, create one with the first message
+      setIsTyping(true);
+      createConversationWithMessageMutation.mutate(
+        { firstMessage: content },
+        {
+          onSuccess: (newConversation) => {
+            setActiveConversation(newConversation);
+            setIsTyping(false);
+          },
+          onError: (error) => {
+            console.error("Error creating conversation with message:", error);
+            setIsTyping(false);
+          },
+        }
+      );
+      return;
+    }
 
     setIsTyping(true);
 
     try {
-      // Send user message
+      // Send user message - the backend will automatically generate AI response
       await sendMessageMutation.mutateAsync({
         conversationId: parseInt(activeConversation.id),
         type: "user",
         content,
       });
-
-      // Simulate agent response after a short delay
-      setTimeout(async () => {
-        try {
-          const agentResponse = generateAgentResponse();
-          await sendMessageMutation.mutateAsync({
-            conversationId: parseInt(activeConversation.id),
-            type: "agent",
-            content: agentResponse,
-          });
-        } catch (error) {
-          console.error("Error sending agent message:", error);
-        } finally {
-          setIsTyping(false);
-        }
-      }, 2000);
     } catch (error) {
-      console.error("Error sending user message:", error);
+      console.error("Error sending message:", error);
+    } finally {
       setIsTyping(false);
     }
-  };
-
-  const generateAgentResponse = (): string => {
-    // Simple response generation - in a real app, this would call an AI service
-    const responses = [
-      "Based on the documents provided, I can help you analyze the key considerations. Let me break this down for you...",
-      "That's an excellent question. Looking at the financial data and market analysis, here are my thoughts...",
-      "I've reviewed the relevant documents and identified several important factors to consider...",
-      "From my analysis of the portfolio data, I can provide insights on the following areas...",
-    ];
-
-    return responses[Math.floor(Math.random() * responses.length)];
   };
 
   const handleAddRow = () => {

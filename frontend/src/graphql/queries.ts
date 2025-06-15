@@ -78,6 +78,35 @@ export const CREATE_CONVERSATION = gql`
   }
 `;
 
+export const CREATE_CONVERSATION_WITH_MESSAGE = gql`
+  mutation CreateConversationWithMessage(
+    $title: String
+    $firstMessage: String!
+  ) {
+    createConversationWithMessage(title: $title, firstMessage: $firstMessage) {
+      id
+      title
+      createdAt
+      updatedAt
+      messages {
+        id
+        conversationId
+        type
+        content
+        attachments {
+          type
+          name
+          url
+          size
+          mimeType
+          metadata
+        }
+        createdAt
+      }
+    }
+  }
+`;
+
 export const SEND_MESSAGE = gql`
   mutation SendMessage($input: MessageInput!) {
     sendMessage(input: $input) {
