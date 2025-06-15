@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Input,
@@ -9,25 +8,22 @@ import {
   HStack,
   Icon,
 } from "@chakra-ui/react";
-import { LuPlus, LuSearch, LuGrid3X3 } from "react-icons/lu";
-
-interface Matrix {
-  id: string;
-  name: string;
-  lastEdited: Date;
-  active: boolean;
-}
+import { LuSearch, LuMessageSquare } from "react-icons/lu";
+import { FaRegEdit } from "react-icons/fa";
+import type { Conversation } from "../types/chat";
 
 interface SidebarProps {
-  matrices: Matrix[];
-  onSelectMatrix: (matrix: Matrix) => void;
-  onNewMatrix: () => void;
+  conversations: Conversation[];
+  onSelectConversation: (conversation: Conversation) => void;
+  onNewConversation: () => void;
+  activeConversation: Conversation | null;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
-  matrices,
-  onSelectMatrix,
-  onNewMatrix,
+  conversations,
+  onSelectConversation,
+  onNewConversation,
+  activeConversation,
 }) => {
   const formatRelativeTime = (date: Date) => {
     const now = new Date();
@@ -56,26 +52,25 @@ const Sidebar: React.FC<SidebarProps> = ({
       <Box p={6} borderBottom="1px" borderColor="gray.100">
         <Flex align="center" justify="space-between" mb={4}>
           <HStack gap={2}>
-            <Icon as={LuGrid3X3} boxSize={6} color="blue.500" />
+            <Icon as={LuMessageSquare} boxSize={6} color="blue.500" />
             <Heading size="lg" color="gray.800">
               Hebbia
             </Heading>
           </HStack>
-          <Button
-            size="sm"
+          <Icon
+            size="md"
             colorScheme="blue"
-            variant="solid"
-            onClick={onNewMatrix}
+            onClick={onNewConversation}
+            cursor="pointer"
           >
-            <LuPlus />
-            New Chat
-          </Button>
+            <FaRegEdit />
+          </Icon>
         </Flex>
 
         {/* Search */}
         <Box position="relative">
           <Input
-            placeholder="Search matrices"
+            placeholder="Search conversations"
             pl={10}
             bg="gray.50"
             border="1px"
@@ -98,136 +93,74 @@ const Sidebar: React.FC<SidebarProps> = ({
         </Box>
       </Box>
 
-      {/* Matrices List */}
+      {/* Conversations List */}
       <Box flex={1} overflowY="auto">
         <Box p={4}>
           <Text fontSize="sm" fontWeight="medium" color="gray.600" mb={3}>
-            Today
+            Recent Conversations
           </Text>
           <VStack gap={1} align="stretch">
-            {matrices
-              .filter((matrix) => {
-                const today = new Date();
-                const matrixDate = new Date(matrix.lastEdited);
-                return matrixDate.toDateString() === today.toDateString();
-              })
-              .map((matrix) => (
+            {conversations.length === 0 ? (
+              <Box p={4} textAlign="center" color="gray.500" fontSize="sm">
+                No conversations yet. Start a new chat!
+              </Box>
+            ) : (
+              conversations.map((conversation) => (
                 <Box
-                  key={matrix.id}
+                  key={conversation.id}
                   p={3}
                   borderRadius="md"
                   cursor="pointer"
-                  bg={matrix.active ? "blue.50" : "transparent"}
-                  borderLeft={
-                    matrix.active ? "3px solid" : "3px solid transparent"
+                  bg={
+                    activeConversation?.id === conversation.id
+                      ? "blue.50"
+                      : "transparent"
                   }
-                  borderLeftColor={matrix.active ? "blue.500" : "transparent"}
-                  _hover={{ bg: matrix.active ? "blue.50" : "gray.50" }}
-                  onClick={() => onSelectMatrix(matrix)}
+                  borderLeft={
+                    activeConversation?.id === conversation.id
+                      ? "3px solid"
+                      : "3px solid transparent"
+                  }
+                  borderLeftColor={
+                    activeConversation?.id === conversation.id
+                      ? "blue.500"
+                      : "transparent"
+                  }
+                  _hover={{
+                    bg:
+                      activeConversation?.id === conversation.id
+                        ? "blue.50"
+                        : "gray.50",
+                  }}
+                  onClick={() => onSelectConversation(conversation)}
                   transition="all 0.2s"
                 >
                   <Text
                     fontSize="sm"
-                    fontWeight={matrix.active ? "semibold" : "medium"}
-                    color={matrix.active ? "blue.700" : "gray.800"}
+                    fontWeight={
+                      activeConversation?.id === conversation.id
+                        ? "semibold"
+                        : "medium"
+                    }
+                    color={
+                      activeConversation?.id === conversation.id
+                        ? "blue.700"
+                        : "gray.800"
+                    }
                     lineClamp={2}
                     mb={1}
                   >
-                    {matrix.name}
+                    {conversation.title}
                   </Text>
                   <Text fontSize="xs" color="gray.500">
-                    {formatRelativeTime(matrix.lastEdited)}
+                    {formatRelativeTime(conversation.updatedAt)}
+                    {conversation.messages.length > 0 && (
+                      <> • {conversation.messages.length} messages</>
+                    )}
                   </Text>
                 </Box>
-              ))}
-          </VStack>
-        </Box>
-
-        <Box p={4}>
-          <Text fontSize="sm" fontWeight="medium" color="gray.600" mb={3}>
-            Yesterday
-          </Text>
-          <VStack gap={1} align="stretch">
-            {matrices
-              .filter((matrix) => {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const matrixDate = new Date(matrix.lastEdited);
-                return matrixDate.toDateString() === yesterday.toDateString();
-              })
-              .map((matrix) => (
-                <Box
-                  key={matrix.id}
-                  p={3}
-                  borderRadius="md"
-                  cursor="pointer"
-                  bg={matrix.active ? "blue.50" : "transparent"}
-                  borderLeft={
-                    matrix.active ? "3px solid" : "3px solid transparent"
-                  }
-                  borderLeftColor={matrix.active ? "blue.500" : "transparent"}
-                  _hover={{ bg: matrix.active ? "blue.50" : "gray.50" }}
-                  onClick={() => onSelectMatrix(matrix)}
-                  transition="all 0.2s"
-                >
-                  <Text
-                    fontSize="sm"
-                    fontWeight={matrix.active ? "semibold" : "medium"}
-                    color={matrix.active ? "blue.700" : "gray.800"}
-                    lineClamp={2}
-                    mb={1}
-                  >
-                    {matrix.name}
-                  </Text>
-                  <Text fontSize="xs" color="gray.500">
-                    {formatRelativeTime(matrix.lastEdited)}
-                  </Text>
-                </Box>
-              ))}
-          </VStack>
-        </Box>
-
-        <Box p={4}>
-          <Text fontSize="sm" fontWeight="medium" color="gray.600" mb={3}>
-            Projects
-          </Text>
-          <VStack gap={1} align="stretch">
-            {matrices
-              .filter((matrix) => {
-                const twoDaysAgo = new Date();
-                twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-                const matrixDate = new Date(matrix.lastEdited);
-                return matrixDate < twoDaysAgo;
-              })
-              .map((matrix) => (
-                <Box
-                  key={matrix.id}
-                  p={3}
-                  borderRadius="md"
-                  cursor="pointer"
-                  bg={matrix.active ? "blue.50" : "transparent"}
-                  borderLeft={
-                    matrix.active ? "3px solid" : "3px solid transparent"
-                  }
-                  borderLeftColor={matrix.active ? "blue.500" : "transparent"}
-                  _hover={{ bg: matrix.active ? "blue.50" : "gray.50" }}
-                  onClick={() => onSelectMatrix(matrix)}
-                  transition="all 0.2s"
-                >
-                  <Text
-                    fontSize="sm"
-                    fontWeight={matrix.active ? "semibold" : "medium"}
-                    color={matrix.active ? "blue.700" : "gray.800"}
-                    lineClamp={2}
-                    mb={1}
-                  >
-                    {matrix.name}
-                  </Text>
-                  <Text fontSize="xs" color="gray.500">
-                    {formatRelativeTime(matrix.lastEdited)}
-                  </Text>
-                </Box>
-              ))}
+              ))
+            )}
           </VStack>
         </Box>
       </Box>

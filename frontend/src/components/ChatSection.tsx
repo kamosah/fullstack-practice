@@ -11,24 +11,20 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { LuSend, LuBot } from "react-icons/lu";
 import MatrixStatus from "./MatrixStatus";
-
-interface Message {
-  id: string;
-  type: 'user' | 'agent';
-  content: string;
-  timestamp: Date;
-}
+import type { Message } from "../types/chat";
 
 interface ChatSectionProps {
   messages: Message[];
   onSendMessage: (content: string) => void;
   isTyping?: boolean;
+  isDisabled?: boolean;
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ 
-  messages, 
+const ChatSection: React.FC<ChatSectionProps> = ({
+  messages,
   onSendMessage,
-  isTyping = false
+  isTyping = false,
+  isDisabled = false,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -43,14 +39,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputValue.trim()) {
+    if (inputValue.trim() && !isDisabled) {
       onSendMessage(inputValue.trim());
       setInputValue("");
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && !isDisabled) {
       e.preventDefault();
       handleSubmit(e);
     }
@@ -97,9 +93,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                   <Heading size="md" color="blue.700">
                     Welcome to Hebbia Matrix
                   </Heading>
-                  <Text color="blue.600" fontSize="sm" textAlign="center" maxW="md">
-                    Ask me anything about your documents. I can help you with due diligence questions, 
-                    risk analysis, market insights, and strategic recommendations.
+                  <Text
+                    color="blue.600"
+                    fontSize="sm"
+                    textAlign="center"
+                    maxW="md"
+                  >
+                    {isDisabled
+                      ? "Select a conversation from the sidebar to start chatting."
+                      : "Ask me anything about your documents. I can help you with due diligence questions, risk analysis, market insights, and strategic recommendations."}
                   </Text>
                 </VStack>
               </VStack>
@@ -108,7 +110,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             messages.map((message) => (
               <Flex
                 key={message.id}
-                direction={message.type === 'user' ? 'row-reverse' : 'row'}
+                direction={message.type === "user" ? "row-reverse" : "row"}
                 align="start"
                 gap={3}
                 className="message-enter"
@@ -117,7 +119,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                   w={8}
                   h={8}
                   borderRadius="full"
-                  bg={message.type === 'user' ? 'gray.300' : 'blue.500'}
+                  bg={message.type === "user" ? "gray.300" : "blue.500"}
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
@@ -126,17 +128,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                   fontWeight="medium"
                   flexShrink={0}
                 >
-                  {message.type === 'user' ? 'U' : <LuBot />}
+                  {message.type === "user" ? "U" : <LuBot />}
                 </Box>
                 <Box
                   maxW="70%"
-                  bg={message.type === 'user' ? 'blue.500' : 'gray.100'}
-                  color={message.type === 'user' ? 'white' : 'gray.800'}
+                  bg={message.type === "user" ? "blue.500" : "gray.100"}
+                  color={message.type === "user" ? "white" : "gray.800"}
                   px={4}
                   py={3}
                   borderRadius="lg"
-                  borderBottomRightRadius={message.type === 'user' ? 'sm' : 'lg'}
-                  borderBottomLeftRadius={message.type === 'agent' ? 'sm' : 'lg'}
+                  borderBottomRightRadius={
+                    message.type === "user" ? "sm" : "lg"
+                  }
+                  borderBottomLeftRadius={
+                    message.type === "agent" ? "sm" : "lg"
+                  }
                 >
                   <Text fontSize="sm" lineHeight="1.5" whiteSpace="pre-line">
                     {message.content}
@@ -145,7 +151,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
               </Flex>
             ))
           )}
-          
+
           {/* Typing Indicator */}
           {isTyping && (
             <Flex direction="row" align="start" gap={3}>
@@ -197,7 +203,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
               </Box>
             </Flex>
           )}
-          
+
           <div ref={messagesEndRef} />
         </VStack>
       </Box>
@@ -210,21 +216,31 @@ const ChatSection: React.FC<ChatSectionProps> = ({
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Type your message..."
+              placeholder={
+                isDisabled
+                  ? "Select a conversation to start chatting..."
+                  : "Type your message..."
+              }
               bg="gray.50"
               border="1px"
               borderColor="gray.200"
-              _hover={{ borderColor: "gray.300" }}
-              _focus={{ borderColor: "blue.500", boxShadow: "0 0 0 1px var(--chakra-colors-blue-500)" }}
+              _hover={{ borderColor: isDisabled ? "gray.200" : "gray.300" }}
+              _focus={{
+                borderColor: isDisabled ? "gray.200" : "blue.500",
+                boxShadow: isDisabled
+                  ? "none"
+                  : "0 0 0 1px var(--chakra-colors-blue-500)",
+              }}
               resize="vertical"
               minH="40px"
               maxH="120px"
+              disabled={isDisabled}
             />
             <IconButton
               type="submit"
               aria-label="Send message"
               colorScheme="blue"
-              disabled={!inputValue.trim()}
+              disabled={!inputValue.trim() || isDisabled}
               size="md"
             >
               <LuSend />

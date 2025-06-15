@@ -1,3 +1,15 @@
+input ChatCreateInput {
+  name: String!
+}
+
+type ChatType {
+  id: String!
+  name: String!
+  createdAt: DateTime!
+  lastUpdated: DateTime!
+  messages: [MessageType!]!
+}
+
 """Date with time (isoformat)"""
 scalar DateTime
 
@@ -22,11 +34,30 @@ type DocumentType {
   createdAt: DateTime!
 }
 
+input MessageCreateInput {
+  chatId: String!
+  content: String!
+  type: String!
+}
+
+type MessageType {
+  id: String!
+  chatId: String!
+  content: String!
+  type: String!
+  timestamp: DateTime!
+}
+
 type Mutation {
   createDocument(document: DocumentCreateInput!): DocumentType!
+  createChat(chat: ChatCreateInput!): ChatType!
+  sendMessage(message: MessageCreateInput!): [MessageType!]!
 }
 
 type Query {
   getDocument(id: Int!): DocumentType!
   listDocuments(filter: DocumentFilter = null, limit: Int! = 10, offset: Int! = 0): [DocumentType!]!
+  listChats: [ChatType!]!
+  getChat(id: String!): ChatType
+  getMessages(chatId: String!): [MessageType!]!
 }

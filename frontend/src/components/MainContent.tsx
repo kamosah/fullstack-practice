@@ -4,20 +4,7 @@ import ChatSection from "./ChatSection";
 import TableSection from "./TableSection";
 import ResizablePanel from "./ResizablePanel";
 import HelpTooltip from "./HelpTooltip";
-
-interface Matrix {
-  id: string;
-  name: string;
-  lastEdited: Date;
-  active: boolean;
-}
-
-interface Message {
-  id: string;
-  type: "user" | "agent";
-  content: string;
-  timestamp: Date;
-}
+import type { Conversation } from "../types/chat";
 
 interface TableRow {
   id: string;
@@ -29,8 +16,7 @@ interface TableRow {
 }
 
 interface MainContentProps {
-  activeMatrix: Matrix;
-  messages: Message[];
+  activeConversation: Conversation | null;
   tableData: TableRow[];
   onSendMessage: (content: string) => void;
   onAddRow: () => void;
@@ -39,8 +25,7 @@ interface MainContentProps {
 }
 
 const MainContent: React.FC<MainContentProps> = ({
-  activeMatrix,
-  messages,
+  activeConversation,
   tableData,
   onSendMessage,
   onAddRow,
@@ -50,23 +35,33 @@ const MainContent: React.FC<MainContentProps> = ({
   const [chatHeight, setChatHeight] = useState(50); // Percentage of screen height
 
   const formatLastSaved = (date: Date) => {
-    return `Saved at ${date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}`;
+    const now = new Date();
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
+    if (diffInMinutes < 1) return "Saved just now";
+    if (diffInMinutes < 60) return `Saved ${diffInMinutes}m ago`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `Saved ${diffInHours}h ago`;
+    return `Saved ${Math.floor(diffInHours / 24)}d ago`;
   };
 
   return (
-    <Box flex={1} display="flex" flexDirection="column" h="100vh">
+    <Box flex={1} bg="white" display="flex" flexDirection="column">
       {/* Header */}
-      <Box bg="white" borderBottom="1px" borderColor="gray.200" px={6} py={4}>
+      <Box p={6} borderBottom="1px" borderColor="gray.200">
         <Flex justify="space-between" align="center">
           <Box>
-            <Heading size="md" color="gray.800" mb={1}>
-              {activeMatrix.name}
+            <Heading size="lg" color="gray.800" mb={1}>
+              {activeConversation
+                ? activeConversation.title
+                : "Select a conversation"}
             </Heading>
             <Text fontSize="sm" color="gray.500">
-              {formatLastSaved(activeMatrix.lastEdited)}
+              {activeConversation
+                ? formatLastSaved(activeConversation.updatedAt)
+                : "Choose a conversation from the sidebar to get started"}
             </Text>
           </Box>
           <HStack gap={3}>
@@ -84,9 +79,10 @@ const MainContent: React.FC<MainContentProps> = ({
         <ResizablePanel
           topContent={
             <ChatSection
-              messages={messages}
+              messages={activeConversation ? activeConversation.messages : []}
               onSendMessage={onSendMessage}
               isTyping={isTyping}
+              isDisabled={!activeConversation}
             />
           }
           bottomContent={

@@ -1,23 +1,24 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
-import { getAgentResponse } from "./utils/mockResponses";
-import useKeyboardShortcuts from "./hooks/useKeyboardShortcuts";
+import {
+  useConversations,
+  useCreateConversation,
+  useSendMessage,
+} from "./hooks/useChat";
+import type { Conversation } from "./types/chat";
 
-interface Matrix {
-  id: string;
-  name: string;
-  lastEdited: Date;
-  active: boolean;
-}
-
-interface Message {
-  id: string;
-  type: "user" | "agent";
-  content: string;
-  timestamp: Date;
-}
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 10, // 10 minutes
+    },
+  },
+});
 
 interface TableRow {
   id: string;
@@ -28,46 +29,14 @@ interface TableRow {
   marketConsiderations: string;
 }
 
-const App: React.FC = () => {
-  const [activeMatrix, setActiveMatrix] = useState<Matrix>({
-    id: "1",
-    name: "First Screen Project Alpha",
-    lastEdited: new Date(),
-    active: true,
-  });
-
-  const [matrices] = useState<Matrix[]>([
-    {
-      id: "1",
-      name: "First Screen Project Alpha",
-      lastEdited: new Date(),
-      active: true,
-    },
-    {
-      id: "2",
-      name: "Q324 Portfolio Review",
-      lastEdited: new Date(Date.now() - 86400000),
-      active: false,
-    },
-    {
-      id: "3",
-      name: "Hannibal Revenue",
-      lastEdited: new Date(Date.now() - 172800000),
-      active: false,
-    },
-  ]);
-
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      type: "user",
-      content:
-        "We are meeting the management team of Project Alpha tomorrow. Draft some key DD questions based on your assessment of these documents.",
-      timestamp: new Date(),
-    },
-  ]);
-
+const AppContent: React.FC = () => {
+  const [activeConversation, setActiveConversation] =
+    useState<Conversation | null>(null);
   const [isTyping, setIsTyping] = useState(false);
+
+  const { data: conversations = [], isLoading } = useConversations();
+  const createConversationMutation = useCreateConversation();
+  const sendMessageMutation = useSendMessage();
 
   const [tableData, setTableData] = useState<TableRow[]>([
     {
@@ -96,61 +65,66 @@ const App: React.FC = () => {
     },
   ]);
 
-  const handleMatrixSelect = (matrix: Matrix) => {
-    setActiveMatrix(matrix);
+  const handleConversationSelect = (conversation: Conversation) => {
+    setActiveConversation(conversation);
   };
 
-  const handleNewMatrix = () => {
-    const newMatrix: Matrix = {
-      id: Date.now().toString(),
-      name: "New Matrix",
-      lastEdited: new Date(),
-      active: true,
-    };
-    setActiveMatrix(newMatrix);
+  const handleNewConversation = () => {
+    const title = `New Conversation ${new Date().toLocaleDateString()}`;
+    createConversationMutation.mutate(
+      { title },
+      {
+        onSuccess: (newConversation) => {
+          setActiveConversation(newConversation);
+        },
+      }
+    );
   };
 
-  // Keyboard shortcuts
-  useKeyboardShortcuts([
-    {
-      key: "n",
-      metaKey: true, // Cmd+N on Mac
-      ctrlKey: true, // Ctrl+N on Windows/Linux
-      callback: () => handleNewMatrix(),
-    },
-    {
-      key: "k",
-      metaKey: true, // Cmd+K on Mac
-      ctrlKey: true, // Ctrl+K on Windows/Linux
-      callback: () => {
-        // Focus search input - we'll implement this later
-        console.log("Focus search");
-      },
-    },
-  ]);
+  const handleSendMessage = async (content: string) => {
+    if (!activeConversation) return;
 
-  const handleSendMessage = (content: string) => {
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      type: "user",
-      content,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, newMessage]);
     setIsTyping(true);
 
-    // Simulate agent response after a short delay
-    setTimeout(() => {
-      const agentResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        type: "agent",
-        content: getAgentResponse(content),
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, agentResponse]);
+    try {
+      // Send user message
+      await sendMessageMutation.mutateAsync({
+        conversationId: parseInt(activeConversation.id),
+        type: "user",
+        content,
+      });
+
+      // Simulate agent response after a short delay
+      setTimeout(async () => {
+        try {
+          const agentResponse = generateAgentResponse();
+          await sendMessageMutation.mutateAsync({
+            conversationId: parseInt(activeConversation.id),
+            type: "agent",
+            content: agentResponse,
+          });
+        } catch (error) {
+          console.error("Error sending agent message:", error);
+        } finally {
+          setIsTyping(false);
+        }
+      }, 2000);
+    } catch (error) {
+      console.error("Error sending user message:", error);
       setIsTyping(false);
-    }, 2000);
+    }
+  };
+
+  const generateAgentResponse = (): string => {
+    // Simple response generation - in a real app, this would call an AI service
+    const responses = [
+      "Based on the documents provided, I can help you analyze the key considerations. Let me break this down for you...",
+      "That's an excellent question. Looking at the financial data and market analysis, here are my thoughts...",
+      "I've reviewed the relevant documents and identified several important factors to consider...",
+      "From my analysis of the portfolio data, I can provide insights on the following areas...",
+    ];
+
+    return responses[Math.floor(Math.random() * responses.length)];
   };
 
   const handleAddRow = () => {
@@ -175,17 +149,31 @@ const App: React.FC = () => {
     );
   };
 
+  if (isLoading) {
+    return (
+      <Box
+        minH="100vh"
+        bg="gray.50"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        Loading conversations...
+      </Box>
+    );
+  }
+
   return (
     <Box minH="100vh" bg="gray.50">
       <Flex h="100vh">
         <Sidebar
-          matrices={matrices}
-          onSelectMatrix={handleMatrixSelect}
-          onNewMatrix={handleNewMatrix}
+          conversations={conversations}
+          onSelectConversation={handleConversationSelect}
+          onNewConversation={handleNewConversation}
+          activeConversation={activeConversation}
         />
         <MainContent
-          activeMatrix={activeMatrix}
-          messages={messages}
+          activeConversation={activeConversation}
           tableData={tableData}
           onSendMessage={handleSendMessage}
           onAddRow={handleAddRow}
@@ -194,6 +182,15 @@ const App: React.FC = () => {
         />
       </Flex>
     </Box>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppContent />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 
