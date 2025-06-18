@@ -10,21 +10,23 @@ import {
 } from "@chakra-ui/react";
 import { LuSearch, LuMessageSquare } from "react-icons/lu";
 import { FaRegEdit } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import { useConversations } from "../hooks/useChat";
 import type { Conversation } from "../types/chat";
 
-interface SidebarProps {
-  conversations: Conversation[];
-  onSelectConversation: (conversation: Conversation) => void;
-  onNewConversation: () => void;
-  activeConversation: Conversation | null;
-}
+const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
+  const { conversationId } = useParams<{ conversationId: string }>();
+  const { data: conversations = [] } = useConversations();
 
-const Sidebar: React.FC<SidebarProps> = ({
-  conversations,
-  onSelectConversation,
-  onNewConversation,
-  activeConversation,
-}) => {
+  const handleSelectConversation = (conversation: Conversation) => {
+    navigate(`/conversations/${conversation.id}`);
+  };
+
+  const handleNewConversation = () => {
+    navigate("/");
+  };
+
   const formatRelativeTime = (date: Date) => {
     const now = new Date();
     const diffInHours = Math.floor(
@@ -60,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <Icon
             size="md"
             colorScheme="blue"
-            onClick={onNewConversation}
+            onClick={handleNewConversation}
             cursor="pointer"
           >
             <FaRegEdit />
@@ -100,6 +102,35 @@ const Sidebar: React.FC<SidebarProps> = ({
             Recent Conversations
           </Text>
           <VStack gap={1} align="stretch">
+            {/* New Conversation Item */}
+            <Box
+              p={3}
+              borderRadius="md"
+              cursor="pointer"
+              bg={!conversationId ? "blue.50" : "transparent"}
+              borderLeft={
+                !conversationId ? "3px solid" : "3px solid transparent"
+              }
+              borderLeftColor={!conversationId ? "blue.500" : "transparent"}
+              _hover={{
+                bg: !conversationId ? "blue.50" : "gray.50",
+              }}
+              onClick={handleNewConversation}
+              transition="all 0.2s"
+            >
+              <Text
+                fontSize="sm"
+                fontWeight={!conversationId ? "semibold" : "medium"}
+                color={!conversationId ? "blue.700" : "gray.800"}
+                mb={1}
+              >
+                + New Conversation
+              </Text>
+              <Text fontSize="xs" color="gray.500">
+                Start a new chat
+              </Text>
+            </Box>
+
             {conversations.length === 0 ? (
               <Box p={4} textAlign="center" color="gray.500" fontSize="sm">
                 No conversations yet. Start a new chat!
@@ -112,38 +143,34 @@ const Sidebar: React.FC<SidebarProps> = ({
                   borderRadius="md"
                   cursor="pointer"
                   bg={
-                    activeConversation?.id === conversation.id
+                    conversationId == conversation.id
                       ? "blue.50"
                       : "transparent"
                   }
                   borderLeft={
-                    activeConversation?.id === conversation.id
+                    conversationId == conversation.id
                       ? "3px solid"
                       : "3px solid transparent"
                   }
                   borderLeftColor={
-                    activeConversation?.id === conversation.id
+                    conversationId == conversation.id
                       ? "blue.500"
                       : "transparent"
                   }
                   _hover={{
                     bg:
-                      activeConversation?.id === conversation.id
-                        ? "blue.50"
-                        : "gray.50",
+                      conversationId == conversation.id ? "blue.50" : "gray.50",
                   }}
-                  onClick={() => onSelectConversation(conversation)}
+                  onClick={() => handleSelectConversation(conversation)}
                   transition="all 0.2s"
                 >
                   <Text
                     fontSize="sm"
                     fontWeight={
-                      activeConversation?.id === conversation.id
-                        ? "semibold"
-                        : "medium"
+                      conversationId == conversation.id ? "semibold" : "medium"
                     }
                     color={
-                      activeConversation?.id === conversation.id
+                      conversationId == conversation.id
                         ? "blue.700"
                         : "gray.800"
                     }

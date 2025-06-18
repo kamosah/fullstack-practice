@@ -1,12 +1,12 @@
-import { 
-  Box, 
-  Flex, 
-  Text, 
-  Input, 
-  VStack, 
+import {
+  Box,
+  Flex,
+  Text,
+  Input,
+  VStack,
   HStack,
   IconButton,
-  Heading
+  Heading,
 } from "@chakra-ui/react";
 import { useState, useRef, useEffect } from "react";
 import { LuSend, LuBot } from "react-icons/lu";
@@ -63,7 +63,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           <MatrixStatus />
         </Flex>
       </Box>
-
       {/* Messages Area */}
       <Box
         flex={1}
@@ -223,7 +222,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           <div ref={messagesEndRef} />
         </VStack>
       </Box>
-
       {/* Input Area */}
       <Box
         p={4}
@@ -237,7 +235,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder={
                 isDisabled
                   ? "Select a conversation to start chatting..."

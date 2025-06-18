@@ -1,4 +1,5 @@
 import { Text, HStack, Icon, Badge } from "@chakra-ui/react";
+import { onlineManager } from "@tanstack/react-query";
 import { LuWifi } from "react-icons/lu";
 
 interface MatrixStatusProps {
@@ -6,26 +7,25 @@ interface MatrixStatusProps {
   documentsCount?: number;
 }
 
-const MatrixStatus: React.FC<MatrixStatusProps> = ({
-  isActive = true,
-  documentsCount = 0,
-}) => {
+const MatrixStatus: React.FC<MatrixStatusProps> = ({ documentsCount = 0 }) => {
+  const isOnline = onlineManager.isOnline();
+
   return (
     <HStack gap={2} p={2} bg="gray.50" borderRadius="md">
       <Icon
         as={LuWifi}
         boxSize={4}
-        color={isActive ? "green.500" : "gray.400"}
+        color={isOnline ? "green.500" : "gray.400"}
       />
       <Text fontSize="xs" color="gray.600">
         Matrix Agent
       </Text>
       <Badge
         size="sm"
-        colorScheme={isActive ? "green" : "gray"}
+        colorScheme={isOnline ? "green" : "gray"}
         variant="subtle"
       >
-        {isActive ? "Online" : "Offline"}
+        {isOnline ? "Online" : "Offline"}
       </Badge>
       {documentsCount > 0 && (
         <Badge size="sm" colorScheme="blue" variant="subtle">
