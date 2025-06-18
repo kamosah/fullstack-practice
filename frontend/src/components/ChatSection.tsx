@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useState, useRef, useEffect } from "react";
 import { LuSend, LuBot } from "react-icons/lu";
+import MarkdownRenderer from "./MarkdownRenderer";
 import MatrixStatus from "./MatrixStatus";
 import type { Message } from "../types/chat";
 
@@ -159,9 +160,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     message.type === "agent" ? "sm" : "lg"
                   }
                 >
-                  <Text fontSize="sm" lineHeight="1.5" whiteSpace="pre-line">
-                    {message.content}
-                  </Text>
+                  {message.type === "agent" ? (
+                    <MarkdownRenderer
+                      markdown={message.content}
+                    />
+                  ) : (
+                    <Text fontSize="sm" lineHeight="1.5" whiteSpace="pre-line">
+                      {message.content}
+                    </Text>
+                  )}
                 </Box>
               </Flex>
             ))

@@ -53,7 +53,13 @@ const Sidebar: React.FC = () => {
       {/* Header */}
       <Box p={6} borderBottom="1px" borderColor="gray.100">
         <Flex align="center" justify="space-between" mb={4}>
-          <HStack gap={2}>
+          <HStack
+            gap={2}
+            as="a"
+            onClick={() => navigate("/")}
+            cursor="pointer"
+            _hover={{ opacity: 0.8 }}
+          >
             <Icon as={LuMessageSquare} boxSize={6} color="blue.500" />
             <Heading size="lg" color="gray.800">
               Hebbia
