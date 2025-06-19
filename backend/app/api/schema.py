@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import List, Optional
 
 import strawberry
@@ -8,6 +9,13 @@ from sqlalchemy.orm import selectinload
 from app.core.database import AsyncSessionLocal
 from app.models.chat import Conversation, Message
 from app.services.llm_service import llm_service
+
+
+# Define a GraphQL enum for message types
+@strawberry.enum
+class MessageTypeGQL(Enum):
+    USER = "user"
+    AGENT = "agent"
 
 
 @strawberry.type
@@ -24,7 +32,7 @@ class AttachmentGQL:
 class MessageGQL:
     id: int
     conversation_id: int
-    type: str
+    type: str  # We keep this as str for backward compatibility, but we'll validate it's a MessageTypeGQL value
     content: str
     attachments: Optional[List[AttachmentGQL]] = None
     created_at: datetime = strawberry.field(name="createdAt")
@@ -42,7 +50,7 @@ class ConversationGQL:
 @strawberry.input
 class MessageInput:
     conversation_id: int
-    type: str
+    type: MessageTypeGQL  # Use the enum type here
     content: str
     attachments: Optional[List[strawberry.scalars.JSON]] = None
 

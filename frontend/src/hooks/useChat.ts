@@ -7,6 +7,7 @@ import {
   CREATE_CONVERSATION_WITH_MESSAGE,
   SEND_MESSAGE,
 } from "../graphql/queries";
+import { MessageType } from "../types/chat";
 import type {
   Conversation,
   ConversationInput,
@@ -15,6 +16,7 @@ import type {
   Attachment,
 } from "../types/chat";
 
+// GraphQL response interfaces
 interface GraphQLConversation {
   id: string;
   title: string;
@@ -32,47 +34,57 @@ interface GraphQLMessage {
   createdAt: string;
 }
 
+// Helper functions to format data consistently
+const formatMessage = (msg: GraphQLMessage): Message => ({
+  ...msg,
+  type: msg.type === "user" ? MessageType.USER : MessageType.AGENT,
+  createdAt: new Date(msg.createdAt),
+});
+
+const formatConversation = (conv: GraphQLConversation): Conversation => ({
+  ...conv,
+  createdAt: new Date(conv.createdAt),
+  updatedAt: new Date(conv.updatedAt),
+  messages: conv.messages.map(formatMessage),
+});
+
 export const useConversations = () => {
+  const queryClient = useQueryClient();
+
   return useQuery({
     queryKey: ["conversations"],
     queryFn: async (): Promise<Conversation[]> => {
       const data = (await graphqlClient.request(GET_CONVERSATIONS)) as {
         getConversations: GraphQLConversation[];
       };
-      return data.getConversations.map((conv: GraphQLConversation) => ({
-        ...conv,
-        createdAt: new Date(conv.createdAt),
-        updatedAt: new Date(conv.updatedAt),
-        messages: conv.messages.map((msg: GraphQLMessage) => ({
-          ...msg,
-          type: msg.type as "user" | "agent",
-          createdAt: new Date(msg.createdAt),
-        })),
-      }));
+
+      const conversations = data.getConversations.map((conv) => {
+        const conversation = formatConversation(conv);
+
+        // Cache each individual conversation by its ID
+        queryClient.setQueryData(
+          ["conversations", parseInt(conv.id)],
+          conversation
+        );
+
+        return conversation;
+      });
+
+      return conversations;
     },
   });
 };
 
 export const useConversation = (id: number) => {
   return useQuery({
-    queryKey: ["conversation", id],
+    queryKey: ["conversations", id],
     queryFn: async (): Promise<Conversation | null> => {
       const data = (await graphqlClient.request(GET_CONVERSATION, { id })) as {
         getConversation: GraphQLConversation | null;
       };
       if (!data.getConversation) return null;
 
-      const conv = data.getConversation;
-      return {
-        ...conv,
-        createdAt: new Date(conv.createdAt),
-        updatedAt: new Date(conv.updatedAt),
-        messages: conv.messages.map((msg: GraphQLMessage) => ({
-          ...msg,
-          type: msg.type as "user" | "agent",
-          createdAt: new Date(msg.createdAt),
-        })),
-      };
+      return formatConversation(data.getConversation);
     },
     enabled: !!id,
   });
@@ -87,24 +99,15 @@ export const useCreateConversation = () => {
       const data = (await graphqlClient.request(CREATE_CONVERSATION, {
         input,
       })) as { createConversation: GraphQLConversation };
-      const conv = data.createConversation;
-      return {
-        ...conv,
-        createdAt: new Date(conv.createdAt),
-        updatedAt: new Date(conv.updatedAt),
-        messages: conv.messages.map((msg: GraphQLMessage) => ({
-          ...msg,
-          type: msg.type as "user" | "agent",
-          createdAt: new Date(msg.createdAt),
-        })),
-      };
+
+      return formatConversation(data.createConversation);
     },
     onSuccess: (newConversation) => {
       // Invalidate conversations list to show the new conversation
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
       // Invalidate the specific conversation in case it's being viewed
       queryClient.invalidateQueries({
-        queryKey: ["conversation", newConversation.id],
+        queryKey: ["conversations", newConversation.id],
       });
     },
   });
@@ -126,24 +129,15 @@ export const useCreateConversationWithMessage = () => {
           firstMessage: input.firstMessage,
         }
       )) as { createConversationWithMessage: GraphQLConversation };
-      const conv = data.createConversationWithMessage;
-      return {
-        ...conv,
-        createdAt: new Date(conv.createdAt),
-        updatedAt: new Date(conv.updatedAt),
-        messages: conv.messages.map((msg: GraphQLMessage) => ({
-          ...msg,
-          type: msg.type as "user" | "agent",
-          createdAt: new Date(msg.createdAt),
-        })),
-      };
+
+      return formatConversation(data.createConversationWithMessage);
     },
     onSuccess: (newConversation) => {
       // Invalidate conversations list to show the new conversation
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
       // Invalidate the specific conversation in case it's being viewed
       queryClient.invalidateQueries({
-        queryKey: ["conversation", newConversation.id],
+        queryKey: ["conversations", newConversation.id],
       });
     },
   });
@@ -158,19 +152,27 @@ export const useSendMessage = () => {
       const data = (await graphqlClient.request(SEND_MESSAGE, { input })) as {
         sendMessage: GraphQLMessage;
       };
-      const msg = data.sendMessage;
-      return {
-        ...msg,
-        type: msg.type as "user" | "agent",
-        createdAt: new Date(msg.createdAt),
-      };
+
+      return formatMessage(data.sendMessage);
     },
-    onSuccess: (_, variables) => {
-      // Invalidate conversations list to update message counts/timestamps
+    onSuccess: (message, variables) => {
+      // First, optimistically update the UI with the new message
+      queryClient.setQueryData(
+        ["conversations", variables.conversationId],
+        (oldData: Conversation | undefined) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            updatedAt: new Date(),
+            messages: [...oldData.messages, message],
+          };
+        }
+      );
+
+      // Then invalidate both queries to trigger refetches
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
-      // Invalidate the specific conversation to show the new message
       queryClient.invalidateQueries({
-        queryKey: ["conversation", variables.conversationId],
+        queryKey: ["conversations", variables.conversationId],
       });
     },
   });

@@ -12,6 +12,7 @@ import { useState, useRef, useEffect } from "react";
 import { LuSend, LuBot } from "react-icons/lu";
 import MarkdownRenderer from "./MarkdownRenderer";
 import MatrixStatus from "./MatrixStatus";
+import { MessageType } from "../types/chat";
 import type { Message } from "../types/chat";
 
 interface ChatSectionProps {
@@ -126,7 +127,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             messages.map((message) => (
               <Flex
                 key={message.id}
-                direction={message.type === "user" ? "row-reverse" : "row"}
+                direction={
+                  message.type === MessageType.USER ? "row-reverse" : "row"
+                }
                 align="start"
                 gap={3}
                 className="message-enter"
@@ -135,7 +138,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                   w={8}
                   h={8}
                   borderRadius="full"
-                  bg={message.type === "user" ? "gray.300" : "blue.500"}
+                  bg={
+                    message.type === MessageType.USER ? "gray.300" : "blue.500"
+                  }
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
@@ -144,26 +149,28 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                   fontWeight="medium"
                   flexShrink={0}
                 >
-                  {message.type === "user" ? "U" : <LuBot />}
+                  {message.type === MessageType.USER ? "U" : <LuBot />}
                 </Box>
                 <Box
                   maxW="70%"
-                  bg={message.type === "user" ? "blue.500" : "gray.100"}
-                  color={message.type === "user" ? "white" : "gray.800"}
+                  bg={
+                    message.type === MessageType.USER ? "blue.500" : "gray.100"
+                  }
+                  color={
+                    message.type === MessageType.USER ? "white" : "gray.800"
+                  }
                   px={4}
                   py={3}
                   borderRadius="lg"
                   borderBottomRightRadius={
-                    message.type === "user" ? "sm" : "lg"
+                    message.type === MessageType.USER ? "sm" : "lg"
                   }
                   borderBottomLeftRadius={
-                    message.type === "agent" ? "sm" : "lg"
+                    message.type === MessageType.AGENT ? "sm" : "lg"
                   }
                 >
-                  {message.type === "agent" ? (
-                    <MarkdownRenderer
-                      markdown={message.content}
-                    />
+                  {message.type === MessageType.AGENT ? (
+                    <MarkdownRenderer markdown={message.content} />
                   ) : (
                     <Text fontSize="sm" lineHeight="1.5" whiteSpace="pre-line">
                       {message.content}

@@ -68,7 +68,7 @@ const Sidebar: React.FC = () => {
           <Icon
             size="md"
             colorScheme="blue"
-            onClick={handleNewConversation}
+            onClick={() => navigate("/")}
             cursor="pointer"
           >
             <FaRegEdit />
@@ -108,35 +108,6 @@ const Sidebar: React.FC = () => {
             Recent Conversations
           </Text>
           <VStack gap={1} align="stretch">
-            {/* New Conversation Item */}
-            <Box
-              p={3}
-              borderRadius="md"
-              cursor="pointer"
-              bg={!conversationId ? "blue.50" : "transparent"}
-              borderLeft={
-                !conversationId ? "3px solid" : "3px solid transparent"
-              }
-              borderLeftColor={!conversationId ? "blue.500" : "transparent"}
-              _hover={{
-                bg: !conversationId ? "blue.50" : "gray.50",
-              }}
-              onClick={handleNewConversation}
-              transition="all 0.2s"
-            >
-              <Text
-                fontSize="sm"
-                fontWeight={!conversationId ? "semibold" : "medium"}
-                color={!conversationId ? "blue.700" : "gray.800"}
-                mb={1}
-              >
-                + New Conversation
-              </Text>
-              <Text fontSize="xs" color="gray.500">
-                Start a new chat
-              </Text>
-            </Box>
-
             {conversations.length === 0 ? (
               <Box p={4} textAlign="center" color="gray.500" fontSize="sm">
                 No conversations yet. Start a new chat!

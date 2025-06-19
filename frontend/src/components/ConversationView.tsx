@@ -3,10 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import MainContent from "./MainContent";
 import { useState } from "react";
 import {
-  useConversations,
+  useConversation,
   useCreateConversationWithMessage,
   useSendMessage,
 } from "../hooks/useChat";
+import { MessageType } from "../types/chat";
 
 interface TableRow {
   id: string;
@@ -22,15 +23,16 @@ const ConversationView: React.FC = () => {
   const navigate = useNavigate();
   const [isTyping, setIsTyping] = useState(false);
 
-  const { data: conversations = [] } = useConversations();
+  // Use the useConversation hook to directly fetch the active conversation
+  const { data: activeConversation, isLoading } = useConversation(
+    conversationId ? parseInt(conversationId) : 0
+  );
+
+  console.log("ConversationView.Active Conversation:", activeConversation);
+
   const createConversationWithMessageMutation =
     useCreateConversationWithMessage();
   const sendMessageMutation = useSendMessage();
-
-  // Find the active conversation based on the URL parameter
-  const activeConversation = conversationId
-    ? conversations.find((conv) => conv.id == conversationId) || null
-    : null;
 
   const [tableData, setTableData] = useState<TableRow[]>([
     {
@@ -84,7 +86,7 @@ const ConversationView: React.FC = () => {
       setIsTyping(true);
       await sendMessageMutation.mutateAsync({
         conversationId: parseInt(activeConversation.id),
-        type: "user",
+        type: MessageType.USER,
         content: message,
       });
     } catch (error) {
@@ -119,12 +121,13 @@ const ConversationView: React.FC = () => {
   return (
     <Box flex={1}>
       <MainContent
-        activeConversation={activeConversation}
+        activeConversation={activeConversation || null}
         tableData={tableData}
         onSendMessage={handleSendMessage}
         onAddRow={handleAddRow}
         onUpdateRow={handleUpdateRow}
         isTyping={isTyping}
+        isLoading={isLoading}
       />
     </Box>
   );

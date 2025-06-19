@@ -1,3 +1,12 @@
+// Define as a const object
+export const MessageType = {
+  USER: "user",
+  AGENT: "agent",
+} as const;
+
+// Create a type from the values of the MessageType object
+export type MessageTypeValue = (typeof MessageType)[keyof typeof MessageType];
+
 export interface Attachment {
   type: "text" | "image" | "file" | "document";
   name: string;
@@ -10,7 +19,7 @@ export interface Attachment {
 export interface Message {
   id: string;
   conversationId: string;
-  type: "user" | "agent";
+  type: MessageTypeValue;
   content: string;
   attachments?: Attachment[];
   createdAt: Date;
@@ -30,7 +39,7 @@ export interface ConversationInput {
 
 export interface MessageInput {
   conversationId: number;
-  type: string;
+  type: MessageTypeValue;
   content: string;
   attachments?: Record<string, unknown>[];
 }

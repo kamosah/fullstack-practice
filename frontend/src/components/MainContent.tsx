@@ -22,6 +22,7 @@ interface MainContentProps {
   onAddRow: () => void;
   onUpdateRow: (id: string, field: keyof TableRow, value: string) => void;
   isTyping?: boolean;
+  isLoading?: boolean;
 }
 
 const MainContent: React.FC<MainContentProps> = ({
@@ -31,6 +32,7 @@ const MainContent: React.FC<MainContentProps> = ({
   onAddRow,
   onUpdateRow,
   isTyping = false,
+  isLoading = false,
 }) => {
   return (
     <Box
@@ -41,10 +43,6 @@ const MainContent: React.FC<MainContentProps> = ({
       height="100vh"
       overflow="hidden"
     >
-      {/* Header */}
-
-      <Header activeConversation={activeConversation} />
-
       {/* Resizable Content */}
       <Box flex={1} position="relative" overflow="hidden" height="100%">
         <PanelGroup direction="vertical">
@@ -53,7 +51,7 @@ const MainContent: React.FC<MainContentProps> = ({
               messages={activeConversation ? activeConversation.messages : []}
               onSendMessage={onSendMessage}
               isTyping={isTyping}
-              isDisabled={false}
+              isDisabled={isLoading}
             />
           </Panel>
           <PanelResizeHandle />
@@ -66,50 +64,6 @@ const MainContent: React.FC<MainContentProps> = ({
           </Panel>
         </PanelGroup>
       </Box>
-    </Box>
-  );
-};
-
-const Header = ({
-  activeConversation,
-}: {
-  activeConversation: Conversation | null;
-}) => {
-  const formatLastSaved = (date: Date) => {
-    const now = new Date();
-    const diffInMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60)
-    );
-
-    if (diffInMinutes < 1) return "Saved just now";
-    if (diffInMinutes < 60) return `Saved ${diffInMinutes}m ago`;
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `Saved ${diffInHours}h ago`;
-    return `Saved ${Math.floor(diffInHours / 24)}d ago`;
-  };
-  return (
-    <Box p={6} borderBottom="1px" borderColor="gray.200" flexShrink={0}>
-      <Flex justify="space-between" align="center">
-        <Box>
-          <Heading size="lg" color="gray.800" mb={1}>
-            {activeConversation
-              ? activeConversation.title
-              : "Select a conversation"}
-          </Heading>
-          <Text fontSize="sm" color="gray.500">
-            {activeConversation
-              ? formatLastSaved(activeConversation.updatedAt)
-              : "Choose a conversation from the sidebar to get started"}
-          </Text>
-        </Box>
-        <HStack gap={3}>
-          <HelpTooltip />
-          <Avatar.Root size="sm">
-            {/* <Avatar.Image src="" /> */}
-            <Avatar.Fallback name="User" />
-          </Avatar.Root>
-        </HStack>
-      </Flex>
     </Box>
   );
 };
