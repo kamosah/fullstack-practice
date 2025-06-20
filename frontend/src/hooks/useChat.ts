@@ -15,6 +15,7 @@ import type {
   Message,
   Attachment,
 } from "../types/chat";
+import { queryKeys } from "../utils/queryKeys";
 
 // GraphQL response interfaces
 interface GraphQLConversation {
@@ -52,7 +53,7 @@ export const useConversations = () => {
   const queryClient = useQueryClient();
 
   return useQuery({
-    queryKey: ["conversations"],
+    queryKey: queryKeys.conversations.all,
     queryFn: async (): Promise<Conversation[]> => {
       const data = (await graphqlClient.request(GET_CONVERSATIONS)) as {
         getConversations: GraphQLConversation[];
@@ -63,7 +64,7 @@ export const useConversations = () => {
 
         // Cache each individual conversation by its ID
         queryClient.setQueryData(
-          ["conversations", parseInt(conv.id)],
+          queryKeys.conversations.detail(parseInt(conv.id)),
           conversation
         );
 
@@ -77,7 +78,7 @@ export const useConversations = () => {
 
 export const useConversation = (id: number) => {
   return useQuery({
-    queryKey: ["conversations", id],
+    queryKey: queryKeys.conversations.detail(id),
     queryFn: async (): Promise<Conversation | null> => {
       const data = (await graphqlClient.request(GET_CONVERSATION, { id })) as {
         getConversation: GraphQLConversation | null;
@@ -94,7 +95,7 @@ export const useCreateConversation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["createConversation"],
+    mutationKey: queryKeys.mutations.createConversation,
     mutationFn: async (input: ConversationInput): Promise<Conversation> => {
       const data = (await graphqlClient.request(CREATE_CONVERSATION, {
         input,
@@ -104,10 +105,10 @@ export const useCreateConversation = () => {
     },
     onSuccess: (newConversation) => {
       // Invalidate conversations list to show the new conversation
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
       // Invalidate the specific conversation in case it's being viewed
       queryClient.invalidateQueries({
-        queryKey: ["conversations", newConversation.id],
+        queryKey: queryKeys.conversations.detail(parseInt(newConversation.id)),
       });
     },
   });
@@ -117,7 +118,7 @@ export const useCreateConversationWithMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["createConversationWithMessage"],
+    mutationKey: queryKeys.mutations.createConversationWithMessage,
     mutationFn: async (input: {
       title?: string;
       firstMessage: string;
@@ -134,10 +135,10 @@ export const useCreateConversationWithMessage = () => {
     },
     onSuccess: (newConversation) => {
       // Invalidate conversations list to show the new conversation
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
       // Invalidate the specific conversation in case it's being viewed
       queryClient.invalidateQueries({
-        queryKey: ["conversations", newConversation.id],
+        queryKey: queryKeys.conversations.detail(parseInt(newConversation.id)),
       });
     },
   });
@@ -147,7 +148,7 @@ export const useSendMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["sendMessage"],
+    mutationKey: queryKeys.mutations.sendMessage,
     mutationFn: async (input: MessageInput): Promise<Message> => {
       const data = (await graphqlClient.request(SEND_MESSAGE, { input })) as {
         sendMessage: GraphQLMessage;
@@ -158,7 +159,7 @@ export const useSendMessage = () => {
     onSuccess: (message, variables) => {
       // First, optimistically update the UI with the new message
       queryClient.setQueryData(
-        ["conversations", variables.conversationId],
+        queryKeys.conversations.detail(variables.conversationId),
         (oldData: Conversation | undefined) => {
           if (!oldData) return oldData;
           return {
@@ -170,9 +171,9 @@ export const useSendMessage = () => {
       );
 
       // Then invalidate both queries to trigger refetches
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
       queryClient.invalidateQueries({
-        queryKey: ["conversations", variables.conversationId],
+        queryKey: queryKeys.conversations.detail(variables.conversationId),
       });
     },
   });
