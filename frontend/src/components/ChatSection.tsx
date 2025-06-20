@@ -253,7 +253,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
               placeholder={
                 isDisabled
                   ? "Select a conversation to start chatting..."
-                  : "Type your message..."
+                  : "Ask Anything..."
               }
               bg="gray.50"
               border="1px"

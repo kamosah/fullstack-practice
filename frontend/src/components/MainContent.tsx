@@ -1,8 +1,7 @@
-import { Box, Flex, Heading, Text, Avatar, HStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box } from "@chakra-ui/react";
 import ChatSection from "./ChatSection";
 import TableSection from "./TableSection";
-import HelpTooltip from "./HelpTooltip";
+import DragResizeHandle from "./DragResizeHandle";
 import type { Conversation } from "../types/chat";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 
@@ -43,27 +42,26 @@ const MainContent: React.FC<MainContentProps> = ({
       height="100vh"
       overflow="hidden"
     >
-      {/* Resizable Content */}
-      <Box flex={1} position="relative" overflow="hidden" height="100%">
-        <PanelGroup direction="vertical">
-          <Panel defaultSize={50} minSize={20} maxSize={80}>
-            <ChatSection
-              messages={activeConversation ? activeConversation.messages : []}
-              onSendMessage={onSendMessage}
-              isTyping={isTyping}
-              isDisabled={isLoading}
-            />
-          </Panel>
-          <PanelResizeHandle />
-          <Panel defaultSize={50} minSize={20} maxSize={80}>
-            <TableSection
-              data={tableData}
-              onAddRow={onAddRow}
-              onUpdateRow={onUpdateRow}
-            />
-          </Panel>
-        </PanelGroup>
-      </Box>
+      <PanelGroup direction="vertical">
+        <Panel defaultSize={50} minSize={20} maxSize={80}>
+          <ChatSection
+            messages={activeConversation ? activeConversation.messages : []}
+            onSendMessage={onSendMessage}
+            isTyping={isTyping}
+            isDisabled={isLoading}
+          />
+        </Panel>
+        <PanelResizeHandle>
+          <DragResizeHandle />
+        </PanelResizeHandle>
+        <Panel defaultSize={50} minSize={20} maxSize={80}>
+          <TableSection
+            data={tableData}
+            onAddRow={onAddRow}
+            onUpdateRow={onUpdateRow}
+          />
+        </Panel>
+      </PanelGroup>
     </Box>
   );
 };
