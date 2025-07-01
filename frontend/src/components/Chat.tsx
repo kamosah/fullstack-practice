@@ -7,9 +7,12 @@ import {
   HStack,
   IconButton,
   Heading,
+  InputGroup,
 } from "@chakra-ui/react";
 import { useState, useRef, useEffect } from "react";
 import { LuSend, LuBot } from "react-icons/lu";
+import { AiOutlineUpload } from "react-icons/ai";
+import { PiArrowElbowRightUp } from "react-icons/pi";
 import MarkdownRenderer from "./MarkdownRenderer";
 import MatrixStatus from "./MatrixStatus";
 import { MessageType } from "../types/chat";
@@ -127,9 +130,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             messages.map((message) => (
               <Flex
                 key={message.id}
-                direction={
-                  message.type === MessageType.USER ? "row-reverse" : "row"
-                }
                 align="start"
                 gap={3}
                 className="message-enter"
@@ -246,30 +246,35 @@ const ChatSection: React.FC<ChatSectionProps> = ({
       >
         <form onSubmit={handleSubmit}>
           <Flex gap={2} align="end">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyPress}
-              placeholder={
-                isDisabled
-                  ? "Select a conversation to start chatting..."
-                  : "Ask Anything..."
-              }
-              bg="gray.50"
-              border="1px"
-              borderColor="gray.200"
-              _hover={{ borderColor: isDisabled ? "gray.200" : "gray.300" }}
-              _focus={{
-                borderColor: isDisabled ? "gray.200" : "blue.500",
-                boxShadow: isDisabled
-                  ? "none"
-                  : "0 0 0 1px var(--chakra-colors-blue-500)",
-              }}
-              resize="vertical"
-              minH="40px"
-              maxH="120px"
-              disabled={isDisabled}
-            />
+            <InputGroup
+              startElement={<AiOutlineUpload />}
+              endElement={<PiArrowElbowRightUp onClick={handleSubmit} />}
+            >
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder={
+                  isDisabled
+                    ? "Select a conversation to start chatting..."
+                    : "Ask Anything..."
+                }
+                bg="gray.50"
+                border="1px"
+                borderColor="gray.200"
+                _hover={{ borderColor: isDisabled ? "gray.200" : "gray.300" }}
+                _focus={{
+                  borderColor: isDisabled ? "gray.200" : "blue.500",
+                  boxShadow: isDisabled
+                    ? "none"
+                    : "0 0 0 1px var(--chakra-colors-blue-500)",
+                }}
+                resize="vertical"
+                minH="40px"
+                maxH="120px"
+                disabled={isDisabled}
+              />
+            </InputGroup>
             <IconButton
               type="submit"
               aria-label="Send message"

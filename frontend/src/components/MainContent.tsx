@@ -1,10 +1,21 @@
 import { Box } from "@chakra-ui/react";
-import ChatSection from "./ChatSection";
-import TableSection from "./TableSection";
+import Chat from "./Chat";
+import Matrix from "./Matrix";
 import DragResizeHandle from "./DragResizeHandle";
-import type { Conversation } from "../types/chat";
+import { MessageType } from "../types/chat";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
-import ErrorBoundary from "./ErrorBoundary";
+import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import {
+  useConversation,
+  useCreateConversationWithMessage,
+  useSendMessage,
+} from "../hooks/useChat";
+import {
+  TABLE_ROWS,
+  TABLE_COLUMNS,
+  type TableColumn,
+} from "../utils/mock/tableData";
 
 interface TableRow {
   id: string;
@@ -15,25 +26,83 @@ interface TableRow {
   marketConsiderations: string;
 }
 
-interface MainContentProps {
-  activeConversation: Conversation | null;
-  tableData: TableRow[];
-  onSendMessage: (content: string) => void;
-  onAddRow: () => void;
-  onUpdateRow: (id: string, field: keyof TableRow, value: string) => void;
-  isTyping?: boolean;
-  isLoading?: boolean;
-}
+const MainContent: React.FC = () => {
+  const { conversationId } = useParams<{ conversationId: string }>();
+  const navigate = useNavigate();
+  const [isTyping, setIsTyping] = useState(false);
 
-const MainContent: React.FC<MainContentProps> = ({
-  activeConversation,
-  tableData,
-  onSendMessage,
-  onAddRow,
-  onUpdateRow,
-  isTyping = false,
-  isLoading = false,
-}) => {
+  const { data: activeConversation, isLoading } = useConversation(
+    conversationId ? parseInt(conversationId) : 0
+  );
+
+  const createConversationWithMessageMutation =
+    useCreateConversationWithMessage();
+  const sendMessageMutation = useSendMessage();
+
+  const [rows, setRows] = useState<TableRow[]>(
+    TABLE_ROWS.map((row) => ({
+      id: row.id,
+      document: row.document as string,
+      date: row.date as string,
+      documentType: row.documentType as string,
+      investmentRisks: row.investmentRisks as string,
+      marketConsiderations: row.marketConsiderations as string,
+    }))
+  );
+  const [tableColumns] = useState<TableColumn[]>(TABLE_COLUMNS);
+
+  const onSendMessage = async (message: string) => {
+    if (!activeConversation) {
+      // Create new conversation with message
+      try {
+        setIsTyping(true);
+        const newConversation =
+          await createConversationWithMessageMutation.mutateAsync({
+            title:
+              message.substring(0, 50) + (message.length > 50 ? "..." : ""),
+            firstMessage: message,
+          });
+        navigate(`/conversations/${newConversation.id}`);
+      } catch (error) {
+        console.error("Failed to create conversation:", error);
+      } finally {
+        setIsTyping(false);
+      }
+      return;
+    }
+
+    // Send message to existing conversation
+    try {
+      setIsTyping(true);
+      await sendMessageMutation.mutateAsync({
+        conversationId: parseInt(activeConversation.id),
+        type: MessageType.USER,
+        content: message,
+      });
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  const onAddRow = () => {
+    const newRow: TableRow = {
+      id: Date.now().toString(),
+      document: "",
+      date: new Date().toLocaleDateString(),
+      documentType: "",
+      investmentRisks: "",
+      marketConsiderations: "",
+    };
+    setRows((prev) => [...prev, newRow]);
+  };
+
+  const onUpdateRow = (id: string, field: string, value: string) => {
+    setRows((prev) =>
+      prev.map((row) => (row.id === id ? { ...row, [field]: value } : row))
+    );
+  };
   return (
     <Box
       flex={1}
@@ -45,23 +114,28 @@ const MainContent: React.FC<MainContentProps> = ({
     >
       <PanelGroup direction="vertical">
         <Panel defaultSize={50} minSize={20} maxSize={80}>
-          <ChatSection
-            messages={activeConversation ? activeConversation.messages : []}
+          <Chat
+            messages={activeConversation?.messages ?? []}
             onSendMessage={onSendMessage}
             isTyping={isTyping}
             isDisabled={isLoading}
           />
         </Panel>
-        <PanelResizeHandle>
-          <DragResizeHandle />
-        </PanelResizeHandle>
-        <Panel defaultSize={50} minSize={20} maxSize={80}>
-          <TableSection
-            data={tableData}
-            onAddRow={onAddRow}
-            onUpdateRow={onUpdateRow}
-          />
-        </Panel>
+        {rows?.length > 0 && (
+          <>
+            <PanelResizeHandle>
+              <DragResizeHandle />
+            </PanelResizeHandle>
+            <Panel defaultSize={50} minSize={20} maxSize={80}>
+              <Matrix
+                rows={rows.map((row) => ({ ...row }))}
+                columns={tableColumns}
+                onAddRow={onAddRow}
+                onUpdateRow={onUpdateRow}
+              />
+            </Panel>
+          </>
+        )}
       </PanelGroup>
     </Box>
   );
