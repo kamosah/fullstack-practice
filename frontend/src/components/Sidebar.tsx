@@ -8,10 +8,11 @@ import {
   HStack,
   Icon,
 } from "@chakra-ui/react";
-import { LuSearch, LuMessageSquare } from "react-icons/lu";
+import { LuSearch } from "react-icons/lu";
 import { FaRegEdit } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback } from "react";
+import { TbTableFilled } from "react-icons/tb";
 import { useConversations } from "../hooks/useChat";
 import type { Conversation } from "../types/chat";
 import SidebarItem from "./SidebarItem";
@@ -48,7 +49,7 @@ const Sidebar: React.FC = () => {
             cursor="pointer"
             _hover={{ opacity: 0.8 }}
           >
-            <Icon as={LuMessageSquare} boxSize={6} color="blue.500" />
+            <Icon as={TbTableFilled} boxSize={6} color="blue.500" />
             <Heading size="lg" color="gray.800">
               Hebbia
             </Heading>

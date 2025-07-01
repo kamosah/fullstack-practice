@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  Flex,
   Text,
   Input,
   HStack,
@@ -12,13 +10,9 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import {
-  LuPlus,
-  LuColumns2,
-  LuChevronDown,
-  LuGripVertical,
-} from "react-icons/lu";
+import { LuPlus, LuChevronDown, LuGripVertical } from "react-icons/lu";
 import type { TableColumn } from "../utils/mock/tableData";
+import Toolbar from "./Toolbar";
 
 interface TableRow {
   id: string;
@@ -101,38 +95,7 @@ const Table: React.FC<TableSectionProps> = ({
       overflow="hidden"
     >
       {/* Toolbar */}
-      <Box
-        p={4}
-        borderBottom="1px"
-        borderColor="gray.200"
-        bg="gray.50"
-        flexShrink={0}
-      >
-        <Flex justify="space-between" align="center">
-          <HStack gap={2}>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                /* Handle add document */
-              }}
-            >
-              <LuPlus />
-              Add documents
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                /* Handle add columns */
-              }}
-            >
-              <LuColumns2 />
-              Add columns
-            </Button>
-          </HStack>
-        </Flex>
-      </Box>
+      <Toolbar />
 
       {/* Table */}
       <Box

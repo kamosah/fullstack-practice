@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 import Chat from "./Chat";
 import Matrix from "./Matrix";
 import DragResizeHandle from "./DragResizeHandle";
@@ -106,7 +106,7 @@ const MainContent: React.FC = () => {
   return (
     <Box
       flex={1}
-      bg="white"
+      bg="gray.100"
       display="flex"
       flexDirection="column"
       height="100vh"
@@ -114,12 +114,18 @@ const MainContent: React.FC = () => {
     >
       <PanelGroup direction="vertical">
         <Panel defaultSize={50} minSize={20} maxSize={80}>
-          <Chat
-            messages={activeConversation?.messages ?? []}
-            onSendMessage={onSendMessage}
-            isTyping={isTyping}
-            isDisabled={isLoading}
-          />
+          <Grid py={10} templateColumns="repeat(12, 1fr)" height="100%">
+            <GridItem colSpan={2}></GridItem>
+            <GridItem p={4} colSpan={8}>
+              <Chat
+                messages={activeConversation?.messages ?? []}
+                onSendMessage={onSendMessage}
+                isTyping={isTyping}
+                isDisabled={isLoading}
+              />
+            </GridItem>
+            <GridItem colSpan={2}></GridItem>
+          </Grid>
         </Panel>
         {rows?.length > 0 && (
           <>
