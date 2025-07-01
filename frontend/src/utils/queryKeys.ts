@@ -7,20 +7,20 @@ export const queryKeys = {
   // Conversations
   conversations: {
     all: ["conversations"] as const,
-    lists: () => [...queryKeys.conversations.all, "list"] as const,
+    lists: () => [...queryKeys.conversations.all] as const,
     list: (filters?: Record<string, unknown>) =>
       [...queryKeys.conversations.lists(), { filters }] as const,
-    details: () => [...queryKeys.conversations.all, "detail"] as const,
+    details: () => [...queryKeys.conversations.all] as const,
     detail: (id: number) => [...queryKeys.conversations.details(), id] as const,
   },
 
   // Messages (if needed separately in the future)
   messages: {
     all: ["messages"] as const,
-    lists: () => [...queryKeys.messages.all, "list"] as const,
+    lists: () => [...queryKeys.messages.all] as const,
     list: (conversationId: number) =>
       [...queryKeys.messages.lists(), { conversationId }] as const,
-    details: () => [...queryKeys.messages.all, "detail"] as const,
+    details: () => [...queryKeys.messages.all] as const,
     detail: (id: number) => [...queryKeys.messages.details(), id] as const,
   },
 

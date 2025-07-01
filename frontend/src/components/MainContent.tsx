@@ -4,6 +4,7 @@ import TableSection from "./TableSection";
 import DragResizeHandle from "./DragResizeHandle";
 import type { Conversation } from "../types/chat";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
+import ErrorBoundary from "./ErrorBoundary";
 
 interface TableRow {
   id: string;

@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import Enum
 from typing import List, Optional
 
 import strawberry
@@ -9,13 +8,6 @@ from sqlalchemy.orm import selectinload
 from app.core.database import AsyncSessionLocal
 from app.models.chat import Conversation, Message
 from app.services.llm_service import llm_service
-
-
-# Define a GraphQL enum for message types
-@strawberry.enum
-class MessageTypeGQL(Enum):
-    USER = "user"
-    AGENT = "agent"
 
 
 @strawberry.type
@@ -50,7 +42,9 @@ class ConversationGQL:
 @strawberry.input
 class MessageInput:
     conversation_id: int
-    type: MessageTypeGQL  # Use the enum type here
+    type: str = strawberry.field(
+        description="Message type, must be either 'user' or 'agent'"
+    )
     content: str
     attachments: Optional[List[strawberry.scalars.JSON]] = None
 
@@ -291,6 +285,12 @@ class Mutation:
 
     @strawberry.mutation
     async def send_message(self, input: MessageInput) -> MessageGQL:
+        # Validate message type
+        if input.type not in ["user", "agent"]:
+            raise ValueError(
+                f"Invalid message type: {input.type}. Must be either 'user' or 'agent'"
+            )
+
         async with AsyncSessionLocal() as session:
             # Create user message
             message = Message(

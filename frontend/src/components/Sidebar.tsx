@@ -11,41 +11,29 @@ import {
 import { LuSearch, LuMessageSquare } from "react-icons/lu";
 import { FaRegEdit } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCallback } from "react";
 import { useConversations } from "../hooks/useChat";
 import type { Conversation } from "../types/chat";
+import SidebarItem from "./SidebarItem";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { conversationId } = useParams<{ conversationId: string }>();
   const { data: conversations = [] } = useConversations();
 
-  const handleSelectConversation = (conversation: Conversation) => {
-    navigate(`/conversations/${conversation.id}`);
-  };
-
-  const handleNewConversation = () => {
-    navigate("/");
-  };
-
-  const formatRelativeTime = (date: Date) => {
-    const now = new Date();
-    const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-    );
-
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays === 1) return "Yesterday";
-    return `${diffInDays} days ago`;
-  };
+  const handleSelectConversation = useCallback(
+    (conversation: Conversation) => {
+      navigate(`/conversations/${conversation.id}`);
+    },
+    [navigate]
+  );
 
   return (
     <Box
       w="320px"
       h="100vh"
       bg="white"
-      borderRight="1px"
+      borderRight="1px solid"
       borderColor="gray.200"
       display="flex"
       flexDirection="column"
@@ -114,55 +102,12 @@ const Sidebar: React.FC = () => {
               </Box>
             ) : (
               conversations.map((conversation) => (
-                <Box
+                <SidebarItem
                   key={conversation.id}
-                  p={3}
-                  borderRadius="md"
-                  cursor="pointer"
-                  bg={
-                    conversationId == conversation.id
-                      ? "blue.50"
-                      : "transparent"
-                  }
-                  borderLeft={
-                    conversationId == conversation.id
-                      ? "3px solid"
-                      : "3px solid transparent"
-                  }
-                  borderLeftColor={
-                    conversationId == conversation.id
-                      ? "blue.500"
-                      : "transparent"
-                  }
-                  _hover={{
-                    bg:
-                      conversationId == conversation.id ? "blue.50" : "gray.50",
-                  }}
-                  onClick={() => handleSelectConversation(conversation)}
-                  transition="all 0.2s"
-                >
-                  <Text
-                    fontSize="sm"
-                    fontWeight={
-                      conversationId == conversation.id ? "semibold" : "medium"
-                    }
-                    color={
-                      conversationId == conversation.id
-                        ? "blue.700"
-                        : "gray.800"
-                    }
-                    lineClamp={2}
-                    mb={1}
-                  >
-                    {conversation.title}
-                  </Text>
-                  <Text fontSize="xs" color="gray.500">
-                    {formatRelativeTime(conversation.updatedAt)}
-                    {conversation.messages.length > 0 && (
-                      <> • {conversation.messages.length} messages</>
-                    )}
-                  </Text>
-                </Box>
+                  conversation={conversation}
+                  isSelected={conversationId === conversation.id}
+                  onSelect={handleSelectConversation}
+                />
               ))
             )}
           </VStack>

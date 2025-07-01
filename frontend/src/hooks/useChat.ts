@@ -53,6 +53,7 @@ export const useConversations = () => {
   const queryClient = useQueryClient();
 
   return useQuery({
+    throwOnError: process.env.NODE_ENV === "development",
     queryKey: queryKeys.conversations.all,
     queryFn: async (): Promise<Conversation[]> => {
       const data = (await graphqlClient.request(GET_CONVERSATIONS)) as {
@@ -78,6 +79,7 @@ export const useConversations = () => {
 
 export const useConversation = (id: number) => {
   return useQuery({
+    throwOnError: process.env.NODE_ENV === "development",
     queryKey: queryKeys.conversations.detail(id),
     queryFn: async (): Promise<Conversation | null> => {
       const data = (await graphqlClient.request(GET_CONVERSATION, { id })) as {
@@ -95,6 +97,7 @@ export const useCreateConversation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    throwOnError: process.env.NODE_ENV === "development",
     mutationKey: queryKeys.mutations.createConversation,
     mutationFn: async (input: ConversationInput): Promise<Conversation> => {
       const data = (await graphqlClient.request(CREATE_CONVERSATION, {
@@ -118,6 +121,7 @@ export const useCreateConversationWithMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    throwOnError: process.env.NODE_ENV === "development",
     mutationKey: queryKeys.mutations.createConversationWithMessage,
     mutationFn: async (input: {
       title?: string;
@@ -148,6 +152,7 @@ export const useSendMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    throwOnError: process.env.NODE_ENV === "development",
     mutationKey: queryKeys.mutations.sendMessage,
     mutationFn: async (input: MessageInput): Promise<Message> => {
       const data = (await graphqlClient.request(SEND_MESSAGE, { input })) as {

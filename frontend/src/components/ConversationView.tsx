@@ -23,12 +23,9 @@ const ConversationView: React.FC = () => {
   const navigate = useNavigate();
   const [isTyping, setIsTyping] = useState(false);
 
-  // Use the useConversation hook to directly fetch the active conversation
   const { data: activeConversation, isLoading } = useConversation(
     conversationId ? parseInt(conversationId) : 0
   );
-
-  console.log("ConversationView.Active Conversation:", activeConversation);
 
   const createConversationWithMessageMutation =
     useCreateConversationWithMessage();
