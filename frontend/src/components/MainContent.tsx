@@ -114,9 +114,20 @@ const MainContent: React.FC = () => {
     >
       <PanelGroup direction="vertical">
         <Panel defaultSize={50} minSize={20} maxSize={80}>
-          <Grid py={10} templateColumns="repeat(12, 1fr)" height="100%" overflow="hidden">
+          <Grid
+            py={10}
+            templateColumns="repeat(12, 1fr)"
+            height="100%"
+            overflow="hidden"
+          >
             <GridItem colSpan={2}></GridItem>
-            <GridItem p={4} colSpan={8} display="flex" flexDirection="column" minH={0}>
+            <GridItem
+              p={4}
+              colSpan={8}
+              display="flex"
+              flexDirection="column"
+              minH={0}
+            >
               <Chat
                 messages={activeConversation?.messages ?? []}
                 onSendMessage={onSendMessage}
