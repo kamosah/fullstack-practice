@@ -40,13 +40,23 @@ class ConversationGQL:
 
 
 @strawberry.input
+class AttachmentInput:
+    type: str
+    name: str
+    url: str
+    size: Optional[int] = None
+    mime_type: Optional[str] = None
+    metadata: Optional[strawberry.scalars.JSON] = None
+
+
+@strawberry.input
 class MessageInput:
     conversation_id: int
     type: str = strawberry.field(
         description="Message type, must be either 'user' or 'agent'"
     )
     content: str
-    attachments: Optional[List[strawberry.scalars.JSON]] = None
+    attachments: Optional[List[AttachmentInput]] = None
 
 
 @strawberry.input
@@ -292,12 +302,27 @@ class Mutation:
             )
 
         async with AsyncSessionLocal() as session:
+            # Convert AttachmentInput to dict format for JSON storage
+            attachments_data = None
+            if input.attachments:
+                attachments_data = [
+                    {
+                        "type": att.type,
+                        "name": att.name,
+                        "url": att.url,
+                        "size": att.size,
+                        "mime_type": att.mime_type,
+                        "metadata": att.metadata,
+                    }
+                    for att in input.attachments
+                ]
+
             # Create user message
             message = Message(
                 conversation_id=input.conversation_id,
                 type=input.type,
                 content=input.content,
-                attachments=input.attachments,
+                attachments=attachments_data,
             )
             session.add(message)
 

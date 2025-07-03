@@ -18,6 +18,28 @@ class Settings(BaseSettings):
     # System prompt for the AI assistant
     SYSTEM_PROMPT: str = """You are a helpful AI assistant specialized in financial analysis and document review. You help users analyze financial documents, investment risks, and market considerations. Provide clear, concise, and professional responses based on the context provided."""
 
+    # File Upload Configuration
+    UPLOAD_DIR: str = "uploads"
+    MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 10MB
+    ALLOWED_FILE_TYPES: list = [
+        "text/plain",
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ]
+    ALLOWED_EXTENSIONS: list = [
+        ".txt",
+        ".pdf",
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+        ".docx",
+    ]
+    MAX_FILES_PER_MESSAGE: int = 5
+
     model_config = ConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
