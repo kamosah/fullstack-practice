@@ -1,26 +1,24 @@
-import {
-  Box,
-  Flex,
-  Text,
-  Input,
-  VStack,
-  HStack,
-  InputGroup,
-} from "@chakra-ui/react";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { Box, Flex, Text, VStack, HStack, Image } from "@chakra-ui/react";
 import { LuBot } from "react-icons/lu";
-import { AiOutlineUpload } from "react-icons/ai";
-import { PiArrowElbowRightUp } from "react-icons/pi";
+import {
+  AiOutlineFile,
+  AiOutlineFilePdf,
+  AiOutlineFileText,
+} from "react-icons/ai";
+import Uploady from "@rpldy/uploady";
 import MarkdownRenderer from "./MarkdownRenderer";
 import MatrixStatus from "./MatrixStatus";
 import { MessageType } from "../types/chat";
-import type { Message } from "../types/chat";
+import type { Message, Attachment } from "../types/chat";
+import { useUploadConfig, formatFileSize } from "../hooks/useUploadConfig";
+import ChatInput from "./ChatInput";
 
 interface ChatProps {
   isDisabled?: boolean;
   isTyping?: boolean;
   messages: Message[];
-  onSendMessage: (content: string) => void;
+  onSendMessage: (content: string, attachments?: Attachment[]) => void;
 }
 
 const Chat: React.FC<ChatProps> = ({
@@ -31,6 +29,7 @@ const Chat: React.FC<ChatProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const uploadConfig = useUploadConfig();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,26 +39,74 @@ const Chat: React.FC<ChatProps> = ({
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (inputValue.trim() && !isDisabled) {
-      onSendMessage(inputValue.trim());
-      setInputValue("");
+  const getFileIcon = (mimeType: string) => {
+    if (mimeType === "application/pdf") {
+      return <AiOutlineFilePdf size={16} color="#dc2626" />;
+    } else if (mimeType === "text/plain") {
+      return <AiOutlineFileText size={16} color="#059669" />;
+    } else {
+      return <AiOutlineFile size={16} color="#6b7280" />;
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey && !isDisabled) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
+  const renderAttachments = (attachments: Attachment[]) => {
+    if (!attachments || attachments.length === 0) return null;
 
-  const handleUpload = () => {
-    // Handle file upload logic here
-    console.log("Upload button clicked");
+    return (
+      <Box mt={2}>
+        <Flex wrap="wrap" gap={2}>
+          {attachments.map((attachment, index) => (
+            <Box
+              key={index}
+              bg="gray.50"
+              borderRadius="6px"
+              border="1px"
+              borderColor="gray.200"
+              p={2}
+              maxW="200px"
+            >
+              {attachment.type === "image" ? (
+                <Box>
+                  <Image
+                    src={attachment.url}
+                    alt={attachment.name}
+                    maxH="100px"
+                    objectFit="cover"
+                    borderRadius="4px"
+                    mb={1}
+                  />
+                  <Text fontSize="xs" color="gray.600" truncate>
+                    {attachment.name}
+                  </Text>
+                  {attachment.size && (
+                    <Text fontSize="xs" color="gray.500">
+                      {formatFileSize(attachment.size)}
+                    </Text>
+                  )}
+                </Box>
+              ) : (
+                <Flex align="center" gap={2}>
+                  <Box flexShrink={0}>
+                    {getFileIcon(attachment.mimeType || "")}
+                  </Box>
+                  <Box flex={1} minW={0}>
+                    <Text fontSize="xs" fontWeight="medium" truncate>
+                      {attachment.name}
+                    </Text>
+                    {attachment.size && (
+                      <Text fontSize="xs" color="gray.500">
+                        {formatFileSize(attachment.size)}
+                      </Text>
+                    )}
+                  </Box>
+                </Flex>
+              )}
+            </Box>
+          ))}
+        </Flex>
+      </Box>
+    );
   };
-
   return (
     <Box
       h="100%"
@@ -142,6 +189,8 @@ const Chat: React.FC<ChatProps> = ({
                     {message.content}
                   </Text>
                 )}
+                {/* Render attachments */}
+                {message.attachments && renderAttachments(message.attachments)}
               </Box>
             </Flex>
           ))}
@@ -209,46 +258,14 @@ const Chat: React.FC<ChatProps> = ({
         bg="white"
         flexShrink={0}
       >
-        <form onSubmit={handleSubmit}>
-          <Flex gap={2} align="end" bg="white">
-            <InputGroup
-              startElement={
-                <AiOutlineUpload
-                  aria-label="Upload file"
-                  onClick={handleUpload}
-                />
-              }
-              endElement={
-                <PiArrowElbowRightUp
-                  aria-label="Send message"
-                  // disabled={isDisabled || !inputValue.trim()}
-                  onClick={handleSubmit}
-                />
-              }
-            >
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="Ask Anything..."
-                bg="gray.50"
-                border="1px"
-                borderColor="gray.200"
-                _hover={{ borderColor: isDisabled ? "gray.200" : "gray.300" }}
-                _focus={{
-                  borderColor: isDisabled ? "gray.200" : "blue.500",
-                  boxShadow: isDisabled
-                    ? "none"
-                    : "0 0 0 1px var(--chakra-colors-blue-500)",
-                }}
-                resize="vertical"
-                minH="40px"
-                maxH="120px"
-                disabled={isDisabled}
-              />
-            </InputGroup>
-          </Flex>
-        </form>
+        <Uploady {...uploadConfig}>
+          <ChatInput
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            onSendMessage={onSendMessage}
+            isDisabled={isDisabled}
+          />
+        </Uploady>
       </Box>
     </Box>
   );

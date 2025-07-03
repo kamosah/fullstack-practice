@@ -1,0 +1,110 @@
+import type { UploadyProps } from "@rpldy/uploady";
+
+export const UPLOAD_CONFIG = {
+  MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
+  MAX_FILES_PER_MESSAGE: 5,
+  ALLOWED_TYPES: {
+    "image/*": [".jpg", ".jpeg", ".png", ".webp"],
+    "application/pdf": [".pdf"],
+    "text/plain": [".txt"],
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+      ".docx",
+    ],
+  },
+  PREVIEW_PANEL: {
+    DEFAULT_WIDTH: 300,
+    MIN_WIDTH: 200,
+    MAX_WIDTH: 500,
+  },
+};
+
+export const useUploadConfig = (): UploadyProps => {
+  return {
+    destination: {
+      url: "http://localhost:8000/api/upload",
+      method: "POST",
+    },
+    fileFilter: (file) => {
+      // Check if file is a valid File object
+      if (!(file instanceof File)) {
+        return false; // Reject non-File objects
+      }
+      // Filter files based on size and type
+      if (file.size > UPLOAD_CONFIG.MAX_FILE_SIZE) {
+        return false; // Reject files larger than max size
+      }
+      const allowedTypes = [
+        "text/plain",
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        return false; // Reject unsupported file types
+      }
+      return true; // Accept the file
+    },
+    multiple: true,
+    autoUpload: false,
+    grouped: true,
+  };
+};
+
+export const getFileTypeCategory = (mimeType: string): string => {
+  if (mimeType.startsWith("image/")) {
+    return "image";
+  } else if (mimeType === "application/pdf") {
+    return "document";
+  } else if (mimeType === "text/plain") {
+    return "text";
+  } else if (mimeType.includes("wordprocessingml")) {
+    return "document";
+  } else {
+    return "file";
+  }
+};
+
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return "0 Bytes";
+
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
+export const validateFile = (
+  file: File
+): { isValid: boolean; error?: string } => {
+  // Check file size
+  if (file.size > UPLOAD_CONFIG.MAX_FILE_SIZE) {
+    return {
+      isValid: false,
+      error: `File too large. Maximum size: ${formatFileSize(
+        UPLOAD_CONFIG.MAX_FILE_SIZE
+      )}`,
+    };
+  }
+
+  // Check file type
+  const allowedTypes = [
+    "text/plain",
+    "application/pdf",
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    return {
+      isValid: false,
+      error: `Unsupported file type: ${file.type}`,
+    };
+  }
+
+  return { isValid: true };
+};

@@ -51,7 +51,8 @@ const MainContent: React.FC = () => {
   );
   const [tableColumns] = useState<TableColumn[]>(TABLE_COLUMNS);
 
-  const onSendMessage = async (message: string) => {
+  // TODO: Fix attachment type handling
+  const onSendMessage = async (message: string, attachments?: unknown[]) => {
     if (!activeConversation) {
       // Create new conversation with message
       try {
@@ -78,6 +79,8 @@ const MainContent: React.FC = () => {
         conversationId: parseInt(activeConversation.id),
         type: MessageType.USER,
         content: message,
+        // TODO: Get attachment type
+        attachments: attachments,
       });
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -143,7 +146,7 @@ const MainContent: React.FC = () => {
             <PanelResizeHandle>
               <DragResizeHandle />
             </PanelResizeHandle>
-            <Panel defaultSize={50} minSize={20} maxSize={80}>
+            <Panel defaultSize={20} minSize={20} maxSize={80}>
               <Matrix
                 rows={rows.map((row) => ({ ...row }))}
                 columns={tableColumns}
