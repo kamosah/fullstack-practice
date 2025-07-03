@@ -1,7 +1,7 @@
 # 🔍 Hebbia Matrix Practice - Full-Stack Financial Analysis Platform
 
 <div align="center">
-  <img src="frontend/public/images/Hebbia%20Matrix%20Practice.png" alt="Hebbia Matrix Practice Preview" width="800px" style="border-radius: 10px; margin: 20px 0;" />
+  <img src="https://raw.githubusercontent.com/kamosah/fullstack-practice/main/frontend/public/images/hebbia_matrix_practice.png" width="800px" style="border-radius: 10px; margin: 20px 0;" />
   
   <p><em>A sophisticated full-stack application mimicking Hebbia's Matrix platform for financial document analysis and AI-powered research</em></p>
 
