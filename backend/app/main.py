@@ -2,9 +2,9 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from strawberry.fastapi import GraphQLRouter
 
+from app.api.routes.files import router as files_router
 from app.api.routes.upload import router as upload_router
 from app.api.schema import schema
 from app.core.config import settings
@@ -29,15 +29,15 @@ async def startup_event():
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
 
-# Include upload API routes
+# Include API routes
 app.include_router(upload_router, prefix="/api", tags=["upload"])
+app.include_router(files_router, prefix="/api", tags=["files"])
 
 # GraphQL endpoint
 graphql_app = GraphQLRouter(schema)
 app.include_router(graphql_app, prefix="/graphql")
 
-# Serve uploaded files statically
-app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
+# Note: We no longer need static file serving since files are served from database
 
 
 @app.get("/")

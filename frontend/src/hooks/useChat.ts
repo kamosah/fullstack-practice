@@ -126,12 +126,14 @@ export const useCreateConversationWithMessage = () => {
     mutationFn: async (input: {
       title?: string;
       firstMessage: string;
+      attachments?: Attachment[];
     }): Promise<Conversation> => {
       const data = (await graphqlClient.request(
         CREATE_CONVERSATION_WITH_MESSAGE,
         {
           title: input.title,
           firstMessage: input.firstMessage,
+          attachments: input.attachments, // <-- Pass attachments
         }
       )) as { createConversationWithMessage: GraphQLConversation };
 

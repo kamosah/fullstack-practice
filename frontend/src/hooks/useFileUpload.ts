@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import {
-  useUploadyContext,
   useItemProgressListener,
   useItemFinishListener,
   useItemErrorListener,
@@ -17,9 +16,7 @@ import { validateFile, formatFileSize } from "./useUploadConfig";
 export const useFileUpload = () => {
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const uploady = useUploadyContext();
 
   const addFiles = useCallback((files: File[]) => {
     const newPendingFiles: PendingFile[] = [];
@@ -52,12 +49,18 @@ export const useFileUpload = () => {
   }, []);
 
   useBatchAddListener((batch) => {
-    addFiles(batch.items.map((item) => item.file as File));
+    console.log("Batch added, files will auto-upload:", batch);
+    // Files will auto-upload due to autoUpload: true
   });
 
-  // Listen to item start events (when files are selected)
+  // Listen to item start events (when files are selected and auto-upload begins)
   useItemStartListener((item) => {
-    if (item.file) {
+    console.log("useFileUpload: Item started (auto-upload):", item);
+    console.log("Item file:", item.file);
+    console.log("Item url:", item.url);
+
+    // Type guard to ensure we have a proper File object
+    if (item.file && item.file instanceof File) {
       const validation = validateFile(item.file);
 
       if (!validation.isValid) {
@@ -71,7 +74,7 @@ export const useFileUpload = () => {
         id: item.id,
         file: item.file,
         uploadProgress: 0,
-        uploadStatus: "pending",
+        uploadStatus: "uploading", // Start as uploading since auto-upload is enabled
         preview: item.file.type.startsWith("image/")
           ? URL.createObjectURL(item.file)
           : undefined,
@@ -97,6 +100,7 @@ export const useFileUpload = () => {
 
   // Listen to upload progress events
   useItemProgressListener((item) => {
+    console.log("useFileUpload: Item progress:", item);
     setPendingFiles((prev) =>
       prev.map((file) =>
         file.id === item.id
@@ -112,7 +116,11 @@ export const useFileUpload = () => {
 
   // Listen to upload finish events
   useItemFinishListener((item) => {
-    if (item.uploadResponse?.status === 200) {
+    console.log("useFileUpload: Item finished:", {
+      item,
+      pendingFiles,
+    });
+    if (item.uploadStatus === 200) {
       const responseData = item.uploadResponse.data as UploadResponse;
 
       // Update pending file to completed
@@ -135,6 +143,7 @@ export const useFileUpload = () => {
 
   // Listen to upload error events
   useItemErrorListener((item) => {
+    console.log("useFileUpload: Item error:", item);
     const errorMessage = item.uploadResponse?.data?.message || "Upload failed";
 
     setPendingFiles((prev) =>
@@ -147,76 +156,6 @@ export const useFileUpload = () => {
 
     setUploadError(errorMessage);
   });
-
-  const uploadFiles = useCallback(async (): Promise<UploadedFile[]> => {
-    if (pendingFiles.length === 0) {
-      return [];
-    }
-
-    setIsUploading(true);
-    setUploadError(null);
-
-    try {
-      // Update status to uploading
-      setPendingFiles((prev) =>
-        prev.map((file) => ({ ...file, uploadStatus: "uploading" as const }))
-      );
-
-      const filesToUpload = pendingFiles.map((pf) => pf.file);
-
-      // Use uploady to upload files
-      uploady.upload(filesToUpload);
-
-      // Return a promise that resolves when upload is complete
-      return new Promise((resolve, reject) => {
-        const checkInterval = setInterval(() => {
-          const allCompleted = pendingFiles.every(
-            (file) =>
-              file.uploadStatus === "completed" || file.uploadStatus === "error"
-          );
-
-          if (allCompleted) {
-            clearInterval(checkInterval);
-            setIsUploading(false);
-
-            const hasErrors = pendingFiles.some(
-              (file) => file.uploadStatus === "error"
-            );
-            if (hasErrors) {
-              reject(new Error("Some files failed to upload"));
-            } else {
-              resolve(uploadedFiles);
-            }
-          }
-        }, 100);
-
-        // Timeout after 30 seconds
-        setTimeout(() => {
-          clearInterval(checkInterval);
-          setIsUploading(false);
-          reject(new Error("Upload timeout"));
-        }, 30000);
-      });
-    } catch (error) {
-      console.error("Upload error:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Upload failed";
-
-      setUploadError(errorMessage);
-
-      // Update pending files to error state
-      setPendingFiles((prev) =>
-        prev.map((file) => ({
-          ...file,
-          uploadStatus: "error" as const,
-          error: errorMessage,
-        }))
-      );
-
-      setIsUploading(false);
-      throw error;
-    }
-  }, [pendingFiles, uploady, uploadedFiles]);
 
   const clearFiles = useCallback(() => {
     // Clean up preview URLs
@@ -232,18 +171,18 @@ export const useFileUpload = () => {
   }, [pendingFiles]);
 
   const retryUpload = useCallback(() => {
-    // Reset error states and retry
+    // Reset error states - auto-upload will retry automatically
     setPendingFiles((prev) =>
       prev.map((file) => ({
         ...file,
-        uploadStatus: "pending" as const,
+        uploadStatus: "uploading" as const,
         uploadProgress: 0,
         error: undefined,
       }))
     );
     setUploadError(null);
-    return uploadFiles();
-  }, [uploadFiles]);
+    return Promise.resolve(uploadedFiles);
+  }, [uploadedFiles]);
 
   const getFileStats = useCallback(() => {
     const totalFiles = pendingFiles.length;
@@ -257,25 +196,36 @@ export const useFileUpload = () => {
     const errorFiles = pendingFiles.filter(
       (f) => f.uploadStatus === "error"
     ).length;
-
+    const uploadingFiles = pendingFiles.filter(
+      (f) => f.uploadStatus === "uploading"
+    ).length;
+    console.log("getFileStats: ", {
+      totalFiles,
+      totalSize,
+      completedFiles,
+      errorFiles,
+      uploadingFiles,
+      pendingFiles,
+    });
     return {
       totalFiles,
       totalSize: formatFileSize(totalSize),
       completedFiles,
       errorFiles,
+      uploadingFiles,
       isComplete: completedFiles === totalFiles && totalFiles > 0,
       hasErrors: errorFiles > 0,
+      isUploading: uploadingFiles > 0,
     };
   }, [pendingFiles]);
 
   return {
     pendingFiles,
     uploadedFiles,
-    isUploading,
+    isUploading: getFileStats().isUploading,
     uploadError,
     addFiles,
     removeFile,
-    uploadFiles,
     clearFiles,
     retryUpload,
     getFileStats,

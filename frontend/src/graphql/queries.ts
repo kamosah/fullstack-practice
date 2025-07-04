@@ -82,8 +82,13 @@ export const CREATE_CONVERSATION_WITH_MESSAGE = gql`
   mutation CreateConversationWithMessage(
     $title: String
     $firstMessage: String!
+    $attachments: [AttachmentInput!]
   ) {
-    createConversationWithMessage(title: $title, firstMessage: $firstMessage) {
+    createConversationWithMessage(
+      title: $title
+      firstMessage: $firstMessage
+      attachments: $attachments
+    ) {
       id
       title
       createdAt

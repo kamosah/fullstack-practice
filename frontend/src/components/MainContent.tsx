@@ -2,7 +2,7 @@ import { Box, Grid, GridItem } from "@chakra-ui/react";
 import Chat from "./Chat";
 import Matrix from "./Matrix";
 import DragResizeHandle from "./DragResizeHandle";
-import { MessageType } from "../types/chat";
+import { MessageType, type Attachment } from "../types/chat";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -52,7 +52,7 @@ const MainContent: React.FC = () => {
   const [tableColumns] = useState<TableColumn[]>(TABLE_COLUMNS);
 
   // TODO: Fix attachment type handling
-  const onSendMessage = async (message: string, attachments?: unknown[]) => {
+  const onSendMessage = async (message: string, attachments?: Attachment[]) => {
     if (!activeConversation) {
       // Create new conversation with message
       try {
@@ -62,6 +62,7 @@ const MainContent: React.FC = () => {
             title:
               message.substring(0, 50) + (message.length > 50 ? "..." : ""),
             firstMessage: message,
+            attachments,
           });
         navigate(`/conversations/${newConversation.id}`);
       } catch (error) {
@@ -79,8 +80,15 @@ const MainContent: React.FC = () => {
         conversationId: parseInt(activeConversation.id),
         type: MessageType.USER,
         content: message,
-        // TODO: Get attachment type
-        attachments: attachments,
+        // Convert Attachment[] to AttachmentInput[] for GraphQL
+        attachments: attachments?.map((att) => ({
+          type: att.type,
+          name: att.name,
+          url: att.url,
+          size: att.size,
+          mimeType: att.mimeType,
+          metadata: att.metadata,
+        })),
       });
     } catch (error) {
       console.error("Failed to send message:", error);

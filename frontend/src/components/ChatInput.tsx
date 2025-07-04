@@ -73,17 +73,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
       }
       return;
     }
-
-    // Convert uploaded files to attachment format
     const attachments = uploadedFiles.map(convertToAttachment);
-
-    // Send message with attachments
     onSendMessage(
       inputValue.trim(),
       attachments.length > 0 ? attachments : undefined
     );
-
-    // Clear input and uploaded files
     setInputValue("");
     clearFiles();
   };
@@ -157,7 +151,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                   minW="220px"
                 >
                   <UploadButton
-                    autoUpload={false}
+                    autoUpload
                     extraProps={{
                       style: {
                         width: "100%",

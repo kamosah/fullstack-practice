@@ -51,7 +51,6 @@ const Chat: React.FC<ChatProps> = ({
 
   const renderAttachments = (attachments: Attachment[]) => {
     if (!attachments || attachments.length === 0) return null;
-
     return (
       <Box mt={2}>
         <Flex wrap="wrap" gap={2}>

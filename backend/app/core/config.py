@@ -16,7 +16,8 @@ class Settings(BaseSettings):
     LITELLM_TIMEOUT: int = 60
 
     # System prompt for the AI assistant
-    SYSTEM_PROMPT: str = """You are a helpful AI assistant specialized in financial analysis and document review. You help users analyze financial documents, investment risks, and market considerations. Provide clear, concise, and professional responses based on the context provided."""
+    # SYSTEM_PROMPT: str = """You are a helpful AI assistant specialized in financial analysis and document review. You help users analyze financial documents, investment risks, and market considerations. Provide clear, concise, and professional responses based on the context provided."""
+    SYSTEM_PROMPT: str = """You are a helpful AI assistant. Provide clear, concise, and professional responses based on the context provided."""
 
     # File Upload Configuration
     UPLOAD_DIR: str = "uploads"
@@ -24,6 +25,7 @@ class Settings(BaseSettings):
     ALLOWED_FILE_TYPES: list = [
         "text/plain",
         "application/pdf",
+        "application/json",
         "image/jpeg",
         "image/png",
         "image/webp",
@@ -32,6 +34,7 @@ class Settings(BaseSettings):
     ALLOWED_EXTENSIONS: list = [
         ".txt",
         ".pdf",
+        ".json",
         ".jpg",
         ".jpeg",
         ".png",

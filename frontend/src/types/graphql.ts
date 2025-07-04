@@ -14,6 +14,38 @@ export type Scalars = {
   Float: { input: number; output: number; }
   /** Date with time (isoformat) */
   DateTime: { input: any; output: any; }
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf). */
+  JSON: { input: any; output: any; }
+};
+
+export type AttachmentGQL = {
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  mimeType?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  size?: Maybe<Scalars['Int']['output']>;
+  type: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
+export type AttachmentInput = {
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  mimeType?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  size?: InputMaybe<Scalars['Int']['input']>;
+  type: Scalars['String']['input'];
+  url: Scalars['String']['input'];
+};
+
+export type ConversationGQL = {
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  messages: Array<MessageGQL>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ConversationInput = {
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DocumentCreateInput = {
@@ -37,8 +69,39 @@ export type DocumentType = {
   title: Scalars['String']['output'];
 };
 
+export type MessageGQL = {
+  attachments?: Maybe<Array<AttachmentGQL>>;
+  content: Scalars['String']['output'];
+  conversationId: Scalars['Int']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type MessageInput = {
+  attachments?: InputMaybe<Array<AttachmentInput>>;
+  content: Scalars['String']['input'];
+  conversationId: Scalars['Int']['input'];
+  /** Message type, must be either 'user' or 'agent' */
+  type: Scalars['String']['input'];
+};
+
 export type Mutation = {
+  createConversation: ConversationGQL;
+  createConversationWithMessage: ConversationGQL;
   createDocument: DocumentType;
+  sendMessage: MessageGQL;
+};
+
+
+export type MutationcreateConversationArgs = {
+  input: ConversationInput;
+};
+
+
+export type MutationcreateConversationWithMessageArgs = {
+  firstMessage: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -46,9 +109,21 @@ export type MutationcreateDocumentArgs = {
   document: DocumentCreateInput;
 };
 
+
+export type MutationsendMessageArgs = {
+  input: MessageInput;
+};
+
 export type Query = {
+  getConversation?: Maybe<ConversationGQL>;
+  getConversations: Array<ConversationGQL>;
   getDocument: DocumentType;
   listDocuments: Array<DocumentType>;
+};
+
+
+export type QuerygetConversationArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -62,6 +137,40 @@ export type QuerylistDocumentsArgs = {
   limit?: Scalars['Int']['input'];
   offset?: Scalars['Int']['input'];
 };
+
+export type GetConversationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetConversationsQuery = { getConversations: Array<{ id: number, title: string, createdAt: any, updatedAt: any, messages: Array<{ id: number, conversationId: number, type: string, content: string, createdAt: any, attachments?: Array<{ type: string, name: string, url: string, size?: number | null, mimeType?: string | null, metadata?: any | null }> | null }> }> };
+
+export type GetConversationQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GetConversationQuery = { getConversation?: { id: number, title: string, createdAt: any, updatedAt: any, messages: Array<{ id: number, conversationId: number, type: string, content: string, createdAt: any, attachments?: Array<{ type: string, name: string, url: string, size?: number | null, mimeType?: string | null, metadata?: any | null }> | null }> } | null };
+
+export type CreateConversationMutationVariables = Exact<{
+  input: ConversationInput;
+}>;
+
+
+export type CreateConversationMutation = { createConversation: { id: number, title: string, createdAt: any, updatedAt: any, messages: Array<{ id: number, conversationId: number, type: string, content: string, createdAt: any, attachments?: Array<{ type: string, name: string, url: string, size?: number | null, mimeType?: string | null, metadata?: any | null }> | null }> } };
+
+export type CreateConversationWithMessageMutationVariables = Exact<{
+  title?: InputMaybe<Scalars['String']['input']>;
+  firstMessage: Scalars['String']['input'];
+}>;
+
+
+export type CreateConversationWithMessageMutation = { createConversationWithMessage: { id: number, title: string, createdAt: any, updatedAt: any, messages: Array<{ id: number, conversationId: number, type: string, content: string, createdAt: any, attachments?: Array<{ type: string, name: string, url: string, size?: number | null, mimeType?: string | null, metadata?: any | null }> | null }> } };
+
+export type SendMessageMutationVariables = Exact<{
+  input: MessageInput;
+}>;
+
+
+export type SendMessageMutation = { sendMessage: { id: number, conversationId: number, type: string, content: string, createdAt: any, attachments?: Array<{ type: string, name: string, url: string, size?: number | null, mimeType?: string | null, metadata?: any | null }> | null } };
 
 export type ListDocumentsQueryVariables = Exact<{
   filter?: InputMaybe<DocumentFilter>;

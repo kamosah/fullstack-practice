@@ -210,7 +210,10 @@ class Mutation:
 
     @strawberry.mutation
     async def create_conversation_with_message(
-        self, title: Optional[str], first_message: str
+        self,
+        title: Optional[str],
+        first_message: str,
+        attachments: Optional[List[AttachmentInput]] = None,
     ) -> ConversationGQL:
         """Create a conversation and send the first message, generating AI response and smart title."""
         async with AsyncSessionLocal() as session:
@@ -227,11 +230,27 @@ class Mutation:
             await session.commit()
             await session.refresh(conversation)
 
+            # Convert AttachmentInput to dict format for JSON storage
+            attachments_data = None
+            if attachments:
+                attachments_data = [
+                    {
+                        "type": att.type,
+                        "name": att.name,
+                        "url": att.url,
+                        "size": att.size,
+                        "mime_type": att.mime_type,
+                        "metadata": att.metadata,
+                    }
+                    for att in attachments
+                ]
+
             # Create user message
             user_message = Message(
                 conversation_id=conversation.id,
                 type="user",
                 content=first_message,
+                attachments=attachments_data,
             )
             session.add(user_message)
 
@@ -240,6 +259,7 @@ class Mutation:
                 ai_response = await llm_service.generate_response(
                     user_message=first_message,
                     conversation_history=None,
+                    attachments=attachments_data,
                 )
 
                 # Create AI message
@@ -345,12 +365,13 @@ class Mutation:
                     )
                     conversation_history = list(history_result.scalars().all())
 
-                    # Generate AI response
+                    # Generate AI response with attachment context
                     ai_response = await llm_service.generate_response(
                         user_message=input.content,
                         conversation_history=conversation_history[
                             :-1
                         ],  # Exclude current message
+                        attachments=attachments_data,
                     )
 
                     # Create AI message

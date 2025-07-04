@@ -1,13 +1,31 @@
-input ChatCreateInput {
+type AttachmentGQL {
+  type: String!
   name: String!
+  url: String!
+  size: Int
+  mimeType: String
+  metadata: JSON
 }
 
-type ChatType {
-  id: String!
+input AttachmentInput {
+  type: String!
   name: String!
+  url: String!
+  size: Int = null
+  mimeType: String = null
+  metadata: JSON = null
+}
+
+type ConversationGQL {
+  id: Int!
+  title: String!
   createdAt: DateTime!
-  lastUpdated: DateTime!
-  messages: [MessageType!]!
+  updatedAt: DateTime!
+  messages: [MessageGQL!]!
+}
+
+input ConversationInput {
+  title: String = null
 }
 
 """Date with time (isoformat)"""
@@ -34,30 +52,39 @@ type DocumentType {
   createdAt: DateTime!
 }
 
-input MessageCreateInput {
-  chatId: String!
-  content: String!
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf).
+"""
+scalar JSON @specifiedBy(url: "https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf")
+
+type MessageGQL {
+  id: Int!
+  conversationId: Int!
   type: String!
+  content: String!
+  attachments: [AttachmentGQL!]
+  createdAt: DateTime!
 }
 
-type MessageType {
-  id: String!
-  chatId: String!
-  content: String!
+input MessageInput {
+  conversationId: Int!
+
+  """Message type, must be either 'user' or 'agent'"""
   type: String!
-  timestamp: DateTime!
+  content: String!
+  attachments: [AttachmentInput!] = null
 }
 
 type Mutation {
+  createConversation(input: ConversationInput!): ConversationGQL!
+  createConversationWithMessage(title: String, firstMessage: String!, attachments: [AttachmentInput!]): ConversationGQL!
+  sendMessage(input: MessageInput!): MessageGQL!
   createDocument(document: DocumentCreateInput!): DocumentType!
-  createChat(chat: ChatCreateInput!): ChatType!
-  sendMessage(message: MessageCreateInput!): [MessageType!]!
 }
 
 type Query {
+  getConversations: [ConversationGQL!]!
+  getConversation(id: Int!): ConversationGQL
   getDocument(id: Int!): DocumentType!
   listDocuments(filter: DocumentFilter = null, limit: Int! = 10, offset: Int! = 0): [DocumentType!]!
-  listChats: [ChatType!]!
-  getChat(id: String!): ChatType
-  getMessages(chatId: String!): [MessageType!]!
 }

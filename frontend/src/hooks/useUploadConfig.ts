@@ -23,6 +23,10 @@ export const useUploadConfig = (): UploadyProps => {
     destination: {
       url: "http://localhost:8000/api/upload",
       method: "POST",
+      filesParamName: "files", // Explicitly set the parameter name
+      headers: {
+        // Don't set Content-Type, let the browser set it for multipart/form-data
+      },
     },
     fileFilter: (file) => {
       // Check if file is a valid File object
@@ -47,8 +51,9 @@ export const useUploadConfig = (): UploadyProps => {
       return true; // Accept the file
     },
     multiple: true,
-    autoUpload: false,
-    grouped: true,
+    autoUpload: true,
+    grouped: false, // Try sending files individually instead of grouped
+    concurrent: false, // Process one file at a time
   };
 };
 
