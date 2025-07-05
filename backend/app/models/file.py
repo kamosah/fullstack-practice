@@ -1,4 +1,4 @@
-from sqlalchemy import BLOB, Column, DateTime, Integer, String, Text
+from sqlalchemy import Column, DateTime, Integer, String, Text
 from sqlalchemy.sql import func
 
 from app.core.database import Base
@@ -12,7 +12,7 @@ class StoredFile(Base):
     original_filename = Column(String(255), nullable=False)
     content_type = Column(String(100), nullable=False)
     file_size = Column(Integer, nullable=False)
-    file_data = Column(BLOB, nullable=False)  # Store the actual file content
+    s3_key = Column(String(512), nullable=False)  # S3 object key
     file_hash = Column(String(64), nullable=True, index=True)  # For deduplication
     extracted_text = Column(Text, nullable=True)  # Extracted text content for LLM
     file_metadata = Column(Text, nullable=True)  # JSON metadata (renamed from metadata)

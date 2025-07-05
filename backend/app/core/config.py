@@ -1,3 +1,5 @@
+import os
+
 from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 
@@ -5,7 +7,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     APP_NAME: str = "My FastAPI App"
     DEBUG: bool = False
-    DATABASE_URL: str = "sqlite:///./test.db"
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
     # LiteLLM Configuration
     LITELLM_MODEL: str = "grok/grok-beta"
@@ -42,6 +44,11 @@ class Settings(BaseSettings):
         ".docx",
     ]
     MAX_FILES_PER_MESSAGE: int = 5
+
+    # AWS S3 Configuration
+    AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
+    S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "fs-hebbia")
+    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "hebbia-kwame")
 
     model_config = ConfigDict(
         env_file=".env",

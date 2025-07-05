@@ -9,6 +9,7 @@ from sqlalchemy import select
 from app.core.database import AsyncSessionLocal
 from app.models.file import StoredFile
 from app.services.content_extraction import content_extraction_service
+from app.services.s3_service import s3_service
 
 
 class FileService:
@@ -86,7 +87,7 @@ class FileService:
             )
 
     async def upload_files(self, files: List[UploadFile]) -> List[Dict]:
-        """Upload files and store them in the database as BLOBs with content extraction."""
+        """Upload files to S3 and store metadata in the database."""
         uploaded_files = []
 
         async with AsyncSessionLocal() as session:
@@ -113,7 +114,7 @@ class FileService:
                             {
                                 "id": existing_file.id,
                                 "fileName": existing_file.original_filename,
-                                "fileUrl": f"/api/files/{existing_file.id}",
+                                "fileUrl": s3_service.get_s3_url(existing_file.s3_key),
                                 "fileSize": existing_file.file_size,
                                 "mimeType": existing_file.content_type,
                                 "metadata": json.loads(existing_file.file_metadata)
@@ -142,6 +143,16 @@ class FileService:
                         else str(uuid.uuid4())
                     )
 
+                    # Upload to S3
+                    from io import BytesIO
+
+                    s3_key = f"uploads/{unique_filename}"
+                    s3_service.upload_file(
+                        BytesIO(file_data),
+                        unique_filename,
+                        file.content_type or "application/octet-stream",
+                    )
+
                     # Prepare metadata (combine extraction metadata with basic info)
                     metadata = {
                         "upload_timestamp": str(
@@ -158,7 +169,7 @@ class FileService:
                         original_filename=file.filename or "unknown",
                         content_type=file.content_type or "application/octet-stream",
                         file_size=len(file_data),
-                        file_data=file_data,
+                        s3_key=s3_key,
                         file_hash=file_hash,
                         extracted_text=extracted_text,  # Store extracted content
                         file_metadata=json.dumps(metadata),
@@ -171,7 +182,7 @@ class FileService:
                         {
                             "id": stored_file.id,
                             "fileName": stored_file.original_filename,
-                            "fileUrl": f"/api/files/{stored_file.id}",
+                            "fileUrl": s3_service.get_s3_url(stored_file.s3_key),
                             "fileSize": stored_file.file_size,
                             "mimeType": stored_file.content_type,
                             "metadata": metadata,
@@ -192,7 +203,7 @@ class FileService:
         return uploaded_files
 
     async def get_file(self, file_id: int) -> Optional[StoredFile]:
-        """Retrieve a file from the database by ID."""
+        """Retrieve a file's metadata from the database by ID."""
         async with AsyncSessionLocal() as session:
             result = await session.execute(
                 select(StoredFile).where(StoredFile.id == file_id)
@@ -224,7 +235,7 @@ class FileService:
             return content_list
 
     async def delete_file(self, file_id: int) -> bool:
-        """Delete a file from the database."""
+        """Delete a file from S3 and the database."""
         async with AsyncSessionLocal() as session:
             result = await session.execute(
                 select(StoredFile).where(StoredFile.id == file_id)
@@ -234,12 +245,14 @@ class FileService:
             if not file:
                 return False
 
+            # Delete from S3
+            s3_service.delete_file(file.s3_key)
             await session.delete(file)
             await session.commit()
             return True
 
     async def get_file_info(self, file_id: int) -> Optional[Dict]:
-        """Get file metadata without the actual file data."""
+        """Get file metadata and S3 URL without the actual file data."""
         file = await self.get_file(file_id)
         if not file:
             return None
@@ -247,7 +260,7 @@ class FileService:
         return {
             "id": file.id,
             "fileName": file.original_filename,
-            "fileUrl": f"/api/files/{file.id}",
+            "fileUrl": s3_service.get_s3_url(file.s3_key),
             "fileSize": file.file_size,
             "mimeType": file.content_type,
             "metadata": json.loads(file.file_metadata) if file.file_metadata else None,
