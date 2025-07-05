@@ -1,18 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, Flex, Text, VStack, HStack, Image } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack, HStack, Icon } from "@chakra-ui/react";
 import { LuBot } from "react-icons/lu";
-import {
-  AiOutlineFile,
-  AiOutlineFilePdf,
-  AiOutlineFileText,
-} from "react-icons/ai";
 import Uploady from "@rpldy/uploady";
 import MarkdownRenderer from "./MarkdownRenderer";
 import MatrixStatus from "./MatrixStatus";
 import { MessageType } from "../types/chat";
 import type { Message, Attachment } from "../types/chat";
-import { useUploadConfig, formatFileSize } from "../hooks/useUploadConfig";
+import { useUploadConfig } from "../hooks/useUploadConfig";
 import ChatInput from "./ChatInput";
+import AttachmentList from "./AttachmentList";
+import { TbTableFilled } from "react-icons/tb";
 
 interface ChatProps {
   isDisabled?: boolean;
@@ -39,73 +36,6 @@ const Chat: React.FC<ChatProps> = ({
     scrollToBottom();
   }, [messages]);
 
-  const getFileIcon = (mimeType: string) => {
-    if (mimeType === "application/pdf") {
-      return <AiOutlineFilePdf size={16} color="#dc2626" />;
-    } else if (mimeType === "text/plain") {
-      return <AiOutlineFileText size={16} color="#059669" />;
-    } else {
-      return <AiOutlineFile size={16} color="#6b7280" />;
-    }
-  };
-
-  const renderAttachments = (attachments: Attachment[]) => {
-    if (!attachments || attachments.length === 0) return null;
-    return (
-      <Box mt={2}>
-        <Flex wrap="wrap" gap={2}>
-          {attachments.map((attachment, index) => (
-            <Box
-              key={index}
-              bg="gray.50"
-              borderRadius="6px"
-              border="1px"
-              borderColor="gray.200"
-              p={2}
-              maxW="200px"
-            >
-              {attachment.type === "image" ? (
-                <Box>
-                  <Image
-                    src={attachment.url}
-                    alt={attachment.name}
-                    maxH="100px"
-                    objectFit="cover"
-                    borderRadius="4px"
-                    mb={1}
-                  />
-                  <Text fontSize="xs" color="gray.600" truncate>
-                    {attachment.name}
-                  </Text>
-                  {attachment.size && (
-                    <Text fontSize="xs" color="gray.500">
-                      {formatFileSize(attachment.size)}
-                    </Text>
-                  )}
-                </Box>
-              ) : (
-                <Flex align="center" gap={2}>
-                  <Box flexShrink={0}>
-                    {getFileIcon(attachment.mimeType || "")}
-                  </Box>
-                  <Box flex={1} minW={0}>
-                    <Text fontSize="xs" fontWeight="medium" truncate>
-                      {attachment.name}
-                    </Text>
-                    {attachment.size && (
-                      <Text fontSize="xs" color="gray.500">
-                        {formatFileSize(attachment.size)}
-                      </Text>
-                    )}
-                  </Box>
-                </Flex>
-              )}
-            </Box>
-          ))}
-        </Flex>
-      </Box>
-    );
-  };
   return (
     <Box
       h="100%"
@@ -155,7 +85,6 @@ const Chat: React.FC<ChatProps> = ({
               <Box
                 w={8}
                 h={8}
-                borderRadius="full"
                 bg={message.type === MessageType.USER ? "gray.300" : "blue.500"}
                 display="flex"
                 alignItems="center"
@@ -165,14 +94,22 @@ const Chat: React.FC<ChatProps> = ({
                 fontWeight="medium"
                 flexShrink={0}
               >
-                {message.type === MessageType.USER ? "U" : <LuBot />}
+                {message.type === MessageType.USER ? (
+                  "U"
+                ) : (
+                  <Icon size="md" colorScheme="blue">
+                    <TbTableFilled />
+                  </Icon>
+                )}
               </Box>
               <Box
                 maxW="70%"
-                bg={message.type === MessageType.USER ? "blue.500" : "gray.100"}
+                bg={
+                  message.type === MessageType.USER ? "blue.500" : "transparent"
+                }
                 color={message.type === MessageType.USER ? "white" : "gray.800"}
                 px={4}
-                py={3}
+                py={2}
                 borderRadius="lg"
                 borderBottomRightRadius={
                   message.type === MessageType.USER ? "sm" : "lg"
@@ -189,7 +126,9 @@ const Chat: React.FC<ChatProps> = ({
                   </Text>
                 )}
                 {/* Render attachments */}
-                {message.attachments && renderAttachments(message.attachments)}
+                {message.attachments && (
+                  <AttachmentList attachments={message.attachments} />
+                )}
               </Box>
             </Flex>
           ))}

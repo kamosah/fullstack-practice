@@ -146,8 +146,7 @@ class FileService:
                     # Upload to S3
                     from io import BytesIO
 
-                    s3_key = f"uploads/{unique_filename}"
-                    s3_service.upload_file(
+                    s3_key = s3_service.upload_file(
                         BytesIO(file_data),
                         unique_filename,
                         file.content_type or "application/octet-stream",

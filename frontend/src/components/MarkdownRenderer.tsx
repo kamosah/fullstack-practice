@@ -24,7 +24,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
   const sanitizedMarkdown = DOMPurify.sanitize(markdown);
 
   return (
-    <Box className="markdown-body" p={4} wordBreak="break-word">
+    <Box
+      className="markdown-body"
+      wordBreak="break-word"
+      background="transparent"
+    >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}

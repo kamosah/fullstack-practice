@@ -27,7 +27,7 @@ class S3Service:
         self.bucket.upload_fileobj(
             file_obj, key, ExtraArgs={"ContentType": content_type}
         )
-        return self.get_s3_url(key)
+        return key
 
     def get_s3_url(self, key: str) -> str:
         """
