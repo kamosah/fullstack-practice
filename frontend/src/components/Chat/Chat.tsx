@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import Uploady from "@rpldy/uploady";
 import type { Message, Attachment } from "../../types/chat";
-import { useUploadConfig } from "../../hooks/useUploadConfig";
 import ChatInput from "../ChatInput";
 import ChatMessageList from "./ChatMessageList";
 import ChatHeader from "./ChatHeader";
@@ -22,7 +19,6 @@ const Chat: React.FC<ChatProps> = ({
   onSendMessage,
 }) => {
   const [inputValue, setInputValue] = useState("");
-  const uploadConfig = useUploadConfig();
 
   return (
     <Paper
@@ -40,25 +36,12 @@ const Chat: React.FC<ChatProps> = ({
       <ChatHeader />
       <ChatMessageList messages={messages} isTyping={isTyping} />
 
-      {/* Input Area */}
-      <Box
-        sx={{
-          p: 2,
-          borderTop: 1,
-          borderColor: "divider",
-          bgcolor: "background.paper",
-          flexShrink: 0,
-        }}
-      >
-        <Uploady {...uploadConfig}>
-          <ChatInput
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            onSendMessage={onSendMessage}
-            isDisabled={isDisabled}
-          />
-        </Uploady>
-      </Box>
+      <ChatInput
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        onSendMessage={onSendMessage}
+        isDisabled={isDisabled}
+      />
     </Paper>
   );
 };

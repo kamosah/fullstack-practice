@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import { Flex, Input, Box, Menu, Portal, Icon, Text } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import { AiOutlineUpload, AiOutlineFolder } from "react-icons/ai";
 import { PiArrowElbowRightUp } from "react-icons/pi";
 import UploadButton from "@rpldy/upload-button";
+import Uploady from "@rpldy/uploady";
 import { useFileUpload } from "../hooks/useFileUpload";
 import type { UploadedFile } from "../types/upload";
 import type { Attachment } from "../types/chat";
-import PendingFileItem from "./PendingFileItem";
+import { useUploadConfig } from "../hooks/useUploadConfig";
+import PendingFiles from "./PendingFiles";
 
 interface ChatInputProps {
   inputValue: string;
@@ -21,8 +27,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
   onSendMessage,
   isDisabled = false,
 }) => {
-  const { uploadedFiles, clearFiles, pendingFiles, removeFile } =
-    useFileUpload();
+  const { uploadedFiles, clearFiles, pendingFiles } = useFileUpload();
+  const uploadConfig = useUploadConfig();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hasUploadingFiles = pendingFiles.some(
     (file) => file.uploadStatus === "uploading"
@@ -35,9 +42,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const canSendMessage = inputValue.trim() && !isDisabled && !hasUploadingFiles;
 
   // Handle menu open/close
-  const handleMenuOpenChange = (details: { open: boolean }) => {
-    setIsMenuOpen(details.open);
-  };
+  // Removed unused handleMenuOpenChange
 
   // Helper function to convert UploadedFile to Attachment
   const convertToAttachment = (uploadedFile: UploadedFile): Attachment => {
@@ -90,132 +95,107 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <Box>
-      {/* Display pending files */}
-      {pendingFiles.length > 0 && (
-        <Box mb={3}>
-          <Flex wrap="wrap" gap={2}>
-            {pendingFiles.map((file) => (
-              <PendingFileItem
-                key={file.id}
-                file={file}
-                onRemove={removeFile}
-              />
-            ))}
-          </Flex>
-        </Box>
-      )}
+    <Box
+      sx={{
+        p: 2,
+        borderTop: 1,
+        borderColor: "divider",
+        bgcolor: "background.paper",
+        flexShrink: 0,
+      }}
+    >
+      <Uploady {...uploadConfig}>
+        <PendingFiles />
+        {/* Display pending files */}
 
-      <form onSubmit={handleSubmit}>
-        <Flex
-          gap={2}
-          align="center"
-          bg="gray.50"
-          border="1px"
-          borderColor="gray.200"
-          borderRadius="md"
-          px={3}
-          py={2}
-          _hover={{ borderColor: isDisabled ? "gray.200" : "gray.300" }}
-          _focusWithin={{
-            borderColor: isDisabled ? "gray.200" : "blue.500",
-            boxShadow: isDisabled
-              ? "none"
-              : "0 0 0 1px var(--chakra-colors-blue-500)",
-          }}
-        >
-          <Menu.Root
-            positioning={{ placement: "top-start" }}
-            open={isMenuOpen}
-            onOpenChange={handleMenuOpenChange}
-          >
-            <Menu.Trigger asChild>
-              <Icon
-                aria-label="Upload file"
-                size="sm"
-                cursor="pointer"
-                as={AiOutlineUpload}
-                color="gray.500"
-                _hover={{ color: "gray.700" }}
-              />
-            </Menu.Trigger>
-            <Portal>
-              <Menu.Positioner>
-                <Menu.Content
-                  bg="white"
-                  border="1px"
-                  borderColor="gray.200"
-                  borderRadius="lg"
-                  shadow="lg"
-                  py={2}
-                  minW="220px"
-                >
-                  <UploadButton
-                    autoUpload
-                    extraProps={{
-                      style: {
-                        width: "100%",
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                      },
-                    }}
-                  >
-                    <Menu.Item
-                      value="upload-computer"
-                      px={4}
-                      py={3}
-                      cursor="pointer"
-                      display="flex"
-                      alignItems="center"
-                      gap={3}
-                      fontSize="sm"
-                      fontWeight="medium"
-                    >
-                      <AiOutlineFolder size={16} color="currentColor" />
-                      <Box>
-                        <Text
-                          fontSize="sm"
-                          fontWeight="medium"
-                          lineHeight="short"
-                        >
-                          Upload from Computer
-                        </Text>
-                      </Box>
-                    </Menu.Item>
-                  </UploadButton>
-                </Menu.Content>
-              </Menu.Positioner>
-            </Portal>
-          </Menu.Root>
-
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="Ask Anything..."
-            border="none"
-            bg="transparent"
-            outline="none"
-            flex={1}
-            minH="32px"
-            _focus={{
-              boxShadow: "none",
+        <form onSubmit={handleSubmit}>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={2}
+            bgcolor="grey.50"
+            border={1}
+            borderColor="grey.200"
+            borderRadius={2}
+            px={2}
+            py={1.5}
+            sx={{
+              "&:hover": { borderColor: isDisabled ? "grey.200" : "grey.300" },
+              "&:focus-within": {
+                borderColor: isDisabled ? "grey.200" : "primary.main",
+                boxShadow: isDisabled ? "none" : "0 0 0 1px",
+              },
             }}
-            disabled={isDisabled || hasUploadingFiles}
-          />
-
-          <Icon
-            as={PiArrowElbowRightUp}
-            aria-label="Send message"
-            size="sm"
-            cursor={canSendMessage ? "pointer" : "not-allowed"}
-            color={canSendMessage ? "gray.500" : "gray.300"}
-            _hover={{ color: canSendMessage ? "gray.700" : "gray.300" }}
-            onClick={canSendMessage ? handleSubmit : undefined}
-          />
-        </Flex>
-      </form>
+          >
+            <Menu
+              anchorEl={isMenuOpen ? document.body : null}
+              open={isMenuOpen}
+              onClose={() => setIsMenuOpen(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "left" }}
+              transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+              slotProps={{
+                list: { sx: { minWidth: 220, py: 1 } },
+              }}
+            >
+              <UploadButton
+                autoUpload
+                extraProps={{
+                  style: {
+                    width: "100%",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                  },
+                }}
+              >
+                <MenuItem onClick={() => setIsMenuOpen(false)}>
+                  <AiOutlineFolder size={16} style={{ marginRight: 8 }} />
+                  <Typography variant="body2">Upload from Computer</Typography>
+                </MenuItem>
+              </UploadButton>
+            </Menu>
+            <IconButton
+              aria-label="Upload file"
+              onClick={() => setIsMenuOpen((open) => !open)}
+              size="small"
+              sx={{ color: "grey.500", "&:hover": { color: "grey.700" } }}
+              disabled={isDisabled}
+            >
+              <AiOutlineUpload />
+            </IconButton>
+            <Box flex={1} minWidth={0}>
+              <input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="Ask Anything..."
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  outline: "none",
+                  width: "100%",
+                  minHeight: 32,
+                  fontSize: 16,
+                  color: isDisabled ? "#aaa" : "inherit",
+                }}
+                disabled={isDisabled || hasUploadingFiles}
+              />
+            </Box>
+            <IconButton
+              aria-label="Send message"
+              onClick={canSendMessage ? handleSubmit : undefined}
+              size="small"
+              sx={{
+                color: canSendMessage ? "grey.500" : "grey.300",
+                "&:hover": { color: canSendMessage ? "grey.700" : "grey.300" },
+              }}
+              disabled={!canSendMessage}
+            >
+              <PiArrowElbowRightUp />
+            </IconButton>
+          </Box>
+        </form>
+      </Uploady>
     </Box>
   );
 };
