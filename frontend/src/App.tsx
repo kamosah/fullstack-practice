@@ -1,15 +1,20 @@
-import { Box, Flex } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-
+import Sidebar from "./components/Sidebar/Sidebar";
+import Uploady from "@rpldy/uploady";
+import { useUploadConfig } from "./hooks/useUploadConfig";
 const App: React.FC = () => {
+  const uploadConfig = useUploadConfig();
   return (
-    <Box minH="100vh" bg="gray.50">
-      <Flex h="100vh">
-        <Sidebar />
-        <Outlet />
-      </Flex>
-    </Box>
+    <Uploady {...uploadConfig}>
+      <Box minHeight="100vh" bgcolor="grey.50">
+        <Stack direction="row" height="100vh">
+          <Sidebar />
+          <Outlet />
+        </Stack>
+      </Box>
+    </Uploady>
   );
 };
 
