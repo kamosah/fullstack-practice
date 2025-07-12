@@ -7,7 +7,7 @@ import { TbTableFilled } from "react-icons/tb";
 import { MessageType } from "../../types/chat";
 import type { Message } from "../../types/chat";
 import MarkdownRenderer from "../MarkdownRenderer";
-import AttachmentList from "../AttachmentList";
+import AttachmentList from "../AttachmentList/AttachmentList";
 
 const ChatMessageBubble: React.FC<{ message: Message }> = ({ message }) => (
   <Stack
