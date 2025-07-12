@@ -5,7 +5,7 @@ import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import "./styles/animations.css";
+import "./styles/app.css";
 
 const queryClient = new QueryClient();
 

@@ -1,4 +1,5 @@
-import { Box, Grid, GridItem } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Chat from "./Chat";
 import Matrix from "./Matrix";
 import DragResizeHandle from "./DragResizeHandle";
@@ -116,28 +117,39 @@ const MainContent: React.FC = () => {
   };
   return (
     <Box
-      flex={1}
-      bg="gray.100"
-      display="flex"
-      flexDirection="column"
-      height="100%"
-      overflow="hidden"
+      sx={{
+        flex: 1,
+        bgcolor: (theme) => theme.palette.background.default,
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        overflow: "hidden",
+      }}
     >
       <PanelGroup direction="vertical">
         <Panel defaultSize={50} minSize={20} maxSize={80}>
           <Grid
-            py={10}
-            templateColumns="repeat(12, 1fr)"
-            height="100%"
-            overflow="hidden"
+            container
+            spacing={0}
+            sx={{ py: 10, height: "100%", overflow: "hidden" }}
+            justifyContent="center"
           >
-            <GridItem colSpan={2}></GridItem>
-            <GridItem
-              p={4}
-              colSpan={8}
-              display="flex"
-              flexDirection="column"
-              minH={0}
+            <Grid
+              sx={{
+                p: 4,
+                display: "flex",
+                flexDirection: "column",
+                minHeight: 0,
+                width: {
+                  xs: "100%", // full width on mobile
+                  sm: "90%",
+                  md: "66.6667%", // 8/12 columns on md and up
+                  lg: "60%",
+                  xl: "50%",
+                },
+                maxWidth: 900,
+                mx: "auto",
+              }}
             >
               <Chat
                 messages={activeConversation?.messages ?? []}
@@ -145,8 +157,7 @@ const MainContent: React.FC = () => {
                 isTyping={isTyping}
                 isDisabled={isLoading}
               />
-            </GridItem>
-            <GridItem colSpan={2}></GridItem>
+            </Grid>
           </Grid>
         </Panel>
         {rows?.length > 0 && (
