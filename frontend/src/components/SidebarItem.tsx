@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import type { Conversation } from "../types/chat";
 
 interface SidebarItemProps {
@@ -12,27 +13,29 @@ const SidebarItem: React.FC<SidebarItemProps> = React.memo(
   ({ conversation, isSelected, onSelect }) => {
     return (
       <Box
-        p={2}
-        borderRadius="md"
-        cursor="pointer"
-        bg={isSelected ? "blue.50" : "transparent"}
-        borderLeft={isSelected ? "3px solid" : "3px solid transparent"}
-        borderLeftColor={isSelected ? "blue.500" : "transparent"}
-        _hover={{
-          bg: isSelected ? "blue.50" : "gray.50",
+        sx={{
+          p: 2,
+          borderRadius: 2,
+          cursor: "pointer",
+          bgcolor: isSelected ? "primary.50" : "transparent",
+          borderLeft: isSelected ? "3px solid" : "3px solid transparent",
+          borderLeftColor: isSelected ? "primary.main" : "transparent",
+          transition: "all 0.2s",
+          "&:hover": {
+            bgcolor: isSelected ? "primary.50" : "grey.50",
+          },
         }}
         onClick={() => onSelect(conversation)}
-        transition="all 0.2s"
       >
-        <Text
-          fontSize="sm"
-          fontWeight={isSelected ? "semibold" : "medium"}
-          color={isSelected ? "blue.700" : "gray.800"}
-          lineClamp="1"
-          mb={1}
+        <Typography
+          variant="body2"
+          fontWeight={isSelected ? 600 : 500}
+          color={isSelected ? "primary.dark" : "text.primary"}
+          noWrap
+          mb={0.5}
         >
           {conversation.title}
-        </Text>
+        </Typography>
       </Box>
     );
   }
