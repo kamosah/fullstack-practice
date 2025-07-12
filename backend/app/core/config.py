@@ -10,9 +10,10 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
     # LiteLLM Configuration
-    LITELLM_MODEL: str = "grok/grok-beta"
-    LITELLM_API_KEY: str = ""
-    LITELLM_BASE_URL: str = "r"
+    LITELLM_MODEL: str = os.getenv("LITELLM_MODEL")
+    LITELLM_PROVIDER: str = os.getenv("LITELLM_PROVIDER", "groq")
+    LITELLM_API_KEY: str = os.getenv("LITELLM_API_KEY")
+    LITELLM_BASE_URL: str = os.getenv("LITELLM_BASE_URL")
     LITELLM_MAX_TOKENS: int = 1000
     LITELLM_TEMPERATURE: float = 0.7
     LITELLM_TIMEOUT: int = 60

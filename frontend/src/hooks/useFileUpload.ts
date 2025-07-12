@@ -199,14 +199,6 @@ export const useFileUpload = () => {
     const uploadingFiles = pendingFiles.filter(
       (f) => f.uploadStatus === "uploading"
     ).length;
-    console.log("getFileStats: ", {
-      totalFiles,
-      totalSize,
-      completedFiles,
-      errorFiles,
-      uploadingFiles,
-      pendingFiles,
-    });
     return {
       totalFiles,
       totalSize: formatFileSize(totalSize),

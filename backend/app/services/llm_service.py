@@ -52,6 +52,8 @@ class LLMService:
                 max_tokens=settings.LITELLM_MAX_TOKENS,
                 temperature=settings.LITELLM_TEMPERATURE,
                 timeout=settings.LITELLM_TIMEOUT,
+                api_key=settings.LITELLM_API_KEY,
+                base_url=settings.LITELLM_BASE_URL,
             )
 
             # Extract the response content
@@ -229,6 +231,8 @@ class LLMService:
                 max_tokens=20,
                 temperature=0.3,
                 timeout=30,
+                api_key=settings.LITELLM_API_KEY,
+                base_url=settings.LITELLM_BASE_URL,
             )
 
             if response.choices and len(response.choices) > 0:
