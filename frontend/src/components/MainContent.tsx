@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Chat from "./Chat";
+import Chat from "./Chat/Chat";
 import Matrix from "./Matrix";
 import DragResizeHandle from "./DragResizeHandle";
 import { MessageType, type Attachment } from "../types/chat";
