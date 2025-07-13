@@ -16,7 +16,6 @@ interface MarkdownRendererProps {
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
-  // Sanitize the Markdown content
   const sanitizedMarkdown = DOMPurify.sanitize(markdown);
 
   return (
@@ -25,27 +24,28 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
         components={{
-          p: ({ children }) => (
-            <Typography variant="body2" paragraph sx={{ mb: 2 }}>
-              {children}
+          p: (props: React.ComponentProps<'p'>) => (
+            <Typography variant="body2" component="p" sx={{ mb: 2 }}>
+              {props.children}
             </Typography>
           ),
-          h1: ({ children }) => (
+          h1: (props: React.ComponentProps<'h1'>) => (
             <Typography variant="h4" sx={{ mb: 3, mt: 2, fontWeight: 700 }}>
-              {children}
+              {props.children}
             </Typography>
           ),
-          h2: ({ children }) => (
+          h2: (props: React.ComponentProps<'h2'>) => (
             <Typography variant="h5" sx={{ mb: 2.5, mt: 2, fontWeight: 600 }}>
-              {children}
+              {props.children}
             </Typography>
           ),
-          h3: ({ children }) => (
+          h3: (props: React.ComponentProps<'h3'>) => (
             <Typography variant="h6" sx={{ mb: 2, mt: 2, fontWeight: 500 }}>
-              {children}
+              {props.children}
             </Typography>
           ),
-          code: ({ className, children, ...props }: any) => {
+          code: (props: React.ComponentProps<'code'> & { inline?: boolean }) => {
+            const { className, children, ...rest } = props;
             const isInline = !className;
             return isInline ? (
               <Box
@@ -58,7 +58,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
                   borderRadius: 1,
                   fontFamily: 'Roboto Mono, monospace',
                 }}
-                {...props}
+                {...rest}
               >
                 {children}
               </Box>
@@ -76,27 +76,32 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
                   mb: 2,
                 }}
                 className={className}
-                {...props}
+                {...rest}
               >
                 <code>{children}</code>
               </Box>
             );
           },
-          a: ({ href, children }) => (
-            <MuiLink color="primary.main" href={href} target="_blank" rel="noopener noreferrer">
-              {children}
+          a: (props: React.ComponentProps<'a'>) => (
+            <MuiLink
+              color="primary.main"
+              href={props.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {props.children}
             </MuiLink>
           ),
-          ul: ({ children }) => (
-            <List sx={{ mb: 2, pl: 3, listStyleType: 'disc' }}>{children}</List>
+          ul: (props: React.ComponentProps<'ul'>) => (
+            <List sx={{ mb: 2, pl: 3, listStyleType: 'disc' }}>{props.children}</List>
           ),
-          ol: ({ children }) => (
+          ol: (props: React.ComponentProps<'ol'>) => (
             <List component="ol" sx={{ mb: 2, pl: 3, listStyleType: 'decimal' }}>
-              {children}
+              {props.children}
             </List>
           ),
-          li: ({ children }) => (
-            <ListItem sx={{ display: 'list-item', pl: 0 }}>{children}</ListItem>
+          li: (props: React.ComponentProps<'li'>) => (
+            <ListItem sx={{ display: 'list-item', pl: 0 }}>{props.children}</ListItem>
           ),
         }}
       >

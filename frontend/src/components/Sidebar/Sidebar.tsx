@@ -9,14 +9,16 @@ import ConversationList from "./ConversationList";
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
-  const { conversationId } = useParams<{ conversationId: string }>();
+  const { conversationId } = useParams() as {
+    conversationId: string;
+  };
   const { data: conversations = [] } = useConversations();
 
   const handleSelectConversation = useCallback(
     (conversation: Conversation) => {
       navigate(`/conversations/${conversation.id}`);
     },
-    [navigate]
+    [navigate],
   );
 
   return (
@@ -24,12 +26,13 @@ const Sidebar: React.FC = () => {
       elevation={1}
       sx={{
         width: 320,
-        height: "100vh",
-        bgcolor: "background.paper",
+        height: '100vh',
+        bgcolor: 'background.paper',
         borderRight: 1,
-        borderColor: "grey.200",
-        display: "flex",
-        flexDirection: "column",
+        borderColor: 'grey.200',
+        display: 'flex',
+        flexDirection: 'column',
+        px: 1,
       }}
     >
       <SidebarHeader />

@@ -1,39 +1,72 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import { TbTableFilled } from "react-icons/tb";
-import { FaRegEdit } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import IconButton from '@mui/material/IconButton';
+import { TbTableFilled } from 'react-icons/tb';
+import { FaRegEdit } from 'react-icons/fa';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { useNavigate } from 'react-router-dom';
 
 const SidebarHeader: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <Box sx={{ p: 4, borderBottom: 1, borderColor: "grey.100" }}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        mb={2}
+    <Box sx={{ py: 1, borderBottom: 1, borderColor: 'grey.100' }}>
+      <IconButton
+        onClick={() => navigate('/')}
+        color="primary"
+        aria-label="Home"
+        sx={{
+          borderRadius: 2,
+          '&:hover': {
+            backgroundColor: 'action.hover',
+          },
+          mb: 0.5,
+        }}
       >
-        <Stack
-          direction="row"
-          spacing={2}
-          component="a"
-          onClick={() => navigate("/")}
-          sx={{ cursor: "pointer", "&:hover": { opacity: 0.8 } }}
-          alignItems="center"
-        >
-          <TbTableFilled size={28} color="#1976d2" />
-          <Typography variant="h5" color="text.primary" fontWeight={700}>
-            Hebbia
-          </Typography>
-        </Stack>
-        <IconButton onClick={() => navigate("/")} size="small" color="primary">
-          <FaRegEdit />
-        </IconButton>
-      </Stack>
+        <TbTableFilled size={24} />
+      </IconButton>
+      <List sx={{ p: 0 }}>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => navigate('/')}
+            sx={{
+              borderRadius: 1,
+              pl: 1,
+              pr: 1,
+              py: 0.5,
+              color: 'CaptionText',
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 24,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'CaptionText',
+              }}
+            >
+              <FaRegEdit />
+            </ListItemIcon>
+            <ListItemText
+              primary="Chat"
+              slotProps={{
+                primary: {
+                  variant: 'body2',
+                  fontWeight: 500,
+                  color: 'CaptionText',
+                  noWrap: true,
+                  lineHeight: '1.43',
+                  ml: 1,
+                },
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+      </List>
     </Box>
   );
 };
