@@ -23,6 +23,10 @@ jobs:
         run: cd backend && poetry run ruff check .
   frontend:
     runs-on: ubuntu-latest
+    env:
+      LITELLM_MODEL: "gpt-3.5-turbo"        # or your preferred model
+      LITELLM_BASE_URL: "https://api.litellm.com"  # or your actual LiteLLM URL
+      LITELLM_API_KEY: "test-key"
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node.js
