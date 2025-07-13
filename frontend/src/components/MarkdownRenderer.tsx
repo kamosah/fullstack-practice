@@ -45,7 +45,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
               {children}
             </Typography>
           ),
-          code: ({ node, className, children, ...props }: any) => {
+          code: ({ className, children, ...props }: any) => {
             const isInline = !className;
             return isInline ? (
               <Box
