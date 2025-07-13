@@ -1,15 +1,15 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import rehypeRaw from "rehype-raw";
-import DOMPurify from "dompurify";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import MuiLink from "@mui/material/Link";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import "highlight.js/styles/github.css";
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
+import DOMPurify from 'dompurify';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import MuiLink from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import 'highlight.js/styles/github.css';
 
 interface MarkdownRendererProps {
   markdown: string;
@@ -20,10 +20,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
   const sanitizedMarkdown = DOMPurify.sanitize(markdown);
 
   return (
-    <Box
-      className="markdown-body"
-      sx={{ wordBreak: "break-word", background: "transparent" }}
-    >
+    <Box className="markdown-body" sx={{ wordBreak: 'break-word', background: 'transparent' }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
@@ -54,12 +51,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
               <Box
                 component="code"
                 sx={{
-                  fontSize: "0.95em",
+                  fontSize: '0.95em',
                   px: 0.5,
                   py: 0.2,
-                  bgcolor: "grey.100",
+                  bgcolor: 'grey.100',
                   borderRadius: 1,
-                  fontFamily: "Roboto Mono, monospace",
+                  fontFamily: 'Roboto Mono, monospace',
                 }}
                 {...props}
               >
@@ -69,13 +66,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
               <Box
                 component="pre"
                 sx={{
-                  display: "block",
-                  whiteSpace: "pre",
+                  display: 'block',
+                  whiteSpace: 'pre',
                   p: 2,
                   borderRadius: 2,
-                  bgcolor: "grey.100",
-                  fontFamily: "Roboto Mono, monospace",
-                  overflowX: "auto",
+                  bgcolor: 'grey.100',
+                  fontFamily: 'Roboto Mono, monospace',
+                  overflowX: 'auto',
                   mb: 2,
                 }}
                 className={className}
@@ -86,28 +83,20 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
             );
           },
           a: ({ href, children }) => (
-            <MuiLink
-              color="primary.main"
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <MuiLink color="primary.main" href={href} target="_blank" rel="noopener noreferrer">
               {children}
             </MuiLink>
           ),
           ul: ({ children }) => (
-            <List sx={{ mb: 2, pl: 3, listStyleType: "disc" }}>{children}</List>
+            <List sx={{ mb: 2, pl: 3, listStyleType: 'disc' }}>{children}</List>
           ),
           ol: ({ children }) => (
-            <List
-              component="ol"
-              sx={{ mb: 2, pl: 3, listStyleType: "decimal" }}
-            >
+            <List component="ol" sx={{ mb: 2, pl: 3, listStyleType: 'decimal' }}>
               {children}
             </List>
           ),
           li: ({ children }) => (
-            <ListItem sx={{ display: "list-item", pl: 0 }}>{children}</ListItem>
+            <ListItem sx={{ display: 'list-item', pl: 0 }}>{children}</ListItem>
           ),
         }}
       >

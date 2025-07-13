@@ -1,33 +1,25 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
-import {
-  AiOutlineFile,
-  AiOutlineFilePdf,
-  AiOutlineFileText,
-  AiOutlineClose,
-} from "react-icons/ai";
-import type { PendingFile } from "../types/upload";
-import { formatFileSize } from "../hooks/useUploadConfig";
+import React from 'react';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
+import { AiOutlineFile, AiOutlineFilePdf, AiOutlineFileText, AiOutlineClose } from 'react-icons/ai';
+import type { PendingFile } from '../types/upload';
+import { formatFileSize } from '../hooks/useUploadConfig';
 
 interface PendingFileItemProps {
   file: PendingFile;
   onRemove: (fileId: string) => void;
 }
 
-const PendingFileItem: React.FC<PendingFileItemProps> = ({
-  file,
-  onRemove,
-}) => {
+const PendingFileItem: React.FC<PendingFileItemProps> = ({ file, onRemove }) => {
   const getFileIcon = (mimeType: string) => {
-    if (mimeType.startsWith("image/")) {
+    if (mimeType.startsWith('image/')) {
       return null; // Will show image preview
-    } else if (mimeType === "application/pdf") {
+    } else if (mimeType === 'application/pdf') {
       return <AiOutlineFilePdf size={20} color="#dc2626" />;
-    } else if (mimeType === "text/plain") {
+    } else if (mimeType === 'text/plain') {
       return <AiOutlineFileText size={20} color="#059669" />;
     } else {
       return <AiOutlineFile size={20} color="#6b7280" />;
@@ -35,12 +27,13 @@ const PendingFileItem: React.FC<PendingFileItemProps> = ({
   };
 
   const renderFilePreview = () => {
-    if (file.preview && file.file.type.startsWith("image/")) {
+    if (file.preview && file.file.type.startsWith('image/')) {
       return (
         <Avatar
           src={file.preview}
           alt={file.file.name}
-          sx={{ width: 32, height: 32, objectFit: "cover", borderRadius: 1 }}
+          sx={{ width: 32, height: 32, borderRadius: 1 }}
+          slotProps={{ img: { style: { objectFit: 'cover' } } }}
         />
       );
     }
@@ -61,27 +54,27 @@ const PendingFileItem: React.FC<PendingFileItemProps> = ({
 
   const getStatusColor = () => {
     switch (file.uploadStatus) {
-      case "uploading":
-        return "primary.main";
-      case "completed":
-        return "success.main";
-      case "error":
-        return "error.main";
+      case 'uploading':
+        return 'primary.main';
+      case 'completed':
+        return 'success.main';
+      case 'error':
+        return 'error.main';
       default:
-        return "grey.500";
+        return 'grey.500';
     }
   };
 
   return (
     <Box
       sx={{
-        bgcolor: "grey.50",
+        bgcolor: 'grey.50',
         borderRadius: 2,
-        border: "1px solid",
-        borderColor: "grey.200",
+        border: '1px solid',
+        borderColor: 'grey.200',
         p: 2,
-        display: "flex",
-        alignItems: "center",
+        display: 'flex',
+        alignItems: 'center',
         gap: 2,
         minWidth: 200,
         maxWidth: 300,
@@ -97,40 +90,40 @@ const PendingFileItem: React.FC<PendingFileItemProps> = ({
           <Typography variant="caption" color="text.secondary">
             {formatFileSize(file.file.size)}
           </Typography>
-          {file.uploadStatus === "uploading" && (
+          {file.uploadStatus === 'uploading' && (
             <Typography variant="caption" color={getStatusColor()}>
               {file.uploadProgress}%
             </Typography>
           )}
-          {file.uploadStatus === "error" && (
+          {file.uploadStatus === 'error' && (
             <Typography variant="caption" color={getStatusColor()}>
               Error
             </Typography>
           )}
-          {file.uploadStatus === "completed" && (
+          {file.uploadStatus === 'completed' && (
             <Typography variant="caption" color={getStatusColor()}>
               ✓
             </Typography>
           )}
         </Stack>
-        {file.uploadStatus === "uploading" && (
+        {file.uploadStatus === 'uploading' && (
           <Box
             sx={{
-              width: "100%",
+              width: '100%',
               height: 2,
-              bgcolor: "grey.200",
+              bgcolor: 'grey.200',
               borderRadius: 1,
               mt: 1,
-              overflow: "hidden",
+              overflow: 'hidden',
             }}
           >
             <Box
               sx={{
-                height: "100%",
+                height: '100%',
                 bgcolor: getStatusColor(),
                 borderRadius: 1,
                 width: `${file.uploadProgress}%`,
-                transition: "width 0.2s",
+                transition: 'width 0.2s',
               }}
             />
           </Box>
@@ -142,8 +135,8 @@ const PendingFileItem: React.FC<PendingFileItemProps> = ({
         size="small"
         onClick={() => onRemove(file.id)}
         sx={{
-          color: "grey.700",
-          "&:hover": { bgcolor: "grey.200" },
+          color: 'grey.700',
+          '&:hover': { bgcolor: 'grey.200' },
         }}
       >
         <AiOutlineClose />

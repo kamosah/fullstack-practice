@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import { AiOutlineUpload, AiOutlineFolder } from "react-icons/ai";
-import { PiArrowElbowRightUp } from "react-icons/pi";
-import UploadButton from "@rpldy/upload-button";
-import { useFileUpload } from "../hooks/useFileUpload";
-import type { UploadedFile } from "../types/upload";
-import type { Attachment } from "../types/chat";
-import PendingFiles from "./PendingFiles";
+import React, { useState, useRef } from 'react';
+import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import { AiOutlineUpload, AiOutlineFolder } from 'react-icons/ai';
+import { PiArrowElbowRightUp } from 'react-icons/pi';
+import UploadButton from '@rpldy/upload-button';
+import { useFileUpload } from '../hooks/useFileUpload';
+import type { UploadedFile } from '../types/upload';
+import type { Attachment } from '../types/chat';
+import PendingFiles from './PendingFiles';
 
 interface ChatInputProps {
   inputValue: string;
@@ -28,28 +28,25 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const { uploadedFiles, clearFiles, pendingFiles } = useFileUpload();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const hasUploadingFiles = pendingFiles.some(
-    (file) => file.uploadStatus === "uploading"
-  );
+  const iconButtonRef = useRef<HTMLButtonElement>(null);
+  const hasUploadingFiles = pendingFiles.some((file) => file.uploadStatus === 'uploading');
 
-  const hasFailedFiles = pendingFiles.some(
-    (file) => file.uploadStatus === "error"
-  );
+  const hasFailedFiles = pendingFiles.some((file) => file.uploadStatus === 'error');
 
   const canSendMessage = inputValue.trim() && !isDisabled && !hasUploadingFiles;
 
   // Helper function to convert UploadedFile to Attachment
   const convertToAttachment = (uploadedFile: UploadedFile): Attachment => {
     // Determine attachment type based on MIME type
-    let type: "text" | "image" | "file" | "document" = "file";
-    if (uploadedFile.mimeType.startsWith("image/")) {
-      type = "image";
-    } else if (uploadedFile.mimeType === "application/pdf") {
-      type = "document";
-    } else if (uploadedFile.mimeType === "text/plain") {
-      type = "text";
-    } else if (uploadedFile.mimeType.includes("wordprocessingml")) {
-      type = "document";
+    let type: 'text' | 'image' | 'file' | 'document' = 'file';
+    if (uploadedFile.mimeType.startsWith('image/')) {
+      type = 'image';
+    } else if (uploadedFile.mimeType === 'application/pdf') {
+      type = 'document';
+    } else if (uploadedFile.mimeType === 'text/plain') {
+      type = 'text';
+    } else if (uploadedFile.mimeType.includes('wordprocessingml')) {
+      type = 'document';
     }
 
     return {
@@ -66,23 +63,20 @@ const ChatInput: React.FC<ChatInputProps> = ({
     e.preventDefault();
     if (!canSendMessage) {
       if (hasUploadingFiles) {
-        console.log("Files are still uploading, please wait...");
+        console.log('Files are still uploading, please wait...');
       } else if (hasFailedFiles) {
-        console.log("Some files failed to upload. Please try again.");
+        console.log('Some files failed to upload. Please try again.');
       }
       return;
     }
     const attachments = uploadedFiles.map(convertToAttachment);
-    onSendMessage(
-      inputValue.trim(),
-      attachments.length > 0 ? attachments : undefined
-    );
-    setInputValue("");
+    onSendMessage(inputValue.trim(), attachments.length > 0 ? attachments : undefined);
+    setInputValue('');
     clearFiles();
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey && canSendMessage) {
+    if (e.key === 'Enter' && !e.shiftKey && canSendMessage) {
       e.preventDefault();
       handleSubmit(e);
     }
@@ -93,8 +87,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
       sx={{
         p: 2,
         borderTop: 1,
-        borderColor: "divider",
-        bgcolor: "background.paper",
+        borderColor: 'divider',
+        bgcolor: 'background.paper',
         flexShrink: 0,
       }}
     >
@@ -113,19 +107,19 @@ const ChatInput: React.FC<ChatInputProps> = ({
           px={2}
           py={1.5}
           sx={{
-            "&:hover": { borderColor: isDisabled ? "grey.200" : "grey.300" },
-            "&:focus-within": {
-              borderColor: isDisabled ? "grey.200" : "primary.main",
-              boxShadow: isDisabled ? "none" : "0 0 0 1px",
+            '&:hover': { borderColor: isDisabled ? 'grey.200' : 'grey.300' },
+            '&:focus-within': {
+              borderColor: isDisabled ? 'grey.200' : 'primary.main',
+              boxShadow: isDisabled ? 'none' : '0 0 0 1px',
             },
           }}
         >
           <Menu
-            anchorEl={isMenuOpen ? document.body : null}
+            anchorEl={isMenuOpen ? iconButtonRef.current : null}
             open={isMenuOpen}
             onClose={() => setIsMenuOpen(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "left" }}
-            transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             slotProps={{
               list: { sx: { minWidth: 220, py: 1 } },
             }}
@@ -134,9 +128,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
               autoUpload
               extraProps={{
                 style: {
-                  width: "100%",
-                  background: "none",
-                  border: "none",
+                  width: '100%',
+                  background: 'none',
+                  border: 'none',
                   padding: 0,
                 },
               }}
@@ -148,10 +142,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
             </UploadButton>
           </Menu>
           <IconButton
+            ref={iconButtonRef}
             aria-label="Upload file"
             onClick={() => setIsMenuOpen((open) => !open)}
             size="small"
-            sx={{ color: "grey.500", "&:hover": { color: "grey.700" } }}
+            sx={{ color: 'grey.500', '&:hover': { color: 'grey.700' } }}
             disabled={isDisabled}
           >
             <AiOutlineUpload />
@@ -163,13 +158,13 @@ const ChatInput: React.FC<ChatInputProps> = ({
               onKeyDown={handleKeyPress}
               placeholder="Ask Anything..."
               style={{
-                border: "none",
-                background: "transparent",
-                outline: "none",
-                width: "100%",
+                border: 'none',
+                background: 'transparent',
+                outline: 'none',
+                width: '100%',
                 minHeight: 32,
                 fontSize: 16,
-                color: isDisabled ? "#aaa" : "inherit",
+                color: isDisabled ? '#aaa' : 'inherit',
               }}
               disabled={isDisabled || hasUploadingFiles}
             />
@@ -179,8 +174,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
             onClick={canSendMessage ? handleSubmit : undefined}
             size="small"
             sx={{
-              color: canSendMessage ? "grey.500" : "grey.300",
-              "&:hover": { color: canSendMessage ? "grey.700" : "grey.300" },
+              color: canSendMessage ? 'grey.500' : 'grey.300',
+              '&:hover': { color: canSendMessage ? 'grey.700' : 'grey.300' },
             }}
             disabled={!canSendMessage}
           >

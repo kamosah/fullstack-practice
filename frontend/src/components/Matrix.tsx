@@ -1,21 +1,22 @@
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import IconButton from '@mui/material/IconButton';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import { LuPlus, LuChevronDown, LuGripVertical } from 'react-icons/lu';
+import type { TableColumn } from '../utils/mock/tableData';
+import Toolbar from './Toolbar';
 
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import IconButton from "@mui/material/IconButton";
-import Chip from "@mui/material/Chip";
-import Paper from "@mui/material/Paper";
-import { LuPlus, LuChevronDown, LuGripVertical } from "react-icons/lu";
-import type { TableColumn } from "../utils/mock/tableData";
-import Toolbar from "./Toolbar";
+type ChipColor = 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning' | 'default';
 
 interface TableRow {
   id: string;
@@ -29,22 +30,17 @@ interface TableSectionProps {
   onUpdateRow: (id: string, field: string, value: string) => void;
 }
 
-const MatrixTable: React.FC<TableSectionProps> = ({
-  rows,
-  columns,
-  onAddRow,
-  onUpdateRow,
-}) => {
+const MatrixTable: React.FC<TableSectionProps> = ({ rows, columns, onAddRow, onUpdateRow }) => {
   const [editingCell, setEditingCell] = useState<{
     rowId: string;
     field: string;
   } | null>(null);
-  const [editValue, setEditValue] = useState("");
+  const [editValue, setEditValue] = useState('');
 
   const handleCellClick = (
     rowId: string,
     field: string,
-    currentValue: string | number | boolean
+    currentValue: string | number | boolean,
   ) => {
     setEditingCell({ rowId, field });
     setEditValue(String(currentValue));
@@ -54,39 +50,38 @@ const MatrixTable: React.FC<TableSectionProps> = ({
     if (editingCell) {
       onUpdateRow(editingCell.rowId, editingCell.field, editValue);
       setEditingCell(null);
-      setEditValue("");
+      setEditValue('');
     }
   };
 
   const handleCellCancel = () => {
     setEditingCell(null);
-    setEditValue("");
+    setEditValue('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleCellSave();
-    } else if (e.key === "Escape") {
+    } else if (e.key === 'Escape') {
       handleCellCancel();
     }
   };
 
-  // Map custom color names to valid MUI Chip color values
-  const getDocumentTypeColor = (type: string): "primary" | "secondary" | "success" | "error" | "info" | "warning" | "default" => {
+  const getDocumentTypeColor = (type: string): ChipColor => {
     switch (type.toLowerCase()) {
-      case "financials":
-        return "secondary";
-      case "marketing materials":
-        return "primary";
-      case "product":
-        return "warning";
-      case "customer":
-        return "success";
-      case "public report":
-        return "default";
+      case 'financials':
+        return 'secondary';
+      case 'marketing materials':
+        return 'primary';
+      case 'product':
+        return 'warning';
+      case 'customer':
+        return 'success';
+      case 'public report':
+        return 'default';
       default:
-        return "default";
+        return 'default';
     }
   };
 
@@ -138,9 +133,7 @@ const MatrixTable: React.FC<TableSectionProps> = ({
                     }}
                   >
                     <Stack direction="row" alignItems="center" spacing={1}>
-                      {column.icon && (
-                        <Box component={column.icon} sx={{ fontSize: 18 }} />
-                      )}
+                      {column.icon && <Box component={column.icon} sx={{ fontSize: 18 }} />}
                       <Typography variant="body2">{column.label}</Typography>
                       {column.sortable && (
                         <Box component={LuChevronDown} sx={{ fontSize: 16, ml: 0.5 }} />
@@ -167,7 +160,10 @@ const MatrixTable: React.FC<TableSectionProps> = ({
                 >
                   <TableCell sx={{ textAlign: 'center' }}>
                     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-                      <Box component={LuGripVertical} sx={{ color: 'grey.400', fontSize: 18, cursor: 'grab' }} />
+                      <Box
+                        component={LuGripVertical}
+                        sx={{ color: 'grey.400', fontSize: 18, cursor: 'grab' }}
+                      />
                       <Typography variant="caption" color="text.secondary">
                         {index + 1}
                       </Typography>
@@ -175,7 +171,7 @@ const MatrixTable: React.FC<TableSectionProps> = ({
                   </TableCell>
                   {columns.map((column) => {
                     const value = row[column.key];
-                    const stringValue = String(value || "");
+                    const stringValue = String(value || '');
 
                     return (
                       <TableCell key={column.id} sx={{ maxWidth: column.maxWidth }}>
@@ -221,8 +217,12 @@ const MatrixTable: React.FC<TableSectionProps> = ({
                               WebkitLineClamp: 2,
                               WebkitBoxOrient: 'vertical',
                               overflow: 'hidden',
-                              color: stringValue.includes('Not in document') ? 'text.secondary' : 'inherit',
-                              fontStyle: stringValue.includes('Not in document') ? 'italic' : 'normal',
+                              color: stringValue.includes('Not in document')
+                                ? 'text.secondary'
+                                : 'inherit',
+                              fontStyle: stringValue.includes('Not in document')
+                                ? 'italic'
+                                : 'normal',
                             }}
                             onClick={() => handleCellClick(row.id, column.key, value)}
                           >
@@ -242,7 +242,8 @@ const MatrixTable: React.FC<TableSectionProps> = ({
                             }}
                             onClick={() => handleCellClick(row.id, column.key, value)}
                           >
-                            {stringValue || (column.key === 'document' ? 'Click to add document' : 'Add value')}
+                            {stringValue ||
+                              (column.key === 'document' ? 'Click to add document' : 'Add value')}
                           </Typography>
                         )}
                       </TableCell>
@@ -253,12 +254,7 @@ const MatrixTable: React.FC<TableSectionProps> = ({
               {/* Add Row */}
               <TableRow hover>
                 <TableCell sx={{ textAlign: 'center' }}>
-                  <IconButton
-                    aria-label="Add row"
-                    size="small"
-                    onClick={onAddRow}
-                    color="primary"
-                  >
+                  <IconButton aria-label="Add row" size="small" onClick={onAddRow} color="primary">
                     <LuPlus />
                   </IconButton>
                 </TableCell>
