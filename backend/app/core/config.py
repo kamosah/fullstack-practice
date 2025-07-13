@@ -47,19 +47,17 @@ class Settings(BaseSettings):
     MAX_FILES_PER_MESSAGE: int = 5
 
     # AWS S3 Configuration
-    AWS_REGION: str = os.getenv("AWS_REGION", "your_region")
-    S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "your_bucket")
-    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "your_aws_profile")
-    AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "your_access_key_id")
-    AWS_SECRET_ACCESS_KEY: str = os.getenv(
-        "AWS_SECRET_ACCESS_KEY", "your_secret_access_key"
-    )
-    AWS_SESSION_TOKEN: str = os.getenv("AWS_SESSION_TOKEN", "your_session_token")
+    AWS_REGION: str = os.getenv("AWS_REGION", "")
+    S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "")
+    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "")
+    AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "")
+    AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+    AWS_SESSION_TOKEN: str = os.getenv("AWS_SESSION_TOKEN", "")
 
     model_config = ConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        extra="ignore",  # This allows extra fields to be ignored instead of causing errors
+        extra="ignore",
     )
 
 
