@@ -10,9 +10,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
     # LiteLLM Configuration
-    LITELLM_MODEL: str = os.getenv("LITELLM_MODEL", "gpt-3.5-turbo")
-    LITELLM_PROVIDER: str = os.getenv("LITELLM_PROVIDER", "groq")
-    LITELLM_API_KEY: str = os.getenv("LITELLM_API_KEY", "your-api-key")
+    LITELLM_MODEL: str = os.getenv("LITELLM_MODEL", "your-model-name")
+    LITELLM_PROVIDER: str = os.getenv("LITELLM_PROVIDER", "grok")
+    LITELLM_API_KEY: str = os.getenv("LITELLM_API_KEY", "your_grok_api_key_here")
     LITELLM_BASE_URL: str = os.getenv("LITELLM_BASE_URL", "https://api.litellm.com/v1")
     LITELLM_MAX_TOKENS: int = 1000
     LITELLM_TEMPERATURE: float = 0.7
@@ -47,9 +47,14 @@ class Settings(BaseSettings):
     MAX_FILES_PER_MESSAGE: int = 5
 
     # AWS S3 Configuration
-    AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
-    S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "fs-hebbia")
-    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "hebbia-kwame")
+    AWS_REGION: str = os.getenv("AWS_REGION", "your_region")
+    S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "your_bucket")
+    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "your_aws_profile")
+    AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "your_access_key_id")
+    AWS_SECRET_ACCESS_KEY: str = os.getenv(
+        "AWS_SECRET_ACCESS_KEY", "your_secret_access_key"
+    )
+    AWS_SESSION_TOKEN: str = os.getenv("AWS_SESSION_TOKEN", "your_session_token")
 
     model_config = ConfigDict(
         env_file=".env",
