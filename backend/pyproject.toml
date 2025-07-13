@@ -36,6 +36,10 @@ httpx = "^0.28.1"
 ruff = "^0.11.13"
 pre-commit = "^4.2.0"
 
+
+[tool.poetry.group.test.dependencies]
+moto = "^5.1.8"
+
 [tool.ruff]
 line-length = 88
 

@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Chat from './Chat/Chat';
 import Matrix from './Matrix';
 import DragResizeHandle from './DragResizeHandle';
@@ -118,14 +117,13 @@ const MainContent: React.FC = () => {
       }}
     >
       <PanelGroup direction="vertical">
-        <Panel defaultSize={50} minSize={20} maxSize={80}>
-          <Grid
-            container
-            spacing={0}
-            sx={{ py: 10, height: '100%', overflow: 'hidden' }}
+        <Panel defaultSize={50} minSize={40} maxSize={80}>
+          <Box
+            display="flex"
             justifyContent="center"
+            sx={{ py: 0, height: '100%', overflow: 'hidden' }}
           >
-            <Grid
+            <Box
               sx={{
                 p: 4,
                 minHeight: 0,
@@ -146,8 +144,8 @@ const MainContent: React.FC = () => {
                 isTyping={isTyping}
                 isDisabled={isLoading}
               />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Panel>
         {rows?.length > 0 && (
           <>

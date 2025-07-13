@@ -85,15 +85,13 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <Box
       sx={{
-        p: 2,
-        borderTop: 1,
-        borderColor: 'divider',
+        py: 2,
+        px: 0,
         bgcolor: 'background.paper',
         flexShrink: 0,
       }}
     >
       <PendingFiles />
-      {/* Display pending files */}
 
       <form onSubmit={handleSubmit}>
         <Box
