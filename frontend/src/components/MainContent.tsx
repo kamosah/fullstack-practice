@@ -128,13 +128,11 @@ const MainContent: React.FC = () => {
             <Grid
               sx={{
                 p: 4,
-                display: 'flex',
-                flexDirection: 'column',
                 minHeight: 0,
                 width: {
-                  xs: '100%', // full width on mobile
+                  xs: '100%',
                   sm: '90%',
-                  md: '66.6667%', // 8/12 columns on md and up
+                  md: '66.6667%',
                   lg: '60%',
                   xl: '50%',
                 },

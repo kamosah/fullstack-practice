@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Paper from "@mui/material/Paper";
-import type { Message, Attachment } from "../../types/chat";
-import ChatInput from "../ChatInput";
-import ChatMessageList from "./ChatMessageList";
-import ChatHeader from "./ChatHeader";
+import React, { useState } from 'react';
+import Paper from '@mui/material/Paper';
+import type { Message, Attachment } from '../../types/chat';
+import ChatInput from '../ChatInput';
+import ChatMessageList from './ChatMessageList';
+import ChatHeader from './ChatHeader';
 
 interface ChatProps {
   isDisabled?: boolean;
@@ -18,19 +18,19 @@ const Chat: React.FC<ChatProps> = ({
   messages,
   onSendMessage,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
   return (
     <Paper
       elevation={2}
       sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        overflowY: "hidden",
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        overflowY: 'hidden',
         borderRadius: 2,
         p: 2,
-        bgcolor: "background.paper",
+        bgcolor: 'background.paper',
       }}
     >
       <ChatHeader />

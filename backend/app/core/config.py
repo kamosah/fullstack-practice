@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     # AWS S3 Configuration
     AWS_REGION: str = os.getenv("AWS_REGION", "your_region")
     S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "your_bucket")
-    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "your_aws_profile")
+    AWS_PROFILE: str = os.getenv("AWS_PROFILE", None)
     AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "your_access_key_id")
     AWS_SECRET_ACCESS_KEY: str = os.getenv(
         "AWS_SECRET_ACCESS_KEY", "your_secret_access_key"
