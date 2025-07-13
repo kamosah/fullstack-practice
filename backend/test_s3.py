@@ -1,10 +1,10 @@
 import boto3
-from moto import mock_s3
+from moto import mock_aws
 
 from app.core.config import settings
 
 
-@mock_s3
+@mock_aws
 def test_list_s3_objects():
     # Set up mock S3
     s3 = boto3.resource("s3", region_name=settings.AWS_REGION)
