@@ -5,6 +5,8 @@ import pytest
 from app.models.chat import Message, MessageType
 from app.services.llm_service import LLMService
 
+pytestmark = pytest.mark.asyncio
+
 
 class TestLLMService:
     @pytest.fixture
