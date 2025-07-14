@@ -1,21 +1,32 @@
-import { Spinner, Text, VStack } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface LoadingIndicatorProps {
-  message?: string;
-  size?: "sm" | "md" | "lg" | "xl";
+  text?: string;
+  size?: number | "small" | "medium" | "large";
 }
 
 const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({
-  message = "Loading...",
-  size = "md",
+  text = "Loading...",
+  size = 40,
 }) => {
   return (
-    <VStack gap={3} py={8}>
-      <Spinner size={size} color="blue.500" />
-      <Text fontSize="sm" color="gray.600" fontWeight="medium">
-        {message}
-      </Text>
-    </VStack>
+    <Box
+      minHeight={120}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      py={4}
+    >
+      <Stack spacing={2} alignItems="center">
+        <CircularProgress size={size} color="primary" thickness={4} />
+        <Typography color="text.secondary" variant="body2" fontWeight={500}>
+          {text}
+        </Typography>
+      </Stack>
+    </Box>
   );
 };
 

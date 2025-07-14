@@ -1,4 +1,7 @@
-import { Input, InputGroup, Icon, Box, Text } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 
@@ -17,35 +20,46 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   return (
     <Box>
-      <Text fontSize="lg" fontWeight="semibold" color="gray.700" mb={4}>
+      <Typography variant="h6" fontWeight={600} color="grey.800" mb={2}>
         Search Documents
-      </Text>
-
-      <InputGroup
-        startElement={
-          <Icon pointerEvents="none" as={FaSearch} color="gray.400" ml={4} />
-        }
-      >
-        <Input
-          placeholder="Search by title, content, or keywords..."
-          value={search}
-          onChange={handleSearch}
-          bg="gray.50"
-          border="1px"
-          borderColor="gray.300"
-          borderRadius="lg"
-          pl={12}
-          _hover={{
-            borderColor: "blue.300",
-            bg: "white",
-          }}
-          _focus={{
-            borderColor: "blue.400",
-            bg: "white",
-            shadow: "0 0 0 1px var(--chakra-colors-blue-400)",
-          }}
-        />
-      </InputGroup>
+      </Typography>
+      <TextField
+        fullWidth
+        size="small"
+        placeholder="Search by title, content, or keywords..."
+        value={search}
+        onChange={handleSearch}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <FaSearch style={{ color: "#9ca3af", fontSize: 18 }} />
+              </InputAdornment>
+            ),
+          },
+          root: {
+            sx: {
+              bgcolor: "grey.50",
+              borderRadius: 2,
+              mt: 2,
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "grey.300",
+                },
+                "&:hover fieldset": {
+                  borderColor: "primary.light",
+                  bgcolor: "white",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "primary.main",
+                  bgcolor: "white",
+                  boxShadow: 1,
+                },
+              },
+            },
+          },
+        }}
+      />
     </Box>
   );
 };

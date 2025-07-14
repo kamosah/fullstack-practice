@@ -14,6 +14,12 @@ def mock_env_vars():
             "LITELLM_MODEL": "grok/grok-beta",
             "LITELLM_TIMEOUT": "60",
             "DEBUG": "True",
+            # AWS mocks for all tests
+            "AWS_ACCESS_KEY_ID": "testing",
+            "AWS_SECRET_ACCESS_KEY": "testing",
+            "AWS_REGION": "us-east-1",
+            "S3_BUCKET_NAME": "test-bucket",
+            "AWS_PROFILE": "",
         },
     ):
         yield

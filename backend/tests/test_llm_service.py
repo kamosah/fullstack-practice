@@ -116,7 +116,7 @@ class TestLLMService:
             }
         ]
 
-        with patch("app.services.llm_service.file_service") as mock_file_service:
+        with patch("app.services.file_service.file_service") as mock_file_service:
             mock_file_service.get_files_content = AsyncMock(return_value=mock_content)
 
             result = await llm_service._get_attachments_content(attachments)
@@ -137,7 +137,7 @@ class TestLLMService:
             }
         ]
 
-        with patch("app.services.llm_service.file_service") as mock_file_service:
+        with patch("app.services.file_service.file_service") as mock_file_service:
             mock_file_service.get_files_content = AsyncMock(return_value=mock_content)
 
             result = await llm_service._get_attachments_content(attachments)

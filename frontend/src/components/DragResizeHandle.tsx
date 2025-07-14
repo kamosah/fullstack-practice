@@ -1,43 +1,51 @@
-import { Box, Center } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
 import { MdDragHandle } from "react-icons/md";
 
 /**
  * Custom resize handle component for react-resizable-panels
  * Provides a visual indicator with hover and active states
  */
+
 const DragResizeHandle: React.FC = () => (
   <Box
-    position="relative"
-    height="4px"
-    bg="gray.200"
-    cursor="row-resize"
-    _hover={{
-      bg: "blue.300",
+    sx={{
+      position: "relative",
+      height: 4,
+      bgcolor: "grey.200",
+      cursor: "row-resize",
+      transition: "background-color 0.2s",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      "&:hover": {
+        bgcolor: "primary.light",
+      },
+      "&:active": {
+        bgcolor: "primary.main",
+      },
     }}
-    _active={{
-      bg: "blue.400",
-    }}
-    transition="background-color 0.2s"
-    display="flex"
-    alignItems="center"
-    justifyContent="center"
   >
-    <Center
-      position="absolute"
-      bg="gray.400"
-      _hover={{
-        bg: "blue.500",
+    <Box
+      sx={{
+        position: "absolute",
+        bgcolor: "grey.400",
+        borderRadius: 999,
+        width: 24,
+        height: 12,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        transition: "all 0.2s",
+        "&:hover": {
+          bgcolor: "primary.dark",
+        },
+        "&:active": {
+          bgcolor: "primary.main",
+        },
       }}
-      _active={{
-        bg: "blue.600",
-      }}
-      borderRadius="full"
-      width="24px"
-      height="12px"
-      transition="all 0.2s"
     >
       <MdDragHandle size={16} color="white" />
-    </Center>
+    </Box>
   </Box>
 );
 

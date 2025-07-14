@@ -10,10 +10,10 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
     # LiteLLM Configuration
-    LITELLM_MODEL: str = os.getenv("LITELLM_MODEL")
-    LITELLM_PROVIDER: str = os.getenv("LITELLM_PROVIDER", "groq")
-    LITELLM_API_KEY: str = os.getenv("LITELLM_API_KEY")
-    LITELLM_BASE_URL: str = os.getenv("LITELLM_BASE_URL")
+    LITELLM_MODEL: str = os.getenv("LITELLM_MODEL", "your-model-name")
+    LITELLM_PROVIDER: str = os.getenv("LITELLM_PROVIDER", "grok")
+    LITELLM_API_KEY: str = os.getenv("LITELLM_API_KEY", "your_grok_api_key_here")
+    LITELLM_BASE_URL: str = os.getenv("LITELLM_BASE_URL", "https://api.litellm.com/v1")
     LITELLM_MAX_TOKENS: int = 1000
     LITELLM_TEMPERATURE: float = 0.7
     LITELLM_TIMEOUT: int = 60
@@ -48,13 +48,16 @@ class Settings(BaseSettings):
 
     # AWS S3 Configuration
     AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
-    S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "fs-hebbia")
-    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "hebbia-kwame")
+    S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "test-bucket")
+    AWS_PROFILE: str = os.getenv("AWS_PROFILE", "")
+    AWS_ACCESS_KEY_ID: str = os.getenv("AWS_ACCESS_KEY_ID", "")
+    AWS_SECRET_ACCESS_KEY: str = os.getenv("AWS_SECRET_ACCESS_KEY", "")
+    AWS_SESSION_TOKEN: str = os.getenv("AWS_SESSION_TOKEN", "")
 
     model_config = ConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        extra="ignore",  # This allows extra fields to be ignored instead of causing errors
+        extra="ignore",
     )
 
 

@@ -1,4 +1,7 @@
-import { Text, HStack, Icon, Badge } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import SvgIcon from "@mui/material/SvgIcon";
 import { onlineManager } from "@tanstack/react-query";
 import { LuWifi } from "react-icons/lu";
 
@@ -11,28 +14,39 @@ const MatrixStatus: React.FC<MatrixStatusProps> = ({ documentsCount = 0 }) => {
   const isOnline = onlineManager.isOnline();
 
   return (
-    <HStack gap={2} p={2} bg="gray.50" borderRadius="md">
-      <Icon
-        as={LuWifi}
-        boxSize={4}
-        color={isOnline ? "green.500" : "gray.400"}
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        p: 1.5,
+        bgcolor: "grey.50",
+        borderRadius: 2,
+      }}
+    >
+      <SvgIcon
+        component={LuWifi}
+        sx={{ fontSize: 20, color: isOnline ? "success.main" : "grey.400" }}
       />
-      <Text fontSize="xs" color="gray.600">
+      <Typography variant="caption" color="text.secondary">
         Matrix Agent
-      </Text>
-      <Badge
-        size="sm"
-        colorScheme={isOnline ? "green" : "gray"}
-        variant="subtle"
-      >
-        {isOnline ? "Online" : "Offline"}
-      </Badge>
+      </Typography>
+      <Chip
+        size="small"
+        label={isOnline ? "Online" : "Offline"}
+        color={isOnline ? "success" : "default"}
+        variant="outlined"
+        sx={{ fontWeight: 500 }}
+      />
       {documentsCount > 0 && (
-        <Badge size="sm" colorScheme="blue" variant="subtle">
-          {documentsCount} docs
-        </Badge>
+        <Chip
+          size="small"
+          label={`${documentsCount} docs`}
+          color="primary"
+          variant="outlined"
+        />
       )}
-    </HStack>
+    </Box>
   );
 };
 

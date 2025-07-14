@@ -1,41 +1,48 @@
-import { Box, Flex, HStack, Button, Icon } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import { LuPlus, LuColumns2 } from "react-icons/lu";
 import { TbTableFilled } from "react-icons/tb";
 
-export const Toolbar = () => {
+const Toolbar = () => {
   return (
     <Box
-      p={4}
-      borderBottom="1px"
-      borderColor="gray.200"
-      bg="gray.50"
-      flexShrink={0}
+      sx={{
+        p: 2.5,
+        borderBottom: "1px solid",
+        borderColor: "grey.200",
+        bgcolor: "grey.50",
+        flexShrink: 0,
+      }}
     >
-      <Flex justify="space-between" align="center">
-        <Icon as={TbTableFilled} boxSize={6} color="blue.500" />
-        <HStack gap={2}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <IconButton size="large" sx={{ color: "primary.main" }} aria-label="View tables">
+          <TbTableFilled size={28} />
+        </IconButton>
+        <Stack direction="row" spacing={2} alignItems="center">
           <Button
-            size="sm"
-            variant="outline"
+            size="small"
+            variant="outlined"
+            startIcon={<LuPlus />}
             onClick={() => {
               /* Handle add document */
             }}
           >
-            <LuPlus />
             Add documents
           </Button>
           <Button
-            size="sm"
-            variant="outline"
+            size="small"
+            variant="outlined"
+            startIcon={<LuColumns2 />}
             onClick={() => {
               /* Handle add columns */
             }}
           >
-            <LuColumns2 />
             Add columns
           </Button>
-        </HStack>
-      </Flex>
+        </Stack>
+      </Stack>
     </Box>
   );
 };

@@ -1,6 +1,8 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
-import type { Conversation } from "../types/chat";
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import type { Conversation } from '../types/chat';
 
 interface SidebarItemProps {
   conversation: Conversation;
@@ -11,31 +13,51 @@ interface SidebarItemProps {
 const SidebarItem: React.FC<SidebarItemProps> = React.memo(
   ({ conversation, isSelected, onSelect }) => {
     return (
-      <Box
-        p={2}
-        borderRadius="md"
-        cursor="pointer"
-        bg={isSelected ? "blue.50" : "transparent"}
-        borderLeft={isSelected ? "3px solid" : "3px solid transparent"}
-        borderLeftColor={isSelected ? "blue.500" : "transparent"}
-        _hover={{
-          bg: isSelected ? "blue.50" : "gray.50",
+      <ListItem
+        disablePadding
+        sx={{
+          bgcolor: 'transparent',
         }}
-        onClick={() => onSelect(conversation)}
-        transition="all 0.2s"
       >
-        <Text
-          fontSize="sm"
-          fontWeight={isSelected ? "semibold" : "medium"}
-          color={isSelected ? "blue.700" : "gray.800"}
-          lineClamp="1"
-          mb={1}
+        <ListItemButton
+          onClick={() => onSelect(conversation)}
+          selected={isSelected}
+          sx={(theme) => ({
+            borderRadius: 1,
+            my: 0.25,
+            pl: 1,
+            pr: 1,
+            py: 0.5,
+            borderLeft: '3px solid',
+            borderLeftColor: isSelected ? theme.palette.primary.dark : 'transparent',
+            transition: 'all 0.2s',
+            bgcolor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+            '&.Mui-selected, &.Mui-selected:hover': {
+              bgcolor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              borderLeftColor: theme.palette.primary.dark,
+            },
+            '&:hover': {
+              bgcolor: theme.palette.grey[200],
+            },
+          })}
         >
-          {conversation.title}
-        </Text>
-      </Box>
+          <ListItemText
+            primary={conversation.title}
+            slotProps={{
+              primary: {
+                variant: 'body2',
+                fontWeight: isSelected ? 600 : 500,
+                color: isSelected ? 'primary.contrastText' : 'text.primary',
+                noWrap: true,
+              },
+            }}
+          />
+        </ListItemButton>
+      </ListItem>
     );
-  }
+  },
 );
 
 SidebarItem.displayName = "SidebarItem";

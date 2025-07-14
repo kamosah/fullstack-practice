@@ -100,6 +100,7 @@ export type MutationcreateConversationArgs = {
 
 
 export type MutationcreateConversationWithMessageArgs = {
+  attachments?: InputMaybe<Array<AttachmentInput>>;
   firstMessage: Scalars['String']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -160,6 +161,7 @@ export type CreateConversationMutation = { createConversation: { id: number, tit
 export type CreateConversationWithMessageMutationVariables = Exact<{
   title?: InputMaybe<Scalars['String']['input']>;
   firstMessage: Scalars['String']['input'];
+  attachments?: InputMaybe<Array<AttachmentInput> | AttachmentInput>;
 }>;
 
 

@@ -1,4 +1,7 @@
-import { Box, Button, Heading, Text, VStack } from "@chakra-ui/react";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import { LuRefreshCw, LuInfo } from "react-icons/lu";
 
 interface ErrorBoundaryProps {
@@ -12,47 +15,51 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
 }) => {
   return (
     <Box
-      p={8}
-      bg="red.50"
-      borderRadius="lg"
-      border="1px"
-      borderColor="red.200"
-      textAlign="center"
+      sx={{
+        p: 6,
+        bgcolor: "error.lighter",
+        borderRadius: 2,
+        border: "1px solid",
+        borderColor: "error.light",
+        textAlign: "center",
+        maxWidth: 400,
+        mx: "auto",
+      }}
     >
-      <VStack gap={4}>
+      <Stack spacing={3} alignItems="center">
         <Box
-          w={12}
-          h={12}
-          bg="red.100"
-          borderRadius="full"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          sx={{
+            width: 48,
+            height: 48,
+            bgcolor: "error.light",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <LuInfo size={24} color="#E53E3E" />
         </Box>
-
-        <VStack gap={2}>
-          <Heading size="md" color="red.700">
+        <Stack spacing={1} alignItems="center">
+          <Typography variant="h6" color="error.dark">
             Oops! Something went wrong
-          </Heading>
-          <Text color="red.600" fontSize="sm">
+          </Typography>
+          <Typography color="error.main" variant="body2">
             {error}
-          </Text>
-        </VStack>
-
+          </Typography>
+        </Stack>
         {onRetry && (
           <Button
-            size="sm"
-            colorScheme="red"
-            variant="outline"
+            size="small"
+            color="error"
+            variant="outlined"
             onClick={onRetry}
+            startIcon={<LuRefreshCw />}
           >
-            <LuRefreshCw />
             Try Again
           </Button>
         )}
-      </VStack>
+      </Stack>
     </Box>
   );
 };

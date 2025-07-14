@@ -1,86 +1,108 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import rehypeRaw from "rehype-raw";
-import DOMPurify from "dompurify";
-import {
-  Box,
-  Text,
-  Code,
-  Heading,
-  Link,
-  ListItem,
-  List,
-} from "@chakra-ui/react";
-import "highlight.js/styles/github.css"; // Import a highlight.js theme (adjust as needed)
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
+import DOMPurify from 'dompurify';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import MuiLink from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import 'highlight.js/styles/github.css';
 
 interface MarkdownRendererProps {
   markdown: string;
 }
 
 const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
-  // Sanitize the Markdown content
   const sanitizedMarkdown = DOMPurify.sanitize(markdown);
 
   return (
-    <Box
-      className="markdown-body"
-      wordBreak="break-word"
-      background="transparent"
-    >
+    <Box className="markdown-body" sx={{ wordBreak: 'break-word', background: 'transparent' }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
         components={{
-          // Map Markdown elements to Chakra UI components
-          p: ({ children }) => <Text mb={2}>{children}</Text>,
-          h1: ({ children }) => (
-            <Heading as="h1" size="xl" mb={4}>
-              {children}
-            </Heading>
+          p: (props: React.ComponentProps<'p'>) => (
+            <Typography variant="body2" component="p" sx={{ mb: 2 }}>
+              {props.children}
+            </Typography>
           ),
-          h2: ({ children }) => (
-            <Heading as="h2" size="lg" mb={3}>
-              {children}
-            </Heading>
+          h1: (props: React.ComponentProps<'h1'>) => (
+            <Typography variant="h4" sx={{ mb: 3, mt: 2, fontWeight: 700 }}>
+              {props.children}
+            </Typography>
           ),
-          h3: ({ children }) => (
-            <Heading as="h3" size="md" mb={2}>
-              {children}
-            </Heading>
+          h2: (props: React.ComponentProps<'h2'>) => (
+            <Typography variant="h5" sx={{ mb: 2.5, mt: 2, fontWeight: 600 }}>
+              {props.children}
+            </Typography>
           ),
-          code: ({ node, className, children, ...props }: any) => {
+          h3: (props: React.ComponentProps<'h3'>) => (
+            <Typography variant="h6" sx={{ mb: 2, mt: 2, fontWeight: 500 }}>
+              {props.children}
+            </Typography>
+          ),
+          code: (props: React.ComponentProps<'code'> & { inline?: boolean }) => {
+            const { className, children, ...rest } = props;
             const isInline = !className;
             return isInline ? (
-              <Code fontSize="sm" px={1} {...props}>
-                {children}
-              </Code>
-            ) : (
-              <Code
-                display="block"
-                whiteSpace="pre"
-                p={2}
-                borderRadius="md"
-                className={className}
-                {...props}
+              <Box
+                component="code"
+                sx={{
+                  fontSize: '0.95em',
+                  px: 0.5,
+                  py: 0.2,
+                  bgcolor: 'grey.100',
+                  borderRadius: 1,
+                  fontFamily: 'Roboto Mono, monospace',
+                }}
+                {...rest}
               >
                 {children}
-              </Code>
+              </Box>
+            ) : (
+              <Box
+                component="pre"
+                sx={{
+                  display: 'block',
+                  whiteSpace: 'pre',
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: 'grey.100',
+                  fontFamily: 'Roboto Mono, monospace',
+                  overflowX: 'auto',
+                  mb: 2,
+                }}
+                className={className}
+                {...rest}
+              >
+                <code>{children}</code>
+              </Box>
             );
           },
-          a: ({ href, children }) => (
-            <Link color="blue.500" href={href}>
-              {children}
-            </Link>
+          a: (props: React.ComponentProps<'a'>) => (
+            <MuiLink
+              color="primary.main"
+              href={props.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {props.children}
+            </MuiLink>
           ),
-          ul: ({ children }) => <List.Root mb={2}>{children}</List.Root>,
-          ol: ({ children }) => (
-            <List.Root as="ol" mb={2}>
-              {children}
-            </List.Root>
+          ul: (props: React.ComponentProps<'ul'>) => (
+            <List sx={{ mb: 2, pl: 3, listStyleType: 'disc' }}>{props.children}</List>
           ),
-          li: ({ children }) => <ListItem>{children}</ListItem>,
+          ol: (props: React.ComponentProps<'ol'>) => (
+            <List component="ol" sx={{ mb: 2, pl: 3, listStyleType: 'decimal' }}>
+              {props.children}
+            </List>
+          ),
+          li: (props: React.ComponentProps<'li'>) => (
+            <ListItem sx={{ display: 'list-item', pl: 0 }}>{props.children}</ListItem>
+          ),
         }}
       >
         {sanitizedMarkdown}

@@ -15,7 +15,7 @@ export interface UploadedFile {
   fileType: string;
   fileSize: number;
   mimeType: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface UploadResponse {
