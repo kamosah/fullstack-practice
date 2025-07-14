@@ -4,10 +4,11 @@ Test script to verify LiteLLM integration with Grok Cloud.
 Run this script to test the LLM service before starting the full application.
 """
 
-import asyncio
 import sys
 from pathlib import Path
 from unittest.mock import AsyncMock, patch
+
+import pytest
 
 # Add the backend directory to the Python path
 backend_dir = Path(__file__).parent
@@ -18,6 +19,7 @@ from app.core.config import settings  # noqa: E402
 from app.services.llm_service import llm_service  # noqa: E402
 
 
+@pytest.mark.asyncio
 async def test_llm_service():
     """Test the LLM service with a simple message."""
     print("Testing LiteLLM integration with Grok Cloud...")
@@ -87,4 +89,5 @@ async def main():
 
 
 if __name__ == "__main__":
+    import asyncio
     asyncio.run(main())
