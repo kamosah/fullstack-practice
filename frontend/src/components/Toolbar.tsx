@@ -17,7 +17,7 @@ const Toolbar = () => {
       }}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <IconButton size="large" sx={{ color: "primary.main" }}>
+        <IconButton size="large" sx={{ color: "primary.main" }} aria-label="View tables">
           <TbTableFilled size={28} />
         </IconButton>
         <Stack direction="row" spacing={2} alignItems="center">
