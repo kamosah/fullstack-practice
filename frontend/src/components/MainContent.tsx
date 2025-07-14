@@ -120,13 +120,17 @@ const MainContent: React.FC = () => {
         <Panel defaultSize={50} minSize={40} maxSize={80}>
           <Box
             display="flex"
+            alignItems="center"
             justifyContent="center"
-            sx={{ py: 0, height: '100%', overflow: 'hidden' }}
+            sx={{ py: 2, height: '100%', overflow: 'hidden' }}
           >
             <Box
               sx={{
-                p: 4,
-                minHeight: 0,
+                p: 2,
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
                 width: {
                   xs: '100%',
                   sm: '90%',

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import type { Message, Attachment } from '../../types/chat';
 import ChatInput from '../ChatInput';
 import ChatMessageList from './ChatMessageList';
-import ChatHeader from './ChatHeader';
 
 interface ChatProps {
   isDisabled?: boolean;
@@ -19,23 +19,22 @@ const Chat: React.FC<ChatProps> = ({
   onSendMessage,
 }) => {
   const [inputValue, setInputValue] = useState('');
+  const hasMessages = messages && messages.length > 0;
 
   return (
     <Paper
       elevation={2}
       sx={{
-        height: '100%',
+        height: hasMessages ? '100%' : 'fit-content',
         display: 'flex',
         flexDirection: 'column',
-        overflowY: 'hidden',
         borderRadius: 2,
         p: 2,
         bgcolor: 'background.paper',
+        overflow: 'hidden',
       }}
     >
-      <ChatHeader />
-      <ChatMessageList messages={messages} isTyping={isTyping} />
-
+      {hasMessages && <ChatMessageList messages={messages} isTyping={isTyping} />}
       <ChatInput
         inputValue={inputValue}
         setInputValue={setInputValue}

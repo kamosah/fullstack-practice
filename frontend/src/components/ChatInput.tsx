@@ -85,10 +85,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <Box
       sx={{
-        py: 2,
+        py: 0,
         px: 0,
         bgcolor: 'background.paper',
         flexShrink: 0,
+        width: '100%',
       }}
     >
       <PendingFiles />
@@ -104,6 +105,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           borderRadius={2}
           px={2}
           py={1.5}
+          width="100%"
           sx={{
             '&:hover': { borderColor: isDisabled ? 'grey.200' : 'grey.300' },
             '&:focus-within': {
