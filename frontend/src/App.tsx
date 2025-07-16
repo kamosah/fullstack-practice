@@ -4,6 +4,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Uploady from "@rpldy/uploady";
 import { useUploadConfig } from "./hooks/useUploadConfig";
+
 const App: React.FC = () => {
   const uploadConfig = useUploadConfig();
   return (

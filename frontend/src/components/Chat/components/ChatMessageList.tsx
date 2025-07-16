@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Stack from '@mui/material/Stack';
 import ChatMessageBubble from './ChatMessageBubble';
 import ChatTypingIndicator from './ChatTypingIndicator';
-import type { Message } from '../../types/chat';
+import type { Message } from '../../../types/chat';
 import Box from '@mui/material/Box';
 
 const ChatMessageList: React.FC<{

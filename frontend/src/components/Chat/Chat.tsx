@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import type { Message, Attachment } from '../../types/chat';
-import ChatInput from '../ChatInput';
-import ChatMessageList from './ChatMessageList';
+import ChatInput from './components/ChatInput';
+import ChatMessageList from './components/ChatMessageList';
 
 interface ChatProps {
   isDisabled?: boolean;
@@ -24,13 +24,15 @@ const Chat: React.FC<ChatProps> = ({
     <Paper
       elevation={2}
       sx={{
-        height: hasMessages ? '100%' : 'fit-content',
+        background: 'transparent',
+        border: 'none',
+        boxShadow: 'none',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 2,
-        p: 2,
-        bgcolor: 'background.paper',
+        height: hasMessages ? '100%' : 'fit-content',
         overflow: 'hidden',
+        p: 2,
+        width: '100%',
       }}
     >
       {hasMessages && <ChatMessageList messages={messages} isTyping={isTyping} />}

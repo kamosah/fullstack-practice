@@ -43,7 +43,7 @@ graph TB
     subgraph "Frontend Stack"
         A1[React 19]
         A2[TypeScript]
-        A3[Chakra UI]
+        A3[Material UI]
         A4[Tanstack Query]
         A5[Framer Motion]
     end
@@ -100,7 +100,7 @@ graph TB
 
 ### **Frontend**
 - **Framework**: React 19.1+ with TypeScript
-- **Styling**: Chakra UI + Emotion
+- **Styling**: Material UI + Emotion
 - **State Management**: Tanstack Query
 - **Animations**: Framer Motion
 - **GraphQL**: GraphQL Request
