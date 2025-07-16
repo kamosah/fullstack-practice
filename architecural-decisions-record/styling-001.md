@@ -1,4 +1,7 @@
-# MUI Styling Best Practices – Architectural Decision Record
+# ADR 001: MUI Styling Best Practices
+
+Status: Accepted
+Date: 2025-07-16
 
 ## Problem Statement
 
