@@ -23,13 +23,7 @@ To support maintainable, scalable, and understandable code in our new React appl
 
 ## Considered Options
 
-- Option 1: Atomic-inspired structure (components/, sub-components/, shared-components/, pages/) and styling guide as described, with best practices codified for component breakdown and smart/dumb split.
-
-- Option 2: Flat structure with all components in a single directory, ad-hoc file sizes, unconstrained subcomponent extraction, and mixed styling approaches.
-
-- Option 3: Strict classic Atomic Design (atoms, molecules, organisms, templates, pages) according to Brad Frost's original methodology.
-
-- Option 4: Use of global CSS or SCSS files and/or legacy JSS for styling, with no enforced styling pattern.
+- Option 1: Atomic design inspired structure (components/, sub-components/, shared-components/, pages/) and styling guide as described, with best practices codified for component breakdown and smart/dumb split.
 
 ## Decision Outcome
 

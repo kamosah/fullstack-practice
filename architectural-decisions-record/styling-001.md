@@ -70,24 +70,41 @@ We require a flexible, maintainable, and theme-consistent way to style Material 
 
 - For advanced needs, prefer slot and slotProps APIs for internal subcomponent control over direct DOM/class hacks.
 
-#### Example Patterns
+#### Example Patterns & Folder Structure
+
+- **Place all styled components created with MUI’s `styled` API in a `styles.tsx` file within the component’s folder.**
+- **Main component files (`index.tsx`) should focus on logic, structure, and rendering.**
+- **Use the `sx` prop for one-off or responsive tweaks directly in the component file.**
 
 ```tsx
-// 1. Reusable component with styled()
+// styles.tsx
 import { styled } from "@mui/material/styles";
-const MyButton = styled(Button)(({ theme }) => ({
+import Box from "@mui/material/Box";
+
+export const MyButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   "&:hover": { backgroundColor: theme.palette.primary.dark },
 }));
 
-// 2. Responsive and one-off customizations
-<MyButton
-  sx={{
-    width: { xs: 120, md: 180 },
-    m: 2,
-    "& .MuiButton-label": { fontWeight: 700 },
-  }}
->
-  Action
-</MyButton>;
+export const Wrapper = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+  display: "flex",
+}));
+
+// index.tsx
+import { MyButton, Wrapper } from "./styles";
+
+const MyComponent = () => (
+  <Wrapper>
+    <MyButton
+      sx={{
+        width: { xs: 120, md: 180 },
+        m: 2,
+        "& .MuiButton-label": { fontWeight: 700 },
+      }}
+    >
+      Action
+    </MyButton>
+  </Wrapper>
+);
 ```

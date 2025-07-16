@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const uploadConfig = useUploadConfig();
   return (
     <Uploady {...uploadConfig}>
-      <Box minHeight="100vh" bgcolor="grey.50">
+      <Box minHeight="100vh">
         <Stack direction="row" height="100vh">
           <Sidebar />
           <Outlet />

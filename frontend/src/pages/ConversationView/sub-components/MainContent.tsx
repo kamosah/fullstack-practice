@@ -1,13 +1,13 @@
-import Box from '@mui/material/Box';
-import Chat from './Chat/Chat';
-import { MessageType, type Attachment } from '../types/chat';
+import { ConversationArea } from './styles';
+import Chat from '../../../components/Chat/Chat';
+import { MessageType, type Attachment } from '../../../types/chat';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import {
   useConversation,
   useCreateConversationWithMessage,
   useSendMessage,
-} from '../hooks/useChat';
+} from '../../../hooks/useChat';
 
 const MainContent: React.FC = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
@@ -62,42 +62,25 @@ const MainContent: React.FC = () => {
   };
 
   return (
-    <Box
+    <ConversationArea
       sx={{
-        flex: 1,
-        bgcolor: 'background.default',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        overflow: 'hidden',
+        alignItems: activeConversation?.messages ? 'flex-end' : 'center',
+        width: {
+          xs: '100%',
+          sm: '90%',
+          md: '66.6667%',
+          lg: '60%',
+          xl: '50%',
+        },
       }}
     >
-      <Box
-        sx={{
-          p: 2,
-          height: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: activeConversation?.messages ? 'flex-end' : 'center',
-          width: {
-            xs: '100%',
-            sm: '90%',
-            md: '66.6667%',
-            lg: '60%',
-            xl: '50%',
-          },
-          maxWidth: 900,
-          mx: 'auto',
-        }}
-      >
-        <Chat
-          messages={activeConversation?.messages ?? []}
-          onSendMessage={onSendMessage}
-          isTyping={isTyping}
-          isDisabled={isLoading}
-        />
-      </Box>
-    </Box>
+      <Chat
+        messages={activeConversation?.messages ?? []}
+        onSendMessage={onSendMessage}
+        isTyping={isTyping}
+        isDisabled={isLoading}
+      />
+    </ConversationArea>
   );
 };
 
