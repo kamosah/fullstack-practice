@@ -1,8 +1,10 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import { type Attachment } from "../../types/chat";
-import AttachmentItem from "./AttachmentItem";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import React from 'react';
+
+import { type Attachment } from '../../types/chat';
+
+import AttachmentItem from './sub-components/AttachmentItem';
 
 interface AttachmentListProps {
   attachments: Attachment[];
@@ -16,14 +18,12 @@ const AttachmentList: React.FC<AttachmentListProps> = ({ attachments }) => {
         {attachments.map((attachment, index) => (
           <Box
             key={index}
-            sx={{
-              bgcolor: "grey.50",
-              borderRadius: 1.5,
-              border: "1px solid",
-              borderColor: "grey.200",
-              p: 1.5,
-              maxWidth: 100,
-            }}
+            bgcolor="grey.50"
+            border="1px solid"
+            borderColor="grey.200"
+            borderRadius={1.5}
+            maxWidth={100}
+            p={1.5}
           >
             <AttachmentItem attachment={attachment} />
           </Box>
