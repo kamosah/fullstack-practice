@@ -1,6 +1,8 @@
-import Box from "@mui/material/Box";
-import PendingFileItem from "./PendingFileItem";
-import { useFileUpload } from "../hooks/useFileUpload";
+import Box from '@mui/material/Box';
+
+import { useFileUpload } from '../hooks/useFileUpload';
+
+import PendingFileItem from './PendingFileItem';
 
 export const PendingFiles = () => {
   const { removeFile, pendingFiles } = useFileUpload();

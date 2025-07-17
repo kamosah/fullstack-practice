@@ -1,11 +1,14 @@
-import React from 'react';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import React from 'react';
+
 import { MessageType } from '../../../types/chat';
-import type { Message } from '../../../types/chat';
-import MarkdownRenderer from '../../MarkdownRenderer';
 import AttachmentList from '../../AttachmentList/AttachmentList';
+import MarkdownRenderer from '../../MarkdownRenderer';
+
+import { MessageBubbleBox } from './styles';
+
+import type { Message } from '../../../types/chat';
 
 const ChatMessageBubble: React.FC<{ message: Message }> = ({ message }) => (
   <Stack
@@ -15,18 +18,7 @@ const ChatMessageBubble: React.FC<{ message: Message }> = ({ message }) => (
     justifyContent={message.type === MessageType.USER ? 'flex-end' : 'flex-start'}
     spacing={2}
   >
-    <Box
-      sx={{
-        maxWidth: '70%',
-        bgcolor: message.type === MessageType.USER ? 'grey.50' : 'transparent',
-        color: message.type === MessageType.USER ? 'grey.900' : 'text.primary',
-        px: 2,
-        py: 1.5,
-        borderRadius: 6,
-        boxShadow: message.type === MessageType.USER ? 1 : 0,
-        justifyContent: 'flex-end',
-      }}
-    >
+    <MessageBubbleBox isUser={message.type === MessageType.USER}>
       {message.type === MessageType.AGENT ? (
         <MarkdownRenderer markdown={message.content} />
       ) : (
@@ -35,7 +27,7 @@ const ChatMessageBubble: React.FC<{ message: Message }> = ({ message }) => (
         </Typography>
       )}
       {message.attachments && <AttachmentList attachments={message.attachments} />}
-    </Box>
+    </MessageBubbleBox>
   </Stack>
 );
 

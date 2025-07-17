@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
+
+import App from './components/App';
 import ConversationView from './pages/ConversationView';
 
 export const router = createBrowserRouter([

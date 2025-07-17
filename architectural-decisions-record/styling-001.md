@@ -58,12 +58,10 @@ We require a flexible, maintainable, and theme-consistent way to style Material 
 
 ### Best Practices (Summary)
 
-- Use @mui/material/styles’s styled function exclusively for all styled components tied to MUI’s theme system.
 
-- Write all style definitions using object syntax.
 
+- When creating styled components that accept additional/custom props (beyond standard MUI/system props), explicitly type the props for clarity and type safety. Define a TypeScript interface or type for the props and use it as the generic argument to `styled`.
 - Apply the sx prop for one-off, responsive, or per-instance overrides.
-
 - Use theme variables and system props for consistent spacing, colors, etc.
 
 - Manage CSS injection order with StyledEngineProvider injectFirst or custom Emotion cache when global override is necessary.

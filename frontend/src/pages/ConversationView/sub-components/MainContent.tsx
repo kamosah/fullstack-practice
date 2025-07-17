@@ -1,13 +1,15 @@
-import { ConversationArea } from './styles';
-import Chat from '../../../components/Chat/Chat';
-import { MessageType, type Attachment } from '../../../types/chat';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import Chat from '../../../components/Chat';
 import {
   useConversation,
   useCreateConversationWithMessage,
   useSendMessage,
 } from '../../../hooks/useChat';
+import { MessageType, type Attachment } from '../../../types/chat';
+
+import { ConversationArea } from './styles';
 
 const MainContent: React.FC = () => {
   const { conversationId } = useParams<{ conversationId: string }>();

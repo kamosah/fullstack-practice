@@ -1,11 +1,14 @@
 import Paper from "@mui/material/Paper";
-import { useNavigate, useParams } from "react-router-dom";
-import { useCallback } from "react";
-import { useConversations } from "../../hooks/useChat";
-import type { Conversation } from "../../types/chat";
-import SidebarHeader from "./Header";
-import SidebarSearch from "./Search";
-import ConversationList from "./ConversationList";
+import { useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { useConversations } from '../../hooks/useChat';
+
+import ConversationList from './ConversationList';
+import SidebarHeader from './Header';
+import SidebarSearch from './Search';
+
+import type { Conversation } from '../../types/chat';
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +30,7 @@ const Sidebar: React.FC = () => {
       sx={{
         width: 320,
         height: '100vh',
-        bgcolor: 'background.paper',
+        bgcolor: 'background.default',
         borderRight: 1,
         borderColor: 'grey.200',
         display: 'flex',

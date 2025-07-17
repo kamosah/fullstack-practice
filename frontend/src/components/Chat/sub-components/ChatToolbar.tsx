@@ -1,12 +1,13 @@
-import React, { useRef, useState } from 'react';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import { PiArrowElbowRightUp } from 'react-icons/pi';
-import UploadButton from '@rpldy/upload-button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { AiOutlineFolder, AiOutlineUpload } from 'react-icons/ai';
 import Typography from '@mui/material/Typography';
+import { UploadButton } from '@rpldy/upload-button';
+import React, { useRef, useState } from 'react';
+import { AiOutlineFolder, AiOutlineUpload } from 'react-icons/ai';
+import { PiArrowElbowRightUp } from 'react-icons/pi';
+
+import { ToolbarRoot, ToolbarActions } from './styles';
 
 type ChatToolbarProps = {
   canSendMessage: boolean;
@@ -18,23 +19,8 @@ const ChatToolbar: React.FC<ChatToolbarProps> = ({ canSendMessage, handleSubmit,
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const iconButtonRef = useRef<HTMLButtonElement>(null);
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      gap={1}
-      mt={1}
-      px={1}
-      py={0.5}
-      bgcolor="transparent"
-      borderRadius="100%"
-      width="100%"
-      justifyContent="space-between"
-      sx={{
-        boxShadow: 0,
-        fontSize: '1.25rem',
-      }}
-    >
-      <Box className="left-actions">
+    <ToolbarRoot>
+      <ToolbarActions>
         <Menu
           anchorEl={isMenuOpen ? iconButtonRef.current : null}
           open={isMenuOpen}
@@ -79,8 +65,8 @@ const ChatToolbar: React.FC<ChatToolbarProps> = ({ canSendMessage, handleSubmit,
         >
           <AiOutlineUpload fontSize="1.5rem" />
         </IconButton>
-      </Box>
-      <Box className="right-actions">
+      </ToolbarActions>
+      <ToolbarActions>
         <IconButton
           aria-label="Send message"
           onClick={canSendMessage ? handleSubmit : undefined}
@@ -95,8 +81,8 @@ const ChatToolbar: React.FC<ChatToolbarProps> = ({ canSendMessage, handleSubmit,
         >
           <PiArrowElbowRightUp fontSize="1.5rem" />
         </IconButton>
-      </Box>
-    </Box>
+      </ToolbarActions>
+    </ToolbarRoot>
   );
 };
 
