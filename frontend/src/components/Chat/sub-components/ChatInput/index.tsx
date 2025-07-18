@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { useFileUpload } from '../../../hooks/useFileUpload';
-import { convertToAttachment } from '../../../utils/convertToAttachment';
-import { PendingFiles } from '../../PendingFiles';
+import { useFileUpload } from '../../../../hooks/useFileUpload';
+import { convertToAttachment } from '../../../../utils/convertToAttachment';
+import { PendingFiles } from '../../../PendingFiles';
+import ChatToolbar from '../ChatToolbar';
 
-import ChatToolbar from './ChatToolbar';
-import { StyledTextarea, ChatInputRoot, ChatInputForm, ChatInputContainer } from './styles';
+import { ChatInputRoot, ChatInputContainer, ChatInputForm, ChatInputTextarea } from './styles';
 
-import type { Attachment } from '../../../types/chat';
+import type { Attachment } from '../../../../types/chat';
 
 interface ChatInputProps {
   inputValue: string;
@@ -56,7 +56,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       <PendingFiles />
       <ChatInputContainer>
         <ChatInputForm as="form" onSubmit={handleSubmit}>
-          <StyledTextarea
+          <ChatInputTextarea
             disabled={isDisabled || hasUploadingFiles}
             maxRows={6}
             minRows={1}

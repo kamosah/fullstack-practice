@@ -1,11 +1,12 @@
 import Stack from '@mui/material/Stack';
 import React, { useEffect, useRef } from 'react';
 
-import ChatMessageBubble from './ChatMessageBubble';
-import ChatTypingIndicator from './ChatTypingIndicator';
+import ChatTypingIndicator from '../ChatInputTypingIndicator';
+import ChatMessageBubble from '../ChatMessageBubble';
+
 import { MessageListContainer } from './styles';
 
-import type { Message } from '../../../types/chat';
+import type { Message } from '../../../../types/chat';
 
 const ChatMessageList: React.FC<{
   messages: Message[];

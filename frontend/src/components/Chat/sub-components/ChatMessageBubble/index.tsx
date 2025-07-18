@@ -2,13 +2,13 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 
-import { MessageType } from '../../../types/chat';
-import AttachmentList from '../../AttachmentList';
-import { MarkdownRenderer } from '../../MarkdownRenderer';
+import { MessageType } from '../../../../types/chat';
+import AttachmentList from '../../../AttachmentList';
+import { MarkdownRenderer } from '../../../MarkdownRenderer';
 
 import { MessageBubbleBox } from './styles';
 
-import type { Message } from '../../../types/chat';
+import type { Message } from '../../../../types/chat';
 
 const ChatMessageBubble: React.FC<{ message: Message }> = ({ message }) => (
   <Stack
