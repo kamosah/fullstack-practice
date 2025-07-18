@@ -1,4 +1,4 @@
-import { blueGrey, cyan, grey } from '@mui/material/colors';
+import { blueGrey, cyan, grey, red } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
@@ -24,6 +24,12 @@ const theme = createTheme({
       primary: grey[900],
       secondary: grey[600],
     },
+    error: {
+      main: red[600],
+      light: red[300],
+      dark: red[800],
+      contrastText: '#fff',
+    },
     grey: {
       50: grey[50],
       100: grey[100],
@@ -32,6 +38,9 @@ const theme = createTheme({
       400: grey[400],
       500: grey[500],
     },
+  },
+  shape: {
+    borderRadius: 8,
   },
 });
 
