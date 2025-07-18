@@ -42,23 +42,27 @@ cp .env.example .env
 # LITELLM_API_KEY=your_actual_grok_api_key_here
 ```
 
-### []. Install AWSCLI
+### 3. Install AWSCLI
 
-### 3. Setup Database
+```bash
+brew install awscli
+```
+
+### 4. Setup Database
 
 ```bash
 # Create database tables
 python setup_database.py
 ```
 
-### 4. Test Integration
+### 5. Test Integration
 
 ```bash
 # Test LiteLLM connection
 python test_llm_integration.py
 ```
 
-### 5. Start the Server
+### 6. Start the Server
 
 ```bash
 # Run the application
