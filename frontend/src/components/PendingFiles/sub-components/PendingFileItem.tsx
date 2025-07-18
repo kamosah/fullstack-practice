@@ -1,12 +1,21 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import React from 'react';
 import { AiOutlineFile, AiOutlineFilePdf, AiOutlineFileText, AiOutlineClose } from 'react-icons/ai';
-import type { PendingFile } from '../types/upload';
-import { formatFileSize } from '../hooks/useUploadConfig';
+
+import { formatFileSize } from '../../../hooks/useUploadConfig';
+
+import {
+  PendingFileDetails,
+  StatusContainer,
+  ProgressContainer,
+  ProgressBar,
+  PendingFileItemRoot,
+  PreviewContainer,
+} from './styles';
+
+import type { PendingFile } from '../../../types/upload';
 
 interface PendingFileItemProps {
   file: PendingFile;
@@ -16,7 +25,7 @@ interface PendingFileItemProps {
 const PendingFileItem: React.FC<PendingFileItemProps> = ({ file, onRemove }) => {
   const getFileIcon = (mimeType: string) => {
     if (mimeType.startsWith('image/')) {
-      return null; // Will show image preview
+      return null;
     } else if (mimeType === 'application/pdf') {
       return <AiOutlineFilePdf size={20} color="#dc2626" />;
     } else if (mimeType === 'text/plain') {
@@ -37,19 +46,7 @@ const PendingFileItem: React.FC<PendingFileItemProps> = ({ file, onRemove }) => 
         />
       );
     }
-    return (
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        width={32}
-        height={32}
-        bgcolor="grey.100"
-        borderRadius={1}
-      >
-        {getFileIcon(file.file.type)}
-      </Box>
-    );
+    return <PreviewContainer>{getFileIcon(file.file.type)}</PreviewContainer>;
   };
 
   const getStatusColor = () => {
@@ -66,27 +63,13 @@ const PendingFileItem: React.FC<PendingFileItemProps> = ({ file, onRemove }) => 
   };
 
   return (
-    <Box
-      sx={{
-        bgcolor: 'grey.50',
-        borderRadius: 2,
-        border: '1px solid',
-        borderColor: 'grey.200',
-        p: 2,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 2,
-        minWidth: 200,
-        maxWidth: 300,
-      }}
-    >
+    <PendingFileItemRoot>
       {renderFilePreview()}
-
-      <Box flex={1} minWidth={0}>
+      <PendingFileDetails spacing={0.5}>
         <Typography variant="body2" fontWeight={500} noWrap>
           {file.file.name}
         </Typography>
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <StatusContainer spacing={2}>
           <Typography variant="caption" color="text.secondary">
             {formatFileSize(file.file.size)}
           </Typography>
@@ -105,43 +88,22 @@ const PendingFileItem: React.FC<PendingFileItemProps> = ({ file, onRemove }) => 
               ✓
             </Typography>
           )}
-        </Stack>
+        </StatusContainer>
         {file.uploadStatus === 'uploading' && (
-          <Box
-            sx={{
-              width: '100%',
-              height: 2,
-              bgcolor: 'grey.200',
-              borderRadius: 1,
-              mt: 1,
-              overflow: 'hidden',
-            }}
-          >
-            <Box
-              sx={{
-                height: '100%',
-                bgcolor: getStatusColor(),
-                borderRadius: 1,
-                width: `${file.uploadProgress}%`,
-                transition: 'width 0.2s',
-              }}
-            />
-          </Box>
+          <ProgressContainer>
+            <ProgressBar sx={{ bgcolor: getStatusColor(), width: `${file.uploadProgress}%` }} />
+          </ProgressContainer>
         )}
-      </Box>
-
+      </PendingFileDetails>
       <IconButton
         aria-label="Remove file"
         size="small"
         onClick={() => onRemove(file.id)}
-        sx={{
-          color: 'grey.700',
-          '&:hover': { bgcolor: 'grey.200' },
-        }}
+        sx={{ color: 'grey.700', '&:hover': { bgcolor: 'grey.200' } }}
       >
         <AiOutlineClose />
       </IconButton>
-    </Box>
+    </PendingFileItemRoot>
   );
 };
 
