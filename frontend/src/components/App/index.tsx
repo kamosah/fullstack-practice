@@ -3,7 +3,7 @@ import { Uploady } from '@rpldy/uploady';
 import { Outlet } from 'react-router-dom';
 
 import { useUploadConfig } from '../../hooks/useUploadConfig';
-import Sidebar from '../Sidebar/Sidebar';
+import Sidebar from '../Sidebar';
 
 import { AppContainer } from './styles';
 
