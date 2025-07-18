@@ -1,25 +1,26 @@
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
-import rehypeRaw from 'rehype-raw';
-import DOMPurify from 'dompurify';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import MuiLink from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import 'highlight.js/styles/github.css';
+import Typography from '@mui/material/Typography';
+import DOMPurify from 'dompurify';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 
-interface MarkdownRendererProps {
+import 'highlight.js/styles/github.css';
+import { CodeBlock, InlineCode, MarkdownRoot } from './styles';
+
+export interface MarkdownRendererProps {
   markdown: string;
 }
 
-const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
+export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
   const sanitizedMarkdown = DOMPurify.sanitize(markdown);
 
   return (
-    <Box className="markdown-body" sx={{ wordBreak: 'break-word', background: 'transparent' }}>
+    <MarkdownRoot className="markdown-body">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight, rehypeRaw]}
@@ -45,42 +46,11 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
             </Typography>
           ),
           code: (props: React.ComponentProps<'code'> & { inline?: boolean }) => {
-            const { className, children, ...rest } = props;
-            const isInline = !className;
-            return isInline ? (
-              <Box
-                component="code"
-                sx={{
-                  fontSize: '0.95em',
-                  px: 0.5,
-                  py: 0.2,
-                  bgcolor: 'grey.100',
-                  borderRadius: 1,
-                  fontFamily: 'Roboto Mono, monospace',
-                }}
-                {...rest}
-              >
-                {children}
-              </Box>
-            ) : (
-              <Box
-                component="pre"
-                sx={{
-                  display: 'block',
-                  whiteSpace: 'pre',
-                  p: 2,
-                  borderRadius: 2,
-                  bgcolor: 'grey.100',
-                  fontFamily: 'Roboto Mono, monospace',
-                  overflowX: 'auto',
-                  mb: 2,
-                }}
-                className={className}
-                {...rest}
-              >
-                <code>{children}</code>
-              </Box>
-            );
+            const { className, children, inline } = props;
+            if (inline) {
+              return <InlineCode>{children}</InlineCode>;
+            }
+            return <CodeBlock className={className}>{children}</CodeBlock>;
           },
           a: (props: React.ComponentProps<'a'>) => (
             <MuiLink
@@ -107,7 +77,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
       >
         {sanitizedMarkdown}
       </ReactMarkdown>
-    </Box>
+    </MarkdownRoot>
   );
 };
 

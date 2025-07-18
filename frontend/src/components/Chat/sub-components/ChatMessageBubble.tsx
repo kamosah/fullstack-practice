@@ -3,8 +3,8 @@ import Typography from '@mui/material/Typography';
 import React from 'react';
 
 import { MessageType } from '../../../types/chat';
-import AttachmentList from '../../AttachmentList/AttachmentList';
-import MarkdownRenderer from '../../MarkdownRenderer';
+import AttachmentList from '../../AttachmentList';
+import { MarkdownRenderer } from '../../MarkdownRenderer';
 
 import { MessageBubbleBox } from './styles';
 
