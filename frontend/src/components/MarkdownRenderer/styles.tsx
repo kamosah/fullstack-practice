@@ -9,7 +9,7 @@ export const MarkdownRoot = styled(Box)({
 });
 
 export const InlineCode = forwardRef<HTMLElement, React.ComponentProps<'code'>>(
-  ({ children, ...restInline }, ref) => (
+  ({ children, ...restProps }, ref) => (
     <Typography
       component="code"
       ref={ref}
@@ -21,7 +21,7 @@ export const InlineCode = forwardRef<HTMLElement, React.ComponentProps<'code'>>(
         borderRadius: 1,
         fontFamily: 'Roboto Mono, monospace',
       }}
-      {...restInline}
+      {...restProps}
     >
       {children}
     </Typography>
@@ -29,7 +29,7 @@ export const InlineCode = forwardRef<HTMLElement, React.ComponentProps<'code'>>(
 );
 
 export const CodeBlock = forwardRef<HTMLPreElement, React.ComponentProps<'pre'>>(
-  ({ className, children, ...restBlock }, ref) => (
+  ({ className, children, ...restProps }, ref) => (
     <Typography
       component="pre"
       ref={ref}
@@ -44,7 +44,7 @@ export const CodeBlock = forwardRef<HTMLPreElement, React.ComponentProps<'pre'>>
         mb: 2,
       }}
       className={className}
-      {...restBlock}
+      {...restProps}
     >
       <code>{children}</code>
     </Typography>
