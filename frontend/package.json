@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "generate": "graphql-codegen --config codegen.ts",
-    "typecheck": "npx tsc --noEmit"
+    "typecheck": "npx tsc --noEmit",
+    "ready": "npm run typecheck && npm run lint && npm run generate"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

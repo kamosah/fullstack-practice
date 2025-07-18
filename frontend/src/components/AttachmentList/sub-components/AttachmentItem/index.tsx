@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { FileAttachment, ImageAttachment } from './styles';
+import { FileAttachment } from '../FileAttachment';
+import { ImageAttachment } from '../ImageAttachment';
 
-import type { Attachment } from '../../../types/chat';
+import type { Attachment } from '../../../../types/chat';
 
 interface AttachmentItemProps {
   attachment: Attachment;

@@ -1,0 +1,9 @@
+This is a test file for testing the BLOB storage system.
+It contains some text that should be extracted and used by the LLM.
+
+Key information:
+- Financial Analysis: Q4 2024 results show 15% growth
+- Investment Risk: Moderate to high risk profile
+- Market Outlook: Positive for next quarter
+
+This text should be available to the LLM when processing user queries.

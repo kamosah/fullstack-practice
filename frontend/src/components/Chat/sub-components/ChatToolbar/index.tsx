@@ -43,9 +43,7 @@ const ChatToolbar: React.FC<ChatToolbarProps> = ({ canSendMessage, handleSubmit,
             }}
           >
             <MenuItem onClick={() => setIsMenuOpen(false)}>
-              <IconButton>
-                <AiOutlineFolder size={16} style={{ marginRight: 8 }} />
-              </IconButton>
+              <AiOutlineFolder size={16} style={{ marginRight: 8 }} />
               <Typography variant="body2">Upload from Computer</Typography>
             </MenuItem>
           </UploadButton>

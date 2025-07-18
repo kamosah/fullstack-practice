@@ -7,7 +7,9 @@ import {
 } from "@rpldy/uploady";
 import { useState, useCallback } from "react";
 
-import { validateFile, formatFileSize } from "./useUploadConfig";
+import { formatFileSize } from '../utils/fileHelpers';
+
+import { validateFile } from './useUploadConfig';
 
 import type {
   PendingFile,

@@ -1,15 +1,15 @@
-import type { UploadyProps } from "@rpldy/uploady";
+import { formatFileSize } from '../utils/fileHelpers';
+
+import type { UploadyProps } from '@rpldy/uploady';
 
 export const UPLOAD_CONFIG = {
   MAX_FILE_SIZE: 10 * 1024 * 1024, // 10MB
   MAX_FILES_PER_MESSAGE: 5,
   ALLOWED_TYPES: {
-    "image/*": [".jpg", ".jpeg", ".png", ".webp"],
-    "application/pdf": [".pdf"],
-    "text/plain": [".txt"],
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
-      ".docx",
-    ],
+    'image/*': ['.jpg', '.jpeg', '.png', '.webp'],
+    'application/pdf': ['.pdf'],
+    'text/plain': ['.txt'],
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
   },
   PREVIEW_PANEL: {
     DEFAULT_WIDTH: 300,
@@ -21,9 +21,9 @@ export const UPLOAD_CONFIG = {
 export const useUploadConfig = (): UploadyProps => {
   return {
     destination: {
-      url: "http://localhost:8000/api/upload",
-      method: "POST",
-      filesParamName: "files", // Explicitly set the parameter name
+      url: 'http://localhost:8000/api/upload',
+      method: 'POST',
+      filesParamName: 'files', // Explicitly set the parameter name
       headers: {
         // Don't set Content-Type, let the browser set it for multipart/form-data
       },
@@ -38,12 +38,12 @@ export const useUploadConfig = (): UploadyProps => {
         return false; // Reject files larger than max size
       }
       const allowedTypes = [
-        "text/plain",
-        "application/pdf",
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        'text/plain',
+        'application/pdf',
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       ];
       if (!allowedTypes.includes(file.type)) {
         return false; // Reject unsupported file types
@@ -57,51 +57,23 @@ export const useUploadConfig = (): UploadyProps => {
   };
 };
 
-export const getFileTypeCategory = (mimeType: string): string => {
-  if (mimeType.startsWith("image/")) {
-    return "image";
-  } else if (mimeType === "application/pdf") {
-    return "document";
-  } else if (mimeType === "text/plain") {
-    return "text";
-  } else if (mimeType.includes("wordprocessingml")) {
-    return "document";
-  } else {
-    return "file";
-  }
-};
-
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return "0 Bytes";
-
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-};
-
-export const validateFile = (
-  file: File
-): { isValid: boolean; error?: string } => {
+export const validateFile = (file: File): { isValid: boolean; error?: string } => {
   // Check file size
   if (file.size > UPLOAD_CONFIG.MAX_FILE_SIZE) {
     return {
       isValid: false,
-      error: `File too large. Maximum size: ${formatFileSize(
-        UPLOAD_CONFIG.MAX_FILE_SIZE
-      )}`,
+      error: `File too large. Maximum size: ${formatFileSize(UPLOAD_CONFIG.MAX_FILE_SIZE)}`,
     };
   }
 
   // Check file type
   const allowedTypes = [
-    "text/plain",
-    "application/pdf",
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    'text/plain',
+    'application/pdf',
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ];
 
   if (!allowedTypes.includes(file.type)) {

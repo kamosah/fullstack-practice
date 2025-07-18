@@ -2,9 +2,9 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import React from 'react';
-import { AiOutlineFile, AiOutlineFilePdf, AiOutlineFileText, AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineClose } from 'react-icons/ai';
 
-import { formatFileSize } from '../../../hooks/useUploadConfig';
+import { formatFileSize, getFileIcon } from '../../../utils/fileHelpers';
 
 import {
   PendingFileDetails,
@@ -23,18 +23,6 @@ interface PendingFileItemProps {
 }
 
 const PendingFileItem: React.FC<PendingFileItemProps> = ({ file, onRemove }) => {
-  const getFileIcon = (mimeType: string) => {
-    if (mimeType.startsWith('image/')) {
-      return null;
-    } else if (mimeType === 'application/pdf') {
-      return <AiOutlineFilePdf size={20} color="#dc2626" />;
-    } else if (mimeType === 'text/plain') {
-      return <AiOutlineFileText size={20} color="#059669" />;
-    } else {
-      return <AiOutlineFile size={20} color="#6b7280" />;
-    }
-  };
-
   const renderFilePreview = () => {
     if (file.preview && file.file.type.startsWith('image/')) {
       return (

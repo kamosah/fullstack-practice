@@ -1,14 +1,10 @@
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
-import { AiOutlineFile, AiOutlineFilePdf, AiOutlineFileText } from 'react-icons/ai';
 
-import { formatFileSize } from '../../../hooks/useUploadConfig';
-
-import type { Attachment } from '../../../types/chat';
+import type { Attachment } from '../../../../types/chat';
 
 export const ImageAttachment: React.FC<{ attachment: Attachment }> = ({ attachment }) => {
   const [loaded, setLoaded] = useState(false);
@@ -47,29 +43,3 @@ export const ImageAttachment: React.FC<{ attachment: Attachment }> = ({ attachme
     </>
   );
 };
-
-const getFileIcon = (mimeType: string) => {
-  if (mimeType === 'application/pdf') {
-    return <AiOutlineFilePdf size={20} color="#dc2626" />;
-  } else if (mimeType === 'text/plain') {
-    return <AiOutlineFileText size={20} color="#059669" />;
-  } else {
-    return <AiOutlineFile size={20} color="#6b7280" />;
-  }
-};
-
-export const FileAttachment: React.FC<{ attachment: Attachment }> = ({ attachment }) => (
-  <Stack direction="row" alignItems="center" spacing={1}>
-    <Box flexShrink={0}>{getFileIcon(attachment.mimeType || '')}</Box>
-    <Box flex={1} minWidth={0}>
-      <Typography variant="caption" fontWeight={500} noWrap>
-        {attachment.name}
-      </Typography>
-      {attachment.size && (
-        <Typography variant="caption" color="text.secondary">
-          {formatFileSize(attachment.size)}
-        </Typography>
-      )}
-    </Box>
-  </Stack>
-);
