@@ -1,4 +1,3 @@
-import { useState, useCallback } from "react";
 import {
   useItemProgressListener,
   useItemFinishListener,
@@ -6,12 +5,18 @@ import {
   useItemStartListener,
   useBatchAddListener,
 } from "@rpldy/uploady";
+import { useState, useCallback } from "react";
+
+import { formatFileSize } from '../utils/fileHelpers';
+
+import { validateFile } from './useUploadConfig';
+
 import type {
   PendingFile,
   UploadedFile,
   UploadResponse,
 } from "../types/upload";
-import { validateFile, formatFileSize } from "./useUploadConfig";
+
 
 export const useFileUpload = () => {
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);

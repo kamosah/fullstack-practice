@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { graphqlClient } from "../lib/graphql";
+
 import {
   GET_CONVERSATIONS,
   GET_CONVERSATION,
@@ -7,7 +7,10 @@ import {
   CREATE_CONVERSATION_WITH_MESSAGE,
   SEND_MESSAGE,
 } from "../graphql/queries";
+import { graphqlClient } from "../lib/graphql";
 import { MessageType } from "../types/chat";
+import { queryKeys } from "../utils/queryKeys";
+
 import type {
   Conversation,
   ConversationInput,
@@ -15,7 +18,6 @@ import type {
   Message,
   Attachment,
 } from "../types/chat";
-import { queryKeys } from "../utils/queryKeys";
 
 // GraphQL response interfaces
 interface GraphQLConversation {

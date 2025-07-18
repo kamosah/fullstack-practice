@@ -1,7 +1,7 @@
 # 🔍 Hebbia Matrix Practice - Full-Stack Financial Analysis Platform
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/kamosah/fullstack-practice/main/frontend/public/images/hebbia_matrix_practice.png" width="800px" style="border-radius: 10px; margin: 20px 0; border-width: 1px; border-style: solid; border-color: blue;" />
+  <img src="https://raw.githubusercontent.com/kamosah/fullstack-practice/main/frontend/public/images/hebbia_pratice_ui_update.png" width="800px" style="border-radius: 10px; margin: 20px 0; border-width: 1px; border-style: solid; border-color: blue;" />
   
   <p><em>A sophisticated full-stack application mimicking Hebbia's Matrix platform for financial document analysis and AI-powered research</em></p>
 
@@ -43,7 +43,7 @@ graph TB
     subgraph "Frontend Stack"
         A1[React 19]
         A2[TypeScript]
-        A3[Chakra UI]
+        A3[Material UI]
         A4[Tanstack Query]
         A5[Framer Motion]
     end
@@ -100,7 +100,7 @@ graph TB
 
 ### **Frontend**
 - **Framework**: React 19.1+ with TypeScript
-- **Styling**: Chakra UI + Emotion
+- **Styling**: Material UI + Emotion
 - **State Management**: Tanstack Query
 - **Animations**: Framer Motion
 - **GraphQL**: GraphQL Request

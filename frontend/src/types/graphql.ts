@@ -173,12 +173,3 @@ export type SendMessageMutationVariables = Exact<{
 
 
 export type SendMessageMutation = { sendMessage: { id: number, conversationId: number, type: string, content: string, createdAt: any, attachments?: Array<{ type: string, name: string, url: string, size?: number | null, mimeType?: string | null, metadata?: any | null }> | null } };
-
-export type ListDocumentsQueryVariables = Exact<{
-  filter?: InputMaybe<DocumentFilter>;
-  limit: Scalars['Int']['input'];
-  offset: Scalars['Int']['input'];
-}>;
-
-
-export type ListDocumentsQuery = { listDocuments: Array<{ id: number, title: string, content: string, category: string, createdAt: any }> };

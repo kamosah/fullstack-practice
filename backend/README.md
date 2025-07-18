@@ -21,8 +21,11 @@ This backend service provides a FastAPI application with GraphQL support for a f
 ### 1. Install Dependencies
 
 ```bash
-# Install dependencies
-poetry install
+poetry install # Install dependencies
+
+poetry env use 3.11 # use the expected python version
+
+source $(poetry env info --path)/bin/activate # activate the virtual env
 ```
 
 ### 2. Configure LiteLLM + Grok
@@ -39,21 +42,27 @@ cp .env.example .env
 # LITELLM_API_KEY=your_actual_grok_api_key_here
 ```
 
-### 3. Setup Database
+### 3. Install AWSCLI
+
+```bash
+brew install awscli
+```
+
+### 4. Setup Database
 
 ```bash
 # Create database tables
 python setup_database.py
 ```
 
-### 4. Test Integration
+### 5. Test Integration
 
 ```bash
 # Test LiteLLM connection
 python test_llm_integration.py
 ```
 
-### 5. Start the Server
+### 6. Start the Server
 
 ```bash
 # Run the application
