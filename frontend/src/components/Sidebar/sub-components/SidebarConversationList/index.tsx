@@ -1,23 +1,25 @@
-import React from "react";
-import Box from "@mui/material/Box";
-
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
-import SidebarItem from '../SidebarItem';
-import type { Conversation } from '../../types/chat';
+import React from 'react';
 
-interface ConversationListProps {
+import SidebarItem from '../SidebarItem';
+
+import { SidebarConversationListRoot, EmptyStateContainer } from './styles';
+
+import type { Conversation } from '../../../../types/chat';
+
+interface SidebarConversationListProps {
   conversations: Conversation[];
   conversationId: string;
   onSelect: (conversation: Conversation) => void;
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({
+const SidebarConversationList: React.FC<SidebarConversationListProps> = ({
   conversations,
   conversationId,
   onSelect,
 }) => (
-  <Box sx={{ flex: 1, overflowY: 'auto', p: 0 }}>
+  <SidebarConversationListRoot>
     <List
       subheader={
         <ListSubheader component="div" sx={{ bgcolor: 'background.paper', fontWeight: 500 }}>
@@ -27,9 +29,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
       sx={{ p: 0 }}
     >
       {conversations.length === 0 ? (
-        <Box sx={{ p: 3, textAlign: 'center', color: 'grey.500', fontSize: 14 }}>
-          No conversations yet. Start a new chat!
-        </Box>
+        <EmptyStateContainer>No conversations yet. Start a new chat!</EmptyStateContainer>
       ) : (
         conversations.map((conversation) => (
           <SidebarItem
@@ -41,7 +41,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         ))
       )}
     </List>
-  </Box>
+  </SidebarConversationListRoot>
 );
 
-export default ConversationList;
+export default SidebarConversationList;

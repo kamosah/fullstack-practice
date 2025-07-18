@@ -1,19 +1,18 @@
-import React from "react";
-import Box from "@mui/material/Box";
 import IconButton from '@mui/material/IconButton';
-import { TbTableFilled } from 'react-icons/tb';
-import { FaRegEdit } from 'react-icons/fa';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import React from 'react';
+import { FaRegEdit } from 'react-icons/fa';
+import { TbTableFilled } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
+
+import { SidebarHeaderRoot, SidebarHeaderListItemButton, SidebarListItemIcon } from './styles';
 
 const SidebarHeader: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <Box sx={{ py: 1, borderBottom: 1, borderColor: 'grey.100' }}>
+    <SidebarHeaderRoot>
       <IconButton
         onClick={() => navigate('/')}
         color="primary"
@@ -30,27 +29,10 @@ const SidebarHeader: React.FC = () => {
       </IconButton>
       <List sx={{ p: 0 }}>
         <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => navigate('/')}
-            sx={{
-              borderRadius: 1,
-              pl: 1,
-              pr: 1,
-              py: 0.5,
-              color: 'CaptionText',
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 24,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'CaptionText',
-              }}
-            >
+          <SidebarHeaderListItemButton onClick={() => navigate('/')}>
+            <SidebarListItemIcon>
               <FaRegEdit />
-            </ListItemIcon>
+            </SidebarListItemIcon>
             <ListItemText
               primary="Chat"
               slotProps={{
@@ -64,10 +46,10 @@ const SidebarHeader: React.FC = () => {
                 },
               }}
             />
-          </ListItemButton>
+          </SidebarHeaderListItemButton>
         </ListItem>
       </List>
-    </Box>
+    </SidebarHeaderRoot>
   );
 };
 
