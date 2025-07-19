@@ -1,26 +1,25 @@
-# 🔍 Hebbia Matrix Practice - Full-Stack Financial Analysis Platform
+# 🔍 Full-Stack AI Chat Application
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/kamosah/fullstack-practice/main/frontend/public/images/hebbia_pratice_ui_update.png" width="800px" style="border-radius: 10px; margin: 20px 0; border-width: 1px; border-style: solid; border-color: blue;" />
-  
-  <p><em>A sophisticated full-stack application mimicking Hebbia's Matrix platform for financial document analysis and AI-powered research</em></p>
-
-  ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
-  ![React](https://img.shields.io/badge/React-19.1+-61DAFB.svg)
-  ![TypeScript](https://img.shields.io/badge/TypeScript-Latest-blue.svg)
-  ![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green.svg)
-  ![GraphQL](https://img.shields.io/badge/GraphQL-Enabled-e10098.svg)
-  ![AI Powered](https://img.shields.io/badge/AI-Grok%20Integrated-orange.svg)
+<div style="text-align:center; border: 1px solid #90a4ae; border-radius: 10px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+  <img src="https://raw.githubusercontent.com/kamosah/fullstack-practice/main/frontend/public/images/hebbia_pratice_ui_update.png" 
+       alt="Full Stack App UI Screenshot"
+       style="max-width: 100%;"
+       width="800px"
+     />
 </div>
+
+<p style="text-align: center;"><em>A sophisticated AI-powered application mimicking Perplexity and Hebbia's Matrix platform for document analysis and AI-powered research</em></p>
+
+  ![Python](https://img.shields.io/badge/Python-3.11+-blue.svg) ![React](https://img.shields.io/badge/React-19.x+-61DAFB.svg) ![TypeScript](https://img.shields.io/badge/TypeScript-Latest-blue.svg) ![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green.svg) ![GraphQL](https://img.shields.io/badge/GraphQL-Enabled-e10098.svg) ![AI Powered](https://img.shields.io/badge/AI-Grok%20Integrated-orange.svg)
 
 ---
 
 ## 🎯 **Project Overview**
 
-This project is a comprehensive full-stack application designed to replicate the core functionality of Hebbia's Matrix platform. It combines modern web technologies with AI-powered document analysis to create an intuitive financial research and analysis tool.
+This project is a comprehensive full-stack application designed to replicate the core functionality of Perplexity and Hebbia's Matrix platform. It combines modern web technologies with AI-powered document analysis to create an intuitive financial research and analysis tool.
 
-### **What is Hebbia Matrix?**
-Hebbia Matrix is a revolutionary AI-powered platform that enables financial professionals to analyze documents, extract insights, and conduct research through natural language interactions. This practice implementation focuses on:
+### **What is this project?**
+It's an AI-powered platform that enables professionals to analyze documents, extract insights, and conduct research through natural language interactions. This practice implementation focuses on:
 
 - **Document Management**: Upload, organize, and analyze financial documents
 - **AI-Powered Chat**: Interactive conversations with documents using LLM integration
@@ -297,7 +296,7 @@ This project serves as a comprehensive learning exercise covering:
 
 ## 🎓 **About This Project**
 
-This application is developed as a learning project to understand and replicate the sophisticated document analysis capabilities of Hebbia Matrix. It demonstrates modern full-stack development practices while providing hands-on experience with:
+This application is developed as a learning project to understand and replicate chat interface of Perplexity and the sophisticated document analysis capabilities of Hebbia Matrix. It demonstrates modern full-stack development practices while providing hands-on experience with:
 
 - **Enterprise-grade Architecture**: Scalable, maintainable code structure
 - **AI/ML Integration**: Practical implementation of LLM APIs

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useFileUpload } from '../../../../hooks/useFileUpload';
-import { convertToAttachment } from '../../../../utils/convertToAttachment';
+import { convertToAttachment } from '../../../../utils/fileHelpers';
 import { PendingFiles } from '../../../PendingFiles';
 import ChatToolbar from '../ChatToolbar';
 
