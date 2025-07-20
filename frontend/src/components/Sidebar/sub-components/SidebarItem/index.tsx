@@ -1,8 +1,7 @@
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
-
-import { SidebarListItemButton } from './styles';
 
 import type { Conversation } from '../../../../types/chat';
 
@@ -16,11 +15,7 @@ const SidebarItem: React.FC<SidebarItemProps> = React.memo(
   ({ conversation, isSelected, onSelect }) => {
     return (
       <ListItem disablePadding sx={{ bgcolor: 'transparent' }}>
-        <SidebarListItemButton
-          onClick={() => onSelect(conversation)}
-          selected={isSelected}
-          isSelected={isSelected}
-        >
+        <ListItemButton onClick={() => onSelect(conversation)} selected={isSelected}>
           <ListItemText
             primary={conversation.title}
             slotProps={{
@@ -32,7 +27,7 @@ const SidebarItem: React.FC<SidebarItemProps> = React.memo(
               },
             }}
           />
-        </SidebarListItemButton>
+        </ListItemButton>
       </ListItem>
     );
   },

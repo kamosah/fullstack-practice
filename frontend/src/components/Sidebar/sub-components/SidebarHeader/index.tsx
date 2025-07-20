@@ -1,13 +1,14 @@
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import React from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 import { TbTableFilled } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
-import { SidebarHeaderRoot, SidebarHeaderListItemButton, SidebarListItemIcon } from './styles';
+import { SidebarHeaderRoot, SidebarListItemIcon } from './styles';
 
 const SidebarHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const SidebarHeader: React.FC = () => {
       </IconButton>
       <List sx={{ p: 0 }}>
         <ListItem disablePadding>
-          <SidebarHeaderListItemButton onClick={() => navigate('/')}>
+          <ListItemButton onClick={() => navigate('/')}>
             <SidebarListItemIcon>
               <FaRegEdit />
             </SidebarListItemIcon>
@@ -46,7 +47,7 @@ const SidebarHeader: React.FC = () => {
                 },
               }}
             />
-          </SidebarHeaderListItemButton>
+          </ListItemButton>
         </ListItem>
       </List>
     </SidebarHeaderRoot>

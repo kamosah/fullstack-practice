@@ -3,10 +3,10 @@ import { styled } from '@mui/material/styles';
 
 export const SidebarRoot = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
-  borderRight: `1px solid ${theme.palette.grey[200]}`,
+  boxShadow: 'none',
   display: 'flex',
   flexDirection: 'column',
-  height: '100vh',
+  height: '100%',
   paddingLeft: theme.spacing(1),
   paddingRight: theme.spacing(1),
   width: 320,

@@ -34,7 +34,7 @@ export const ChatInputContainer = styled(Box)(({ theme }) => ({
 export const ChatInputForm = styled(Box)({
   alignItems: 'stretch',
   background: 'transparent',
-  border: 'none',
+  border: 0,
   display: 'flex',
   flexDirection: 'column',
   padding: 0,
@@ -44,7 +44,7 @@ export const ChatInputForm = styled(Box)({
 export const ChatInputTextarea = styled(TextareaAutosize)<{ disabled?: boolean }>(
   ({ disabled }) => ({
     background: 'transparent',
-    border: 'none',
+    border: 0,
     color: disabled ? '#aaa' : 'inherit',
     fontSize: 16,
     outline: 'none',

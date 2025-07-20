@@ -1,10 +1,9 @@
 import List from '@mui/material/List';
-import ListSubheader from '@mui/material/ListSubheader';
 import React from 'react';
 
 import SidebarItem from '../SidebarItem';
 
-import { SidebarConversationListRoot, EmptyStateContainer } from './styles';
+import { SidebarConversationListRoot, EmptyStateContainer, SidebarListSubheader } from './styles';
 
 import type { Conversation } from '../../../../types/chat';
 
@@ -19,13 +18,9 @@ const SidebarConversationList: React.FC<SidebarConversationListProps> = ({
   conversationId,
   onSelect,
 }) => (
-  <SidebarConversationListRoot>
+  <SidebarConversationListRoot role="navigation">
     <List
-      subheader={
-        <ListSubheader component="div" sx={{ bgcolor: 'background.paper', fontWeight: 500 }}>
-          Recent Conversations
-        </ListSubheader>
-      }
+      subheader={<SidebarListSubheader component="div">Recent Conversations</SidebarListSubheader>}
       sx={{ p: 0 }}
     >
       {conversations.length === 0 ? (

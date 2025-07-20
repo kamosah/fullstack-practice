@@ -9,7 +9,7 @@ import {
 } from '../../../hooks/useChat';
 import { MessageType, type Attachment } from '../../../types/chat';
 
-import { ConversationArea } from './styles';
+import { ConversationArea, MainContainer } from './styles';
 
 const MainContent: React.FC = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
@@ -64,25 +64,27 @@ const MainContent: React.FC = () => {
   };
 
   return (
-    <ConversationArea
-      sx={{
-        alignItems: activeConversation?.messages ? 'flex-end' : 'center',
-        width: {
-          xs: '100%',
-          sm: '90%',
-          md: '66.6667%',
-          lg: '60%',
-          xl: '50%',
-        },
-      }}
-    >
-      <Chat
-        messages={activeConversation?.messages ?? []}
-        onSendMessage={onSendMessage}
-        isTyping={isTyping}
-        isDisabled={isLoading}
-      />
-    </ConversationArea>
+    <MainContainer>
+      <ConversationArea
+        sx={{
+          alignItems: activeConversation?.messages ? 'flex-end' : 'center',
+          width: {
+            xs: '100%',
+            sm: '90%',
+            md: '66.6667%',
+            lg: '60%',
+            xl: '50%',
+          },
+        }}
+      >
+        <Chat
+          messages={activeConversation?.messages ?? []}
+          onSendMessage={onSendMessage}
+          isTyping={isTyping}
+          isDisabled={isLoading}
+        />
+      </ConversationArea>
+    </MainContainer>
   );
 };
 
