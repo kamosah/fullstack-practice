@@ -23,7 +23,7 @@ const Sidebar: React.FC = () => {
   );
 
   return (
-    <SidebarRoot elevation={1}>
+    <SidebarRoot elevation={1} square>
       <SidebarHeader />
       <SidebarSearch />
       <SidebarConversationList

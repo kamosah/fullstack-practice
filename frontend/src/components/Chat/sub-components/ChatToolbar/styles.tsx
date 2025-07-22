@@ -9,7 +9,7 @@ export const ToolbarRoot = styled(Box)(({ theme }) => ({
   display: 'flex',
   fontSize: '1.25rem',
   gap: theme.spacing(1),
-  justifyContent: 'space-between',
+  justifyContent: 'flex-end',
   marginTop: theme.spacing(1),
   padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
   width: '100%',
@@ -18,5 +18,5 @@ export const ToolbarRoot = styled(Box)(({ theme }) => ({
 export const ToolbarActions = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.5),
+  gap: theme.spacing(1),
 }));

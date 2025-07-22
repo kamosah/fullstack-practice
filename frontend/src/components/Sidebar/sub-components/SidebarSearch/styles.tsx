@@ -14,5 +14,6 @@ export const SidebarTextField = styled(TextField)(({ theme }) => ({
 
 export const SidebarSearchRoot = styled(Box)(({ theme }) => ({
   position: 'relative',
-  marginTop: theme.spacing(2),
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
 }));

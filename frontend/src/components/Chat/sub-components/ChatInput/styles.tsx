@@ -12,15 +12,15 @@ export const ChatInputContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   backgroundColor: theme.palette.background.paper,
   border: `1px solid ${theme.palette.grey[200]}`,
-  borderRadius: '1.5rem',
+  borderRadius: '1rem',
   display: 'flex',
   flex: 1,
   gap: theme.spacing(2),
   minWidth: 0,
-  paddingBottom: theme.spacing(0.5),
-  paddingLeft: theme.spacing(0.75),
-  paddingRight: theme.spacing(0.75),
-  paddingTop: theme.spacing(2.5),
+  paddingBottom: theme.spacing(1.5),
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  paddingTop: theme.spacing(1.5),
   width: '100%',
   '&:hover': {
     borderColor: theme.palette.grey[300],
@@ -34,22 +34,21 @@ export const ChatInputContainer = styled(Box)(({ theme }) => ({
 export const ChatInputForm = styled(Box)({
   alignItems: 'stretch',
   background: 'transparent',
-  border: 'none',
+  border: 0,
   display: 'flex',
   flexDirection: 'column',
   padding: 0,
   width: '100%',
 });
 
-export const ChatInputTextarea = styled(TextareaAutosize)<{ disabled?: boolean }>(
-  ({ disabled }) => ({
-    background: 'transparent',
-    border: 'none',
-    color: disabled ? '#aaa' : 'inherit',
-    fontSize: 16,
-    outline: 'none',
-    padding: '0 1rem',
-    resize: 'none',
-    width: '100%',
-  }),
-);
+export const ChatInputTextarea = styled(TextareaAutosize)<{ disabled?: boolean }>(({ disabled }) => ({
+  background: 'transparent',
+  border: 0,
+  color: disabled ? '#aaa' : 'inherit',
+  fontSize: '1rem',
+  lineHeight: '1.5rem',
+  outline: 'none',
+  padding: '0 1rem',
+  resize: 'none',
+  width: '100%',
+}));

@@ -1,4 +1,4 @@
-import { ListItemButton, ListItemIcon } from '@mui/material';
+import { ListItemIcon } from '@mui/material';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
@@ -14,12 +14,4 @@ export const SidebarListItemIcon = styled(ListItemIcon)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   minWidth: 24,
-}));
-
-export const SidebarHeaderListItemButton = styled(ListItemButton)(({ theme }) => ({
-  borderRadius: 1,
-  color: theme.palette.text.primary,
-  pl: 1,
-  pr: 1,
-  py: 0.5,
 }));

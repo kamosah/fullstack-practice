@@ -1,13 +1,15 @@
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
 import { FaRegEdit } from 'react-icons/fa';
 import { TbTableFilled } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
-import { SidebarHeaderRoot, SidebarHeaderListItemButton, SidebarListItemIcon } from './styles';
+import { SidebarHeaderRoot, SidebarListItemIcon } from './styles';
 
 const SidebarHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -28,26 +30,28 @@ const SidebarHeader: React.FC = () => {
         <TbTableFilled size={24} />
       </IconButton>
       <List sx={{ p: 0 }}>
-        <ListItem disablePadding>
-          <SidebarHeaderListItemButton onClick={() => navigate('/')}>
-            <SidebarListItemIcon>
-              <FaRegEdit />
-            </SidebarListItemIcon>
-            <ListItemText
-              primary="Chat"
-              slotProps={{
-                primary: {
-                  variant: 'body2',
-                  fontWeight: 500,
-                  color: 'CaptionText',
-                  noWrap: true,
-                  lineHeight: '1.43',
-                  ml: 1,
-                },
-              }}
-            />
-          </SidebarHeaderListItemButton>
-        </ListItem>
+        <Tooltip placement="right" title="New Chat">
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate('/')}>
+              <SidebarListItemIcon>
+                <FaRegEdit />
+              </SidebarListItemIcon>
+              <ListItemText
+                primary="Chat"
+                slotProps={{
+                  primary: {
+                    variant: 'body2',
+                    fontWeight: 500,
+                    color: 'CaptionText',
+                    noWrap: true,
+                    lineHeight: '1.43',
+                    ml: 1,
+                  },
+                }}
+              />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
       </List>
     </SidebarHeaderRoot>
   );

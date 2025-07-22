@@ -13,3 +13,10 @@ export const ConversationArea = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   padding: theme.spacing(2),
 }));
+
+export const MainContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: Number(theme.shape.borderRadius) * 2,
+  display: 'flex',
+  width: '100%',
+}));
