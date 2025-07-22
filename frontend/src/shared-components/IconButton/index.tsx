@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-import { withTooltip } from '../withTooltip';
+import { withTooltip } from '../WIthTooltip';
 
 import { StyledIconButton } from './styles';
 
