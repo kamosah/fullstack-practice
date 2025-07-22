@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -19,7 +18,6 @@ const SidebarItem: React.FC<SidebarItemProps> = React.memo(
       <Tooltip title={conversation.title} placement="right">
         <ListItem disablePadding sx={{ bgcolor: 'transparent' }}>
           <ListItemButton onClick={() => onSelect(conversation)} selected={isSelected}>
-            <Typography></Typography>
             <ListItemText
               primary={conversation.title}
               slotProps={{
@@ -29,7 +27,6 @@ const SidebarItem: React.FC<SidebarItemProps> = React.memo(
                   noWrap: true,
                 },
               }}
-              sx={{ fontWeight: isSelected ? 600 : 500 }}
             />
           </ListItemButton>
         </ListItem>

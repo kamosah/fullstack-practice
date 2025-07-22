@@ -1,19 +1,26 @@
 import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
 
-type WithTooltipProps = {
-  tooltip: React.ReactNode;
-  tooltipProps?: React.ComponentProps<typeof Tooltip>;
-};
+import type { TooltipProps as MuiTooltipProps } from '@mui/material/Tooltip';
 
-export const withTooltip = <P extends object>(
-  WrappedComponent: React.ComponentType<P>,
-): React.FC<P & WithTooltipProps> => {
-  return ({ tooltip, tooltipProps, ...props }) => (
-    <Tooltip title={tooltip} {...tooltipProps}>
-      <span>
-        <WrappedComponent {...(props as P)} />
-      </span>
-    </Tooltip>
+export interface WithTooltipProps {
+  tooltip: React.ReactNode;
+  tooltipProps?: MuiTooltipProps;
+}
+
+export const withTooltip = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+  const ComponentWithTooltip = React.forwardRef<HTMLElement, P & WithTooltipProps>(
+    ({ tooltip, tooltipProps, ...props }, ref) => (
+      <Tooltip title={tooltip} {...tooltipProps}>
+        {/* span is needed for Tooltip to work with disabled elements */}
+        <span>
+          <WrappedComponent ref={ref} {...(props as P)} />
+        </span>
+      </Tooltip>
+    ),
   );
-};
+  ComponentWithTooltip.displayName = `withTooltip(${
+    WrappedComponent.displayName || WrappedComponent.name || 'Component'
+  })`;
+  return ComponentWithTooltip;
+}
