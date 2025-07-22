@@ -3,11 +3,28 @@ import type { ThemeOptions } from '@mui/material/styles';
 export const COMPONENTS_THEME: ThemeOptions['components'] = {
   MuiButton: {
     styleOverrides: {
-      root: {
+      root: ({ theme }) => ({
         borderRadius: 8,
         textTransform: 'none',
         fontWeight: 500,
-      },
+        '&.Mui-disabled': {
+          backgroundColor: theme.palette.action.disabledBackground,
+        },
+      }),
+    },
+  },
+  MuiIconButton: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        borderRadius: theme.shape.borderRadius,
+        '&.ghost': {
+          backgroundColor: 'transparent',
+          color: theme.palette.text.primary,
+          '&:hover': {
+            backgroundColor: theme.palette.action.hover,
+          },
+        },
+      }),
     },
   },
   MuiCard: {
@@ -29,6 +46,16 @@ export const COMPONENTS_THEME: ThemeOptions['components'] = {
           backgroundColor: theme.palette.primary.main,
           borderLeftColor: theme.palette.primary.dark,
         },
+      }),
+    },
+  },
+  MuiTooltip: {
+    styleOverrides: {
+      tooltip: ({ theme }) => ({
+        padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
+        fontSize: theme.typography.body2.fontSize,
+        backgroundColor: theme.palette.common.black,
+        color: '#fff',
       }),
     },
   },

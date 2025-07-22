@@ -22,6 +22,10 @@ export const LIGHT_THEME: ThemeOptions = {
       default: '#EEF3F3',
       paper: '#FFFFFF',
     },
+    common: {
+      black: '#000000',
+      white: '#FFFFFF',
+    },
     text: {
       primary: '#000000',
       secondary: '#4D4D4C',
@@ -49,6 +53,10 @@ export const LIGHT_THEME: ThemeOptions = {
       light: '#8FA133',
       dark: '#667D00',
       contrastText: '#FFFFFF',
+    },
+    action: {
+      disabledBackground: '#f3f3f3',
+      disabled: '#dadada',
     },
   },
   shape: {

@@ -54,7 +54,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <ChatInputRoot>
       <PendingFiles />
-      <ChatInputContainer>
+      <ChatInputContainer sx={{ boxShadow: 4 }}>
         <ChatInputForm as="form" onSubmit={handleSubmit}>
           <ChatInputTextarea
             disabled={isDisabled || hasUploadingFiles}

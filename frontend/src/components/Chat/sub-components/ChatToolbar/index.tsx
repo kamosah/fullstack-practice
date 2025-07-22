@@ -1,11 +1,15 @@
-import IconButton from '@mui/material/IconButton';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import MuiIconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { UploadButton } from '@rpldy/upload-button';
 import React, { useRef, useState } from 'react';
-import { AiOutlineFolder, AiOutlineUpload } from 'react-icons/ai';
-import { PiArrowElbowRightUp } from 'react-icons/pi';
+import { AiOutlineFolder } from 'react-icons/ai';
+
+import { PrimaryIconButton } from '../../../../shared-components/IconButton';
 
 import { ToolbarRoot, ToolbarActions } from './styles';
 
@@ -48,37 +52,27 @@ const ChatToolbar: React.FC<ChatToolbarProps> = ({ canSendMessage, handleSubmit,
             </MenuItem>
           </UploadButton>
         </Menu>
-        <IconButton
-          ref={iconButtonRef}
-          aria-label="Upload file"
-          onClick={() => setIsMenuOpen((open) => !open)}
-          size="small"
-          sx={{
-            color: 'grey.500',
-            '&:hover': { color: 'grey.700' },
-            border: '1px solid',
-            borderColor: 'grey.200',
-          }}
-          disabled={isDisabled}
-        >
-          <AiOutlineUpload fontSize="1.5rem" />
-        </IconButton>
-      </ToolbarActions>
-      <ToolbarActions>
-        <IconButton
-          aria-label="Send message"
+        <Tooltip title="Upload file" placement="top">
+          <MuiIconButton
+            ref={iconButtonRef}
+            aria-label="Upload file"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            disabled={isDisabled}
+          >
+            <AttachFileIcon />
+          </MuiIconButton>
+        </Tooltip>
+        <PrimaryIconButton
+          aria-label={`${canSendMessage ? 'Send message' : 'Disabled'}`}
           onClick={canSendMessage ? handleSubmit : undefined}
-          size="small"
-          sx={{
-            color: canSendMessage ? 'grey.500' : 'grey.300',
-            '&:hover': { color: canSendMessage ? 'grey.700' : 'grey.300' },
-            border: '1px solid',
-            borderColor: 'grey.200',
-          }}
           disabled={!canSendMessage}
+          tooltip="Send message"
         >
-          <PiArrowElbowRightUp fontSize="1.5rem" />
-        </IconButton>
+          <ArrowUpwardIcon
+            color="inherit"
+            sx={{ color: canSendMessage ? 'primary.contrastText' : 'inherit' }}
+          />
+        </PrimaryIconButton>
       </ToolbarActions>
     </ToolbarRoot>
   );
