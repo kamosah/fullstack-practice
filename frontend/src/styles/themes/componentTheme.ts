@@ -17,12 +17,14 @@ export const COMPONENTS_THEME: ThemeOptions['components'] = {
     styleOverrides: {
       root: ({ theme }) => ({
         borderRadius: theme.shape.borderRadius,
-        '&.ghost': {
-          backgroundColor: 'transparent',
-          color: theme.palette.text.primary,
-          '&:hover': {
-            backgroundColor: theme.palette.action.hover,
-          },
+        backgroundColor: 'transparent',
+        color: theme.palette.text.primary,
+        '&:hover': {
+          backgroundColor: theme.palette.action.hover,
+        },
+        '&.Mui-focusVisible': {
+          backgroundColor: theme.palette.action.focus,
+          borderRadius: theme.shape.borderRadius,
         },
       }),
     },

@@ -1,4 +1,5 @@
 import { COMPONENTS_THEME } from './componentTheme';
+import { CUSTOM_UTILS } from './customUtils';
 import { TYPOGRAPHY_THEME } from './typographyTheme';
 
 import type { ThemeOptions } from '@mui/material/styles';
@@ -70,13 +71,7 @@ export const DARK_THEME: ThemeOptions = {
     ...TYPOGRAPHY_THEME,
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-          body {
-            font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-          }
-        `,
-    },
     ...COMPONENTS_THEME,
   },
+  ...CUSTOM_UTILS,
 };

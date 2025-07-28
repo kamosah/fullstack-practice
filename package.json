@@ -1,0 +1,16 @@
+{
+  "name": "fullstack-practice",
+  "version": "1.0.0",
+  "description": "A fullstack practice project",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd backend && poetry run uvicorn app.main:app --reload",
+    "dev": "cd frontend && npm run dev",
+    "lint:backend": "cd backend && poetry run ruff check app",
+    "format:backend": "cd backend && poetry run ruff format app",
+    "ready:backend": "npm run lint:backend && npm run format:backend",
+    "ready:frontend": "cd frontend && npm run ready"
+  },
+  "author": "Kwame Amosah",
+  "license": "ISC"
+}

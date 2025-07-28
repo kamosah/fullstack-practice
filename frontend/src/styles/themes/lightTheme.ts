@@ -1,4 +1,5 @@
 import { COMPONENTS_THEME } from './componentTheme';
+import { CUSTOM_UTILS } from './customUtils';
 import { TYPOGRAPHY_THEME } from './typographyTheme';
 
 import type { ThemeOptions } from '@mui/material/styles';
@@ -7,56 +8,52 @@ export const LIGHT_THEME: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#3B1334',
-      light: '#5D2050',
-      dark: '#2F0F29',
-      contrastText: '#FFFFFF',
+      main: '#1E7582',
+      light: '#E8F1F2',
+      dark: '#142E34',
+      contrastText: '#FEFEFA',
     },
     secondary: {
-      main: '#8D2180',
-      light: '#A64296',
-      dark: '#711A66',
-      contrastText: '#FFFFFF',
-    },
-    background: {
-      default: '#EEF3F3',
-      paper: '#FFFFFF',
-    },
-    common: {
-      black: '#000000',
-      white: '#FFFFFF',
-    },
-    text: {
-      primary: '#000000',
-      secondary: '#4D4D4C',
-    },
-    error: {
-      main: '#FF3B30',
-      light: '#FF6B5C',
-      dark: '#E5342A',
-      contrastText: '#FFFFFF',
-    },
-    warning: {
-      main: '#F5871F',
-      light: '#F7A24F',
-      dark: '#DC7A1C',
-      contrastText: '#FFFFFF',
-    },
-    info: {
-      main: '#8959A8',
-      light: '#A179C0',
-      dark: '#7A5097',
+      main: '#7E4F9E',
+      light: '#F1EEF D',
+      dark: '#55686C',
       contrastText: '#FFFFFF',
     },
     success: {
-      main: '#718C00',
-      light: '#8FA133',
-      dark: '#667D00',
+      main: '#668100',
+      light: '#E5E5DF',
+      dark: '#444443',
       contrastText: '#FFFFFF',
     },
+    background: {
+      default: '#FBFCF8',
+      paper: '#F1F1EB',
+    },
+    text: {
+      primary: '#142E34',
+      secondary: '#55686C',
+      disabled: '#AAB2B5',
+    },
+    divider: '#E5E5E2',
     action: {
-      disabledBackground: '#f3f3f3',
-      disabled: '#dadada',
+      active: '#1E7582',
+      hover: 'rgba(30,117,130,0.08)',
+      selected: 'rgba(30,117,130,0.16)',
+      disabled: 'rgba(68,68,67,0.38)',
+      disabledBackground: 'rgba(229,229,226,0.12)',
+      focus: 'rgba(30,117,130,0.24)',
+    },
+    error: {
+      main: '#D32F2F',
+      contrastText: '#FFFFFF',
+    },
+    warning: {
+      main: '#ED6C02',
+      contrastText: '#FFFFFF',
+    },
+    info: {
+      main: '#0288D1',
+      contrastText: '#FFFFFF',
     },
   },
   shape: {
@@ -66,13 +63,7 @@ export const LIGHT_THEME: ThemeOptions = {
     ...TYPOGRAPHY_THEME,
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        body {
-          font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-        }
-      `,
-    },
     ...COMPONENTS_THEME,
   },
+  ...CUSTOM_UTILS,
 };

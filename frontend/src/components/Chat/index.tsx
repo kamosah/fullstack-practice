@@ -1,36 +1,32 @@
-import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import React, { useRef } from 'react';
+
+import { useConversation } from '../../hooks/useConversation';
+import { useScrollToBottom } from '../../hooks/useScrollToBottom';
 
 import { ChatContainer } from './styles';
-import ChatInput from './sub-components/ChatInput';
 import ChatMessageList from './sub-components/ChatMessageList';
 
-import type { Message, Attachment } from '../../types/chat';
-
 interface ChatProps {
-  isDisabled?: boolean;
-  isTyping?: boolean;
-  messages: Message[];
-  onSendMessage: (content: string, attachments?: Attachment[]) => void;
+  parentScrollRef: React.RefObject<HTMLDivElement>;
 }
 
-const Chat: React.FC<ChatProps> = ({
-  isDisabled = false,
-  isTyping = false,
-  messages,
-  onSendMessage,
-}) => {
-  const [inputValue, setInputValue] = useState('');
-  const hasMessages = messages && messages.length > 0;
+const Chat: React.FC<ChatProps> = ({ parentScrollRef }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const { activeConversation } = useConversation();
+  useScrollToBottom({
+    parentScrollRef,
+    messagesEndRef,
+    options: { behavior: 'smooth' },
+  });
 
+  if (!activeConversation?.messages?.length) {
+    return <div>No conversation found</div>;
+  }
   return (
-    <ChatContainer sx={{ height: hasMessages ? '100%' : 'fit-content' }}>
-      {hasMessages && <ChatMessageList messages={messages} isTyping={isTyping} />}
-      <ChatInput
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        onSendMessage={onSendMessage}
-        isDisabled={isDisabled}
-      />
+    <ChatContainer>
+      <ChatMessageList messages={activeConversation?.messages ?? []} />
+      <Box py={12} ref={messagesEndRef} />
     </ChatContainer>
   );
 };

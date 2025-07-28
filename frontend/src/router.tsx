@@ -1,20 +1,25 @@
-import { createBrowserRouter } from "react-router-dom";
+import { lazy } from 'react';
+import { createBrowserRouter } from 'react-router-dom';
 
-import App from './components/App';
-import ConversationView from './pages/ConversationView';
+import { withSuspense } from './hocs';
+
+const ConversationView = lazy(() => import('./pages/ConversationView'));
+const HomeView = lazy(() => import('./pages/HomeView'));
+
+const App = lazy(() => import('./components/App'));
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <App />,
+    path: '/',
+    element: withSuspense(App),
     children: [
       {
         index: true,
-        element: <ConversationView />,
+        element: withSuspense(HomeView),
       },
       {
-        path: "conversations/:conversationId",
-        element: <ConversationView />,
+        path: 'conversations/:conversationId',
+        element: withSuspense(ConversationView),
       },
     ],
   },

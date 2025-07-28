@@ -1,16 +1,37 @@
 import { Box, TextareaAutosize } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, type CSSProperties } from '@mui/material/styles';
 
-export const ChatInputRoot = styled(Box)({
-  backgroundColor: 'transparent',
-  borderRadius: '1.5rem',
-  flexShrink: 0,
+import { Layout } from '../../../../styles/layout';
+
+const HomeChatInputStyles: CSSProperties = {
   width: '100%',
-});
+};
+
+const ConversationChatInputStyles: CSSProperties = {
+  position: 'fixed',
+  // start near sidebar's end + 50% (approx center)
+  left: `calc(${Layout.sidebarWidth}px + 50%)`,
+  // translateX adjusts to truly center within main content
+  transform: `translateX(calc(-50% - ${Layout.sidebarWidth / 2}px))`,
+};
+
+const getChatInputStyles = (isNewChat: boolean) => {
+  return isNewChat ? HomeChatInputStyles : ConversationChatInputStyles;
+};
+
+export const ChatInputRoot = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isNewChat',
+})<{ isNewChat: boolean }>(({ theme, isNewChat }) => ({
+  backgroundColor: theme.palette.background.default,
+  bottom: 0,
+  paddingBottom: theme.spacing(3),
+  maxWidth: 'min(900px, 100vw)',
+  ...getChatInputStyles(isNewChat),
+}));
 
 export const ChatInputContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.grey[200]}`,
   borderRadius: '1rem',
   display: 'flex',
@@ -41,14 +62,16 @@ export const ChatInputForm = styled(Box)({
   width: '100%',
 });
 
-export const ChatInputTextarea = styled(TextareaAutosize)<{ disabled?: boolean }>(({ disabled }) => ({
-  background: 'transparent',
-  border: 0,
-  color: disabled ? '#aaa' : 'inherit',
-  fontSize: '1rem',
-  lineHeight: '1.5rem',
-  outline: 'none',
-  padding: '0 1rem',
-  resize: 'none',
-  width: '100%',
-}));
+export const ChatInputTextarea = styled(TextareaAutosize)<{ disabled?: boolean }>(
+  ({ disabled }) => ({
+    background: 'transparent',
+    border: 0,
+    color: disabled ? '#aaa' : 'inherit',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
+    outline: 'none',
+    padding: '0 1rem',
+    resize: 'none',
+    width: '100%',
+  }),
+);

@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+import { useConversation } from '../../../../hooks/useConversation';
 import { useFileUpload } from '../../../../hooks/useFileUpload';
+import { ResponsiveChatWidth } from '../../../../styles/layout';
+import { isConversation } from '../../../../utils/chatHelpers';
 import { convertToAttachment } from '../../../../utils/fileHelpers';
 import { PendingFiles } from '../../../PendingFiles';
 import ChatToolbar from '../ChatToolbar';
@@ -9,24 +13,35 @@ import { ChatInputRoot, ChatInputContainer, ChatInputForm, ChatInputTextarea } f
 
 import type { Attachment } from '../../../../types/chat';
 
-interface ChatInputProps {
-  inputValue: string;
-  setInputValue: (value: string) => void;
-  onSendMessage: (content: string, attachments?: Attachment[]) => void;
-  isDisabled?: boolean;
-}
-
-const ChatInput: React.FC<ChatInputProps> = ({
-  inputValue,
-  setInputValue,
-  onSendMessage,
-  isDisabled = false,
-}) => {
+const ChatInput: React.FC = () => {
   const { uploadedFiles, clearFiles, pendingFiles } = useFileUpload();
+  const { pathname } = useLocation();
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const { createConversation, addMessage, isLoading } = useConversation();
+  const navigate = useNavigate();
 
   const hasUploadingFiles = pendingFiles.some((file) => file.uploadStatus === 'uploading');
   const hasFailedFiles = pendingFiles.some((file) => file.uploadStatus === 'error');
-  const canSendMessage = Boolean(inputValue.trim()) && !isDisabled && !hasUploadingFiles;
+  const canSendMessage = Boolean(inputValue.trim()) && !isLoading && !hasUploadingFiles;
+  const isNewChat = pathname === '/';
+  const sendMessage = isNewChat ? createConversation : addMessage;
+
+  const onSendMessage = async (message: string, attachments?: Attachment[]) => {
+    setIsTyping(true);
+    try {
+      const result = await sendMessage(message, attachments);
+      if (isConversation(result)) {
+        navigate(`conversations/${result.id}`);
+      } else {
+        navigate(`/conversations/${result!.conversationId}`);
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setIsTyping(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,12 +67,17 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   return (
-    <ChatInputRoot>
+    <ChatInputRoot
+      isNewChat={isNewChat}
+      sx={{
+        width: isNewChat ? '100%' : ResponsiveChatWidth,
+      }}
+    >
       <PendingFiles />
       <ChatInputContainer sx={{ boxShadow: 4 }}>
         <ChatInputForm as="form" onSubmit={handleSubmit}>
           <ChatInputTextarea
-            disabled={isDisabled || hasUploadingFiles}
+            disabled={isLoading || isTyping || hasUploadingFiles}
             maxRows={6}
             minRows={1}
             onChange={(e) => setInputValue(e.target.value)}
@@ -68,7 +88,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           <ChatToolbar
             canSendMessage={canSendMessage}
             handleSubmit={handleSubmit}
-            isDisabled={isDisabled}
+            isDisabled={isLoading || isTyping || hasUploadingFiles}
           />
         </ChatInputForm>
       </ChatInputContainer>

@@ -1,6 +1,8 @@
 import Stack from '@mui/material/Stack';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
+import { useConversation } from '../../../../hooks/useConversation';
+import { Layout } from '../../../../styles/layout';
 import ChatTypingIndicator from '../ChatInputTypingIndicator';
 import ChatMessageBubble from '../ChatMessageBubble';
 
@@ -10,24 +12,15 @@ import type { Message } from '../../../../types/chat';
 
 const ChatMessageList: React.FC<{
   messages: Message[];
-  isTyping: boolean;
-}> = ({ messages, isTyping }) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  };
-
-  useEffect(() => {
-    setTimeout(scrollToBottom, 100);
-  }, [messages, isTyping]);
+}> = ({ messages }) => {
+  const { isLoading: isTyping } = useConversation();
   return (
-    <MessageListContainer>
+    <MessageListContainer px={2} pt={2} pb={Layout.chatInputHeight}>
       <Stack spacing={2} alignItems="stretch" sx={{ minHeight: 'min-content', width: '100%' }}>
         {messages.map((message) => (
           <ChatMessageBubble key={message.id} message={message} />
         ))}
         {isTyping && <ChatTypingIndicator />}
-        <div ref={messagesEndRef} />
       </Stack>
     </MessageListContainer>
   );

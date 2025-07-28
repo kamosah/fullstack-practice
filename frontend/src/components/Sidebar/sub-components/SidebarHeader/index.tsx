@@ -20,7 +20,7 @@ const SidebarHeader: React.FC = () => {
         color="primary"
         aria-label="Home"
         sx={{
-          borderRadius: 2,
+          borderRadius: 1,
           '&:hover': {
             backgroundColor: 'action.hover',
           },

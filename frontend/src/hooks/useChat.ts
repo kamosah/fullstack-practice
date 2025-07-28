@@ -19,7 +19,6 @@ import type {
   Attachment,
 } from "../types/chat";
 
-// GraphQL response interfaces
 interface GraphQLConversation {
   id: string;
   title: string;
@@ -37,10 +36,9 @@ interface GraphQLMessage {
   createdAt: string;
 }
 
-// Helper functions to format data consistently
 const formatMessage = (msg: GraphQLMessage): Message => ({
   ...msg,
-  type: msg.type === "user" ? MessageType.USER : MessageType.AGENT,
+  type: msg.type === 'user' ? MessageType.USER : MessageType.AGENT,
   createdAt: new Date(msg.createdAt),
 });
 
@@ -51,11 +49,11 @@ const formatConversation = (conv: GraphQLConversation): Conversation => ({
   messages: conv.messages.map(formatMessage),
 });
 
-export const useConversations = () => {
+export const useGetConversations = () => {
   const queryClient = useQueryClient();
 
   return useQuery({
-    throwOnError: process.env.NODE_ENV === "development",
+    throwOnError: process.env.NODE_ENV === 'development',
     queryKey: queryKeys.conversations.all,
     queryFn: async (): Promise<Conversation[]> => {
       const data = (await graphqlClient.request(GET_CONVERSATIONS)) as {
@@ -65,11 +63,7 @@ export const useConversations = () => {
       const conversations = data.getConversations.map((conv) => {
         const conversation = formatConversation(conv);
 
-        // Cache each individual conversation by its ID
-        queryClient.setQueryData(
-          queryKeys.conversations.detail(parseInt(conv.id)),
-          conversation
-        );
+        queryClient.setQueryData(queryKeys.conversations.detail(parseInt(conv.id)), conversation);
 
         return conversation;
       });
@@ -79,10 +73,10 @@ export const useConversations = () => {
   });
 };
 
-export const useConversation = (id: number) => {
+export const useGetConversation = (id?: number) => {
   return useQuery({
-    throwOnError: process.env.NODE_ENV === "development",
-    queryKey: queryKeys.conversations.detail(id),
+    throwOnError: process.env.NODE_ENV === 'development',
+    queryKey: queryKeys.conversations.detail(id!),
     queryFn: async (): Promise<Conversation | null> => {
       const data = (await graphqlClient.request(GET_CONVERSATION, { id })) as {
         getConversation: GraphQLConversation | null;
@@ -92,6 +86,8 @@ export const useConversation = (id: number) => {
       return formatConversation(data.getConversation);
     },
     enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 
@@ -99,7 +95,7 @@ export const useCreateConversation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    throwOnError: process.env.NODE_ENV === "development",
+    throwOnError: process.env.NODE_ENV === 'development',
     mutationKey: queryKeys.mutations.createConversation,
     mutationFn: async (input: ConversationInput): Promise<Conversation> => {
       const data = (await graphqlClient.request(CREATE_CONVERSATION, {
@@ -109,9 +105,7 @@ export const useCreateConversation = () => {
       return formatConversation(data.createConversation);
     },
     onSuccess: (newConversation) => {
-      // Invalidate conversations list to show the new conversation
       queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
-      // Invalidate the specific conversation in case it's being viewed
       queryClient.invalidateQueries({
         queryKey: queryKeys.conversations.detail(parseInt(newConversation.id)),
       });
@@ -123,28 +117,23 @@ export const useCreateConversationWithMessage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    throwOnError: process.env.NODE_ENV === "development",
+    throwOnError: process.env.NODE_ENV === 'development',
     mutationKey: queryKeys.mutations.createConversationWithMessage,
     mutationFn: async (input: {
       title?: string;
       firstMessage: string;
       attachments?: Attachment[];
     }): Promise<Conversation> => {
-      const data = (await graphqlClient.request(
-        CREATE_CONVERSATION_WITH_MESSAGE,
-        {
-          title: input.title,
-          firstMessage: input.firstMessage,
-          attachments: input.attachments, // <-- Pass attachments
-        }
-      )) as { createConversationWithMessage: GraphQLConversation };
+      const data = (await graphqlClient.request(CREATE_CONVERSATION_WITH_MESSAGE, {
+        title: input.title,
+        firstMessage: input.firstMessage,
+        attachments: input.attachments,
+      })) as { createConversationWithMessage: GraphQLConversation };
 
       return formatConversation(data.createConversationWithMessage);
     },
     onSuccess: (newConversation) => {
-      // Invalidate conversations list to show the new conversation
       queryClient.invalidateQueries({ queryKey: queryKeys.conversations.all });
-      // Invalidate the specific conversation in case it's being viewed
       queryClient.invalidateQueries({
         queryKey: queryKeys.conversations.detail(parseInt(newConversation.id)),
       });
