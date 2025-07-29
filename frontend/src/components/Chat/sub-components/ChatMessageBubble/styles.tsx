@@ -11,9 +11,10 @@ export const MessageBubbleBox = styled(Box, {
   boxShadow: isUser ? theme.shadows[1] : 'none',
   color: isUser ? theme.palette.grey[900] : theme.palette.text.primary,
   justifyContent: 'flex-end',
-  maxWidth: '70%',
+  maxWidth: '100%',
   paddingBottom: theme.spacing(1.5),
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(2),
   paddingTop: theme.spacing(1.5),
+  wordBreak: 'break-word',
 }));

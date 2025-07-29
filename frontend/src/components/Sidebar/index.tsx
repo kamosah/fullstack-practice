@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useConversations } from '../../hooks/useChat';
+import { useGetConversations } from '../../hooks/useChat';
 
 import { SidebarRoot } from './styles';
 import SidebarConversationList from './sub-components/SidebarConversationList';
@@ -13,7 +13,7 @@ import type { Conversation } from '../../types/chat';
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const { conversationId } = useParams() as { conversationId: string };
-  const { data: conversations = [] } = useConversations();
+  const { data: conversations = [] } = useGetConversations();
 
   const handleSelectConversation = useCallback(
     (conversation: Conversation) => {
