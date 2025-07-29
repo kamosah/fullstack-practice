@@ -3,7 +3,7 @@ const SIDEBAR_WIDTH = 320;
 export const Layout = {
   chatInputHeight: 105,
   mainContentWidth: `calc(100vw - ${SIDEBAR_WIDTH}px)`,
-  sidebarWidth: `${SIDEBAR_WIDTH}px`,
+  sidebarWidth: SIDEBAR_WIDTH,
 } as const;
 
 export const ResponsiveChatWidth = {
