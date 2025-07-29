@@ -52,7 +52,7 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({ chil
     }
     try {
       return await addMessageMutation.mutateAsync({
-        conversationId: parseInt(activeConversation!.id),
+        conversationId: parseInt(activeConversation.id),
         type: MessageType.USER,
         content: message,
         attachments: attachments?.map((att) => ({

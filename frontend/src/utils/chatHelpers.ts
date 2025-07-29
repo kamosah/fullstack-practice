@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type Conversation, type Message } from '../types/chat';
 
-export const isConversation = (obj: any): obj is Conversation => {
-  return obj && 'title' in obj;
+export const isConversation = (obj: unknown): obj is Conversation => {
+  return typeof obj === 'object' && obj !== null && 'title' in obj;
 };
-
-export const isMessage = (obj: any): obj is Message => {
-  return obj && 'conversationId' in obj;
+export const isMessage = (obj: unknown): obj is Message => {
+  return typeof obj === 'object' && obj !== null && 'conversationId' in obj;
 };
