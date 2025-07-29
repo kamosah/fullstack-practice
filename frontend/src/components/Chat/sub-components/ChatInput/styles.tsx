@@ -1,5 +1,6 @@
-import { Box, TextareaAutosize } from '@mui/material';
+import Box from '@mui/material/Box';
 import { styled, type CSSProperties } from '@mui/material/styles';
+import TextareaAutosize, { type TextareaAutosizeProps } from '@mui/material/TextareaAutosize';
 
 import { Layout } from '../../../../styles/layout';
 
@@ -62,11 +63,11 @@ export const ChatInputForm = styled(Box)({
   width: '100%',
 });
 
-export const ChatInputTextarea = styled(TextareaAutosize)<{ disabled?: boolean }>(
-  ({ disabled }) => ({
+export const ChatInputTextarea = styled(TextareaAutosize)<TextareaAutosizeProps>(
+  ({ theme, disabled }) => ({
     background: 'transparent',
     border: 0,
-    color: disabled ? '#aaa' : 'inherit',
+    color: disabled ? theme.palette.text.disabled : 'inherit',
     fontSize: '1rem',
     lineHeight: '1.5rem',
     outline: 'none',

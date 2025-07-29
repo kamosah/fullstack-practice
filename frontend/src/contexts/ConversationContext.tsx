@@ -46,6 +46,10 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({ chil
     message: string,
     attachments?: Attachment[],
   ): Promise<Message | undefined> => {
+    if (!activeConversation) {
+      console.error('Cannot send message: activeConversation is undefined.');
+      return;
+    }
     try {
       return await addMessageMutation.mutateAsync({
         conversationId: parseInt(activeConversation!.id),

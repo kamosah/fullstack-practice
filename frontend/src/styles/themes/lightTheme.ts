@@ -15,7 +15,7 @@ export const LIGHT_THEME: ThemeOptions = {
     },
     secondary: {
       main: '#7E4F9E',
-      light: '#F1EEF D',
+      light: '#F1EEFD',
       dark: '#55686C',
       contrastText: '#FFFFFF',
     },

@@ -32,9 +32,9 @@ const ChatInput: React.FC = () => {
     try {
       const result = await sendMessage(message, attachments);
       if (isConversation(result)) {
-        navigate(`conversations/${result.id}`);
+        navigate(`/conversations/${result.id}`);
       } else {
-        navigate(`/conversations/${result!.conversationId}`);
+        navigate(`/conversations/${result?.conversationId ?? 'unknown'}`);
       }
     } catch (error) {
       console.error('Failed to send message:', error);

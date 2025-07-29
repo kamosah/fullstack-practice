@@ -28,9 +28,11 @@ const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
       <ThemeProvider theme={theme}>
         <StyledEngineProvider injectFirst>
           <ConversationProvider>
+            <Uploady {...uploadConfig}>
             <CssBaseline />
-            <Uploady {...uploadConfig}>{children}</Uploady>
             <ReactQueryDevtools initialIsOpen={false} />
+              {children}
+              </Uploady>
           </ConversationProvider>
         </StyledEngineProvider>
       </ThemeProvider>
