@@ -1,8 +1,8 @@
 # 🔍 Full-Stack AI Chat Application
 
 <div style="text-align:center; border: 1px solid #90a4ae; border-radius: 10px; padding: 20px; margin: 20px 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-  <img src="https://raw.githubusercontent.com/kamosah/fullstack-practice/main/frontend/public/images/hebbia_pratice_ui_update.png" 
-       alt="Full Stack App UI Screenshot"
+  <img src="https://raw.githubusercontent.com/kamosah/fullstack-practice/main/frontend/public/images/chat_app_ui_update.png"
+       alt="Full Stack App Screenshot"
        style="max-width: 100%;"
        width="800px"
      />
