@@ -15,23 +15,19 @@ interface ConversationProviderProps {
 
 export const ConversationProvider: React.FC<ConversationProviderProps> = ({ children }) => {
   const { conversationId } = useParams<{ conversationId: string }>();
-  const { data: activeConversation, isLoading: isLoadingActiveConversation } = useGetConversation(
+  const { data: activeConversation, isLoading: isGetConversationLoading } = useGetConversation(
     conversationId ? parseInt(conversationId) : undefined,
   );
-  const createConversationMutation = useCreateConversationWithMessage();
-  const addMessageMutation = useSendMessage();
-
-  const isLoading =
-    createConversationMutation.isPending ||
-    addMessageMutation.isPending ||
-    isLoadingActiveConversation;
+  const { mutateAsync: createConversationMutation, isPending: isCreatingConversationPending } =
+    useCreateConversationWithMessage();
+  const { mutateAsync: addMessageMutation, isPending: isAddingMessagePending } = useSendMessage();
 
   const createConversation = async (
     message: string,
     attachments?: Attachment[],
   ): Promise<Conversation | undefined> => {
     try {
-      const newConversation = await createConversationMutation.mutateAsync({
+      const newConversation = await createConversationMutation({
         title: message.substring(0, 50) + (message.length > 50 ? '...' : ''),
         firstMessage: message,
         attachments,
@@ -51,7 +47,7 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({ chil
       return;
     }
     try {
-      return await addMessageMutation.mutateAsync({
+      return await addMessageMutation({
         conversationId: parseInt(activeConversation.id),
         type: MessageType.USER,
         content: message,
@@ -75,7 +71,9 @@ export const ConversationProvider: React.FC<ConversationProviderProps> = ({ chil
         activeConversation,
         addMessage,
         createConversation,
-        isLoading,
+        isCreatingConversationPending,
+        isGetConversationLoading,
+        isAddingMessagePending,
       }}
     >
       {children}

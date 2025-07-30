@@ -2,7 +2,6 @@ import MuiLink from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
-import DOMPurify from 'dompurify';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -12,16 +11,15 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 import 'highlight.js/styles/github.css';
-import { InlineCode } from './InlineCode';
+
 import { MarkdownRoot } from './styles';
+import { InlineCode } from './sub-components/InlineCode';
 
 export interface MarkdownRendererProps {
   markdown: string;
 }
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) => {
-  const sanitizedMarkdown = DOMPurify.sanitize(markdown);
-
   return (
     <MarkdownRoot className="markdown-body">
       <ReactMarkdown
@@ -107,7 +105,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdown }) 
           li: (props) => <ListItem sx={{ display: 'list-item', pl: 0 }}>{props.children}</ListItem>,
         }}
       >
-        {sanitizedMarkdown}
+        {markdown}
       </ReactMarkdown>
     </MarkdownRoot>
   );

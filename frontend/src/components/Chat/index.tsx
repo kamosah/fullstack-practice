@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { useConversation } from '../../hooks/useConversation';
 import { useScrollToBottom } from '../../hooks/useScrollToBottom';
@@ -13,12 +13,16 @@ interface ChatProps {
 
 const Chat: React.FC<ChatProps> = ({ parentScrollRef }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
-  const { activeConversation } = useConversation();
-  useScrollToBottom({
+  const { activeConversation, isAddingMessagePending } = useConversation();
+  const scrollToBottom = useScrollToBottom({
     parentScrollRef,
     messagesEndRef,
     options: { behavior: 'smooth' },
   });
+
+  useEffect(() => {
+    if (isAddingMessagePending) scrollToBottom();
+  }, [isAddingMessagePending, scrollToBottom]);
 
   if (!activeConversation?.messages?.length) {
     return <div>No conversation found</div>;

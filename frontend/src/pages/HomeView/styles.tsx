@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
 export const HomeContainer = styled(Box)(({ theme }) => ({
-  alignItems: 'center',
   backgroundColor: 'transparent',
   borderRadius: Number(theme.shape.borderRadius),
   display: 'flex',
