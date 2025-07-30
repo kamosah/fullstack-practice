@@ -13,7 +13,8 @@ import type { Message } from '../../../../types/chat';
 const ChatMessageList: React.FC<{
   messages: Message[];
 }> = ({ messages }) => {
-  const { isLoading: isTyping } = useConversation();
+  const { isGetConversationLoading, isAddingMessagePending } = useConversation();
+  const isTyping = isGetConversationLoading || isAddingMessagePending;
   return (
     <MessageListContainer px={2} pt={2} pb={Layout.chatInputHeight}>
       <Stack spacing={2} alignItems="stretch" sx={{ minHeight: 'min-content', width: '100%' }}>

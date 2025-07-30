@@ -17,8 +17,9 @@ const ChatInput: React.FC = () => {
   const { uploadedFiles, clearFiles, pendingFiles } = useFileUpload();
   const { pathname } = useLocation();
   const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const { createConversation, addMessage, isLoading } = useConversation();
+  const { createConversation, addMessage, isCreatingConversationPending, isAddingMessagePending } =
+    useConversation();
+  const isLoading = isCreatingConversationPending || isAddingMessagePending;
   const navigate = useNavigate();
 
   const hasUploadingFiles = pendingFiles.some((file) => file.uploadStatus === 'uploading');
@@ -28,7 +29,6 @@ const ChatInput: React.FC = () => {
   const sendMessage = isNewChat ? createConversation : addMessage;
 
   const onSendMessage = async (message: string, attachments?: Attachment[]) => {
-    setIsTyping(true);
     try {
       const result = await sendMessage(message, attachments);
       if (isConversation(result)) {
@@ -38,8 +38,6 @@ const ChatInput: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to send message:', error);
-    } finally {
-      setIsTyping(false);
     }
   };
 
@@ -77,7 +75,7 @@ const ChatInput: React.FC = () => {
       <ChatInputContainer sx={{ boxShadow: 4 }}>
         <ChatInputForm as="form" onSubmit={handleSubmit}>
           <ChatInputTextarea
-            disabled={isLoading || isTyping || hasUploadingFiles}
+            disabled={isLoading || hasUploadingFiles}
             maxRows={6}
             minRows={1}
             onChange={(e) => setInputValue(e.target.value)}
@@ -88,7 +86,7 @@ const ChatInput: React.FC = () => {
           <ChatToolbar
             canSendMessage={canSendMessage}
             handleSubmit={handleSubmit}
-            isDisabled={isLoading || isTyping || hasUploadingFiles}
+            isDisabled={isLoading || hasUploadingFiles}
           />
         </ChatInputForm>
       </ChatInputContainer>

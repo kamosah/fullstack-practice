@@ -6,7 +6,9 @@ interface ConversationContextState {
   addMessage: (message: string, attachments?: Attachment[]) => Promise<Message | undefined>;
   createConversation: (title: string) => Promise<Conversation | undefined>;
   activeConversation?: Conversation | null;
-  isLoading: boolean;
+  isCreatingConversationPending: boolean;
+  isGetConversationLoading: boolean;
+  isAddingMessagePending: boolean;
 }
 
 export const ConversationContext = createContext<ConversationContextState | undefined>(undefined);
