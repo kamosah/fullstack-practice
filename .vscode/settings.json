@@ -1,5 +1,4 @@
 {
-  "python.defaultInterpreterPath": "/Users/kwameamosah/Documents/GitHub/fullstack-practice/backend/.venv/bin/python",
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,

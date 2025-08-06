@@ -1,3 +1,5 @@
+import { decorators } from './decorators';
+
 import type { Preview } from '@storybook/react-vite';
 
 const preview: Preview = {
@@ -16,6 +18,7 @@ const preview: Preview = {
       test: 'todo',
     },
   },
+  decorators,
 };
 
 export default preview;
