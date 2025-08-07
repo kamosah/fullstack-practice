@@ -1,5 +1,4 @@
 {
-  "python.defaultInterpreterPath": "/Users/kwameamosah/Library/Caches/pypoetry/virtualenvs/fhir-api-RzEqz7RU-py3.11/bin/python",
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
