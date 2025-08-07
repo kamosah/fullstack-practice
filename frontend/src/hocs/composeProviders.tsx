@@ -6,16 +6,15 @@ type ProviderProps = {
 
 type Provider = ComponentType<ProviderProps>;
 
-export type ProviderWithProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Provider: React.ComponentType<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props?: Record<string, any>;
+export type ProviderWithProps<P = object> = {
+  Provider: React.ComponentType<P>;
+  props?: P;
 };
-
-export const composeProviders = (...providersWithProps: ProviderWithProps[]) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const composeProviders = (...providersWithProps: ProviderWithProps<any>[]) => {
   return providersWithProps.reduce(
-    (AccumulatedProviders: Provider, CurrentProviderWithProps: ProviderWithProps): Provider =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (AccumulatedProviders: Provider, CurrentProviderWithProps: ProviderWithProps<any>): Provider =>
       ({ children }: ProviderProps) => {
         const { Provider: CurrentProvider, props = {} } = CurrentProviderWithProps;
         return (

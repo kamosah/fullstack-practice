@@ -43,3 +43,6 @@ htmlcov/
 # Logs
 logs/
 *.log 
+
+# DB
+chat.db
