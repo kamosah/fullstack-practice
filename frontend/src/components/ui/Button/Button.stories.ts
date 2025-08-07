@@ -3,6 +3,7 @@ import { Button } from '.';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
+  title: 'UI/Button',
   component: Button,
 } satisfies Meta<typeof Button>;
 
